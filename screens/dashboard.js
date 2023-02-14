@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { Text, View, TextInput } from "react-native";
 import { Button } from "react-native-paper";
 import { onAuthStateChanged } from "firebase/auth";
+import { Agenda } from "react-native-calendars";
 import { auth, logout } from "../firebase";
 import React from "react";
 
@@ -17,6 +18,7 @@ export default function Dashboard({ navigation }) {
 
   return (
     <View className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <Agenda></Agenda>
       <Text>Welcome to dashboard</Text>
       <Button
         title="Sign out"
