@@ -11,7 +11,7 @@ export default function Dashboard({ navigation }) {
     if (user) {
       console.log("User logged in");
     } else {
-      navigation.navigate("Signin");
+      navigation.navigate("HomeScreen");
     }
   });
 

@@ -38,7 +38,21 @@ const logInWithEmailAndPassword = async (email, password) => {
     alert(err.message);
   }
 };
+const registerWithEmailAndPassword = async (name, email, password) => {
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const user = res.user;
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
+  }
+};
 const logout = () => {
   signOut(auth);
 };
-export { auth, logInWithEmailAndPassword, logout };
+export {
+  auth,
+  logInWithEmailAndPassword,
+  logout,
+  registerWithEmailAndPassword,
+};

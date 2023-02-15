@@ -1072,6 +1072,13 @@
     deepmerge "^3.2.0"
     hoist-non-react-statics "^3.3.0"
 
+"@egjs/hammerjs@^2.0.17":
+  version "2.0.17"
+  resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
+  integrity sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==
+  dependencies:
+    "@types/hammerjs" "^2.0.36"
+
 "@expo/bunyan@4.0.0", "@expo/bunyan@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@expo/bunyan/-/bunyan-4.0.0.tgz#be0c1de943c7987a9fbd309ea0b1acd605890c7b"
@@ -2272,6 +2279,11 @@
   dependencies:
     mini-svg-data-uri "^1.2.3"
 
+"@types/hammerjs@^2.0.36":
+  version "2.0.41"
+  resolved "https://registry.yarnpkg.com/@types/hammerjs/-/hammerjs-2.0.41.tgz#f6ecf57d1b12d2befcce00e928a6a097c22980aa"
+  integrity sha512-ewXv/ceBaJprikMcxCmWU1FKyMAQ2X7a9Gtmzw8fcg2kIePI1crERDM818W+XYrxqdBBOdlf2rm137bU+BltCA==
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.4.tgz#8467d4b3c087805d63580480890791277ce35c44"
@@ -2305,6 +2317,32 @@
   version "18.13.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-18.13.0.tgz#0400d1e6ce87e9d3032c19eb6c58205b0d3f7850"
   integrity sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg==
+
+"@types/prop-types@*":
+  version "15.7.5"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
+  integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
+
+"@types/react-native@^0.71.3":
+  version "0.71.3"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.71.3.tgz#537f669ed6b38b5ae47444bd9d253c4cff23bed7"
+  integrity sha512-0Uqw1YZ0qbVla0MMWFTANFm6W8KYWNvGQmYfucdecbXivLMcQ2v4PovuYFKr7bE6Bc5nDCUEaga962Y8gcDF7A==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^18.0.28":
+  version "18.0.28"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.28.tgz#accaeb8b86f4908057ad629a26635fe641480065"
+  integrity sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/scheduler@*":
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
+  integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
 
 "@types/yargs-parser@*":
   version "21.0.0"
@@ -3320,6 +3358,11 @@ cssesc@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
+
+csstype@^3.0.2:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
+  integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
 
 dag-map@~1.0.0:
   version "1.0.2"
@@ -4893,7 +4936,7 @@ lodash.throttle@^4.1.1:
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
   integrity sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==
 
-lodash@^4.17.13, lodash@^4.17.4:
+lodash@^4.17.13, lodash@^4.17.21, lodash@^4.17.4:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -6244,6 +6287,17 @@ react-native-dotenv@^3.4.7:
   dependencies:
     dotenv "^16.0.3"
 
+react-native-gesture-handler@^2.9.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.9.0.tgz#2f63812e523c646f25b9ad660fc6f75948e51241"
+  integrity sha512-a0BcH3Qb1tgVqUutc6d3VuWQkI1AM3+fJx8dkxzZs9t06qA27QgURYFoklpabuWpsUTzuKRpxleykp25E8m7tg==
+  dependencies:
+    "@egjs/hammerjs" "^2.0.17"
+    hoist-non-react-statics "^3.3.0"
+    invariant "^2.2.4"
+    lodash "^4.17.21"
+    prop-types "^15.7.2"
+
 react-native-gradle-plugin@^0.70.3:
   version "0.70.3"
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.3.tgz#cbcf0619cbfbddaa9128701aa2d7b4145f9c4fc8"
@@ -6270,6 +6324,11 @@ react-native-screens@~3.18.0:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-status-bar-height@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.6.0.tgz#b6afd25b6e3d533c43d0fcdcfd5cafd775592cea"
+  integrity sha512-z3SGLF0mHT+OlJDq7B7h/jXPjWcdBT3V14Le5L2PjntjjWM3+EJzq2BcXDwV+v67KFNJic5pgA26cCmseYek6w==
 
 react-native-vector-icons@^9.2.0:
   version "9.2.0"
@@ -7302,6 +7361,11 @@ type-is@~1.6.18:
   dependencies:
     media-typer "0.3.0"
     mime-types "~2.1.24"
+
+typescript@^4.9.5:
+  version "4.9.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
+  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
 
 ua-parser-js@^0.7.30:
   version "0.7.33"
