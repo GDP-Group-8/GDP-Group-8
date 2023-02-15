@@ -13,14 +13,14 @@ export default function Signin({ navigation }) {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setUser(user);
-      navigation.navigate("Dashboard");
+      navigation.navigate("UsersManage");
     } else {
       console.log("No user logged in");
     }
   });
 
   React.useEffect(() => {
-    if (user) navigation.navigate("Dashboard");
+    if (user) navigation.navigate("UsersManage");
   }, [user]);
 
   return (
@@ -61,6 +61,7 @@ export default function Signin({ navigation }) {
               title="Sign in"
               mode="contained"
               onPress={() => logInWithEmailAndPassword(email, password)}
+
               className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               Sign in
