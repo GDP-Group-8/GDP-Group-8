@@ -17,7 +17,7 @@ export default function App() {
           headerShown: false,
         }}
       >
-        {/* <Stack.Screen name="Signin" component={Signin} /> */}
+        <Stack.Screen name="Signin" component={Signin} />
         <Stack.Screen name="UsersManage" component={UsersManage}  />
         <Stack.Screen name="UserDetail" component={UserDetail} />
 
