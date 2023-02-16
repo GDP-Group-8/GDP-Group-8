@@ -32,7 +32,7 @@ const auth = getAuth(app);
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     const res = await signInWithEmailAndPassword(auth, email, password);
-    const res3 = await axios.get("http://192.168.170.179:5000");
+    const res3 = await axios.get("http://10.6.6.176:5000");
     console.log(res3.data);
     console.log(res.user.uid);
   } catch (err) {
@@ -48,7 +48,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     const res2 = await axios.post("http://10.6.6.176:5000/members/", {
       memberID: user.uid,
       name: name,
-      gymOwner: "7pDwFT9gTMU1uil4WlrbrTlvxsp2",
+      gymOwner: "hzaaU5hcJMgOMbPdDWdUzxn37zU2",
     });
     console.log(res2);
   } catch (err) {
