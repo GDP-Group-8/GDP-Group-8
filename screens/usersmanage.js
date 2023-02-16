@@ -44,22 +44,31 @@ export default function UsersManage({ navigation }) {
   ]);
   useEffect(() => {
     // fetch data from server with axios
-    async function fetchData() {
-      const res = await axios.get("https://gdp-api.herokuapp.com/members");
-      console.log(res.data[0]);
-      setUsers(res.data);
-    }
+    // async function fetchData() {
+    //   const res = await axios.get("http://192.168.170.179:5000/members/");
+    //   console.log(res.data[0]);
+    //   setUsers(res.data);
+    // }
     fetchData();
   }, []);
-
+  async function fetchData() {
+    const res = await axios.get("http://192.168.170.179:5000/members/");
+    console.log(res.data[0]);
+    setUsers(res.data);
+  }
   const addUser = () => {
     users.push(newUser);
     setUsers(users);
     setNewUser({});
   };
 
-  const deleteUser = (member_id) => {
-    setUsers(users.filter((user, idx) => user.member_id !== member_id));
+  const deleteUser = async (memberID) => {
+    // setUsers(users.filter((user, idx) => user.member_id !== member_id));
+    const res = await axios.delete(
+      "http://192.168.170.179:5000/members/" + memberID
+    );
+    console.log(res.data[0]);
+    fetchData();
   };
   return (
     <ScrollView className="bg-white">
@@ -149,9 +158,9 @@ export default function UsersManage({ navigation }) {
             <View className="mt-1">
               <RadioButton.Group
                 onValueChange={(value) =>
-                  setNewUser({ ...newUser, membership_type: value })
+                  setNewUser({ ...newUser, membershipType: value })
                 }
-                value={newUser.membership_type}
+                value={newUser.membershipType}
               >
                 <RadioButton.Item label="Bronze" value="Bronze" />
                 <RadioButton.Item label="Silver" value="Silver" />
