@@ -8,54 +8,23 @@ import {
   RadioButton,
   Text,
 } from "react-native-paper";
+import { useAuth } from "../contexts/AuthContext";
+
 export default function UsersManage({ navigation }) {
   const [newUser, setNewUser] = React.useState({});
+  const { currentUser, admin } = useAuth();
+  const [users, setUsers] = React.useState([]);
 
-  const [users, setUsers] = React.useState([
-    // {
-    //   _id: "63ea2e76c27e349dabad312a",
-    //   member_id: 1,
-    //   name: "Tim Kelly",
-    //   email: "Tikelly@tcd.ie",
-    //   membership_type: "Gold",
-    //   join_date: "2022-01-01",
-    //   gym_location: "Dublin",
-    // },
-    // // 2
-    // {
-    //   _id: "63ea2e76c27e349dabad312b",
-    //   member_id: 2,
-    //   name: "Aaron Byrne",
-    //   email: "aabyrne@tcd.ie",
-    //   membership_type: "Silver",
-    //   join_date: "2022-02-01",
-    //   gym_location: "Cork",
-    // },
-    // // 3
-    // {
-    //   _id: "63ea2e76c27e349dabad312c",
-    //   member_id: 3,
-    //   name: "Holly Mcevoy",
-    //   email: "mcevoyho@tcd.ie",
-    //   membership_type: "Bronze",
-    //   join_date: "2022-03-01",
-    //   gym_location: "Limerick",
-    // },
-  ]);
   useEffect(() => {
-    // fetch data from server with axios
-    // async function fetchData() {
-    //   const res = await axios.get("http://192.168.170.179:5000/members/");
-    //   console.log(res.data[0]);
-    //   setUsers(res.data);
-    // }
     fetchData();
   }, []);
+
   async function fetchData() {
     const res = await axios.get("http://192.168.170.179:5000/members/");
     console.log(res.data[0]);
     setUsers(res.data);
   }
+
   const addUser = () => {
     users.push(newUser);
     setUsers(users);
@@ -64,10 +33,18 @@ export default function UsersManage({ navigation }) {
 
   const deleteUser = async (memberID) => {
     // setUsers(users.filter((user, idx) => user.member_id !== member_id));
-    const res = await axios.delete(
-      "http://192.168.170.179:5000/members/" + memberID
-    );
-    console.log(res.data[0]);
+    if (memberID === currentUser.uid) {
+      alert("You cannot delete yourself!");
+    } else {
+      const res = await axios.delete(
+        "http://192.168.170.179:5000/members/" + memberID
+      );
+      const res2 = await axios.delete(
+        "http://192.168.170.179:5000/firebase/" + memberID
+      );
+      console.log(res.data);
+      console.log(res2.data);
+    }
     fetchData();
   };
   return (

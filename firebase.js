@@ -16,6 +16,7 @@ import {
   FIREBASE_MEASUREMENT_ID,
 } from "@env";
 import axios from "axios";
+import { useAuth } from "./contexts/AuthContext";
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,
   authDomain: FIREBASE_AUTH_DOMAIN,
@@ -28,13 +29,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-
 const logInWithEmailAndPassword = async (email, password) => {
   try {
-    const res = await signInWithEmailAndPassword(auth, email, password);
-    const res3 = await axios.get("http://10.6.6.176:5000");
-    console.log(res3.data);
-    console.log(res.user.uid);
+    return await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
     console.error(err);
     alert(err.message);

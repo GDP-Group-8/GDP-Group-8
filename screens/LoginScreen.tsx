@@ -1,37 +1,47 @@
-import React, { memo, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import React, { memo, useEffect, useState } from "react";
+import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, logInWithEmailAndPassword } from "../firebase";
-
-import Background from '../components/Background';
-import Logo from '../components/Logo';
-import Header from '../components/Header';
-import Button from '../components/Button';
-import TextInput from '../components/TextInput';
-import BackButton from '../components/BackButton';
-import { theme } from '../core/theme';
-import { emailValidator, passwordValidator } from '../core/utils';
-import { Navigation } from '../types';
+import { useAuth } from "../contexts/AuthContext";
+import Background from "../components/Background";
+import Logo from "../components/Logo";
+import Header from "../components/Header";
+import Button from "../components/Button";
+import TextInput from "../components/TextInput";
+import BackButton from "../components/BackButton";
+import { theme } from "../core/theme";
+import { emailValidator, passwordValidator } from "../core/utils";
+import { Navigation } from "../types";
+import axios from "axios";
 
 type Props = {
   navigation: Navigation;
 };
 
 const LoginScreen = ({ navigation }: Props) => {
-  const [email, setEmail] = useState({ value: '', error: '' });
-  const [password, setPassword] = useState({ value: '', error: '' });
-  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState({ value: "", error: "" });
+  const [password, setPassword] = useState({ value: "", error: "" });
+  const { currentUser,setCurrentUser, setAdmin } = useAuth();
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      setUser(user);
+  // onAuthStateChanged(auth, async (user) => {
+  //   if (user) {
+  //     setCurrentUser(user);
+
+  //     navigation.navigate("Dashboard");
+  //   } else {
+  //     console.log("No user logged in");
+  //   }
+  // });
+
+  useEffect(() => {
+    if (currentUser) {
       navigation.navigate("Dashboard");
-    } else {
-      console.log("No user logged in");
     }
-  });
+  }, [currentUser, navigation]);
+  
 
-  const _onLoginPressed = () => {
+
+  const _onLoginPressed = async () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
 
@@ -40,12 +50,17 @@ const LoginScreen = ({ navigation }: Props) => {
       setPassword({ ...password, error: passwordError });
       return;
     }
-    logInWithEmailAndPassword(email.value, password.value);
+    const res = await logInWithEmailAndPassword(email.value, password.value);
+    const res2 = await axios.get(
+      "http://192.168.170.179:5000/members/" + res.user.uid
+    );
+    setAdmin(res2.data[0].admin);
+    setCurrentUser(res.user);
   };
 
   return (
     <Background>
-      <BackButton goBack={() => navigation.navigate('HomeScreen')} />
+      <BackButton goBack={() => navigation.navigate("HomeScreen")} />
 
       <Logo />
 
@@ -55,7 +70,7 @@ const LoginScreen = ({ navigation }: Props) => {
         label="Email"
         returnKeyType="next"
         value={email.value}
-        onChangeText={text => setEmail({ value: text, error: '' })}
+        onChangeText={(text) => setEmail({ value: text, error: "" })}
         error={!!email.error}
         errorText={email.error}
         autoCapitalize="none"
@@ -68,7 +83,7 @@ const LoginScreen = ({ navigation }: Props) => {
         label="Password"
         returnKeyType="done"
         value={password.value}
-        onChangeText={text => setPassword({ value: text, error: '' })}
+        onChangeText={(text) => setPassword({ value: text, error: "" })}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry
@@ -76,7 +91,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
       <View style={styles.forgotPassword}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('ForgotPasswordScreen')}
+          onPress={() => navigation.navigate("ForgotPasswordScreen")}
         >
           <Text style={styles.label}>Forgot your password?</Text>
         </TouchableOpacity>
@@ -88,7 +103,7 @@ const LoginScreen = ({ navigation }: Props) => {
 
       <View style={styles.row}>
         <Text style={styles.label}>Don’t have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')}>
+        <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")}>
           <Text style={styles.link}>Sign up</Text>
         </TouchableOpacity>
       </View>
@@ -98,19 +113,19 @@ const LoginScreen = ({ navigation }: Props) => {
 
 const styles = StyleSheet.create({
   forgotPassword: {
-    width: '100%',
-    alignItems: 'flex-end',
+    width: "100%",
+    alignItems: "flex-end",
     marginBottom: 24,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 4,
   },
   label: {
     color: theme.colors.secondary,
   },
   link: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: theme.colors.primary,
   },
 });

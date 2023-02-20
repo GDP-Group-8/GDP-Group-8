@@ -14,32 +14,34 @@ import {
 import Dashboard from "./screens/dashboard";
 import UsersManage from "./screens/usersmanage";
 import UserDetail from "./screens/userdetail";
-
+import { AuthProvider } from "./contexts/AuthContext";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [userId, setUserId] = React.useState(null);
   return (
-    <Provider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          {/* <Stack.Screen name="Signin" component={Signin} /> */}
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen
-            name="ForgotPasswordScreen"
-            component={ForgotPasswordScreen}
-          />
-          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <Stack.Screen name="Dashboard" component={Dashboard} />
-          <Stack.Screen name="UsersManage" component={UsersManage} />
-          <Stack.Screen name="UserDetail" component={UserDetail} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Provider>
+    <AuthProvider>
+      <Provider theme={theme}>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            {/* <Stack.Screen name="Signin" component={Signin} /> */}
+            <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            <Stack.Screen
+              name="ForgotPasswordScreen"
+              component={ForgotPasswordScreen}
+            />
+            <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+            <Stack.Screen name="Dashboard" component={Dashboard} />
+            <Stack.Screen name="UsersManage" component={UsersManage} />
+            <Stack.Screen name="UserDetail" component={UserDetail} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
+    </AuthProvider>
   );
 }
