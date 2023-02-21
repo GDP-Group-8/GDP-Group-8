@@ -13,14 +13,14 @@ export default function Signin({ navigation }) {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       setUser(user);
-      navigation.navigate("Dashboard");
+      navigation.navigate("UsersManage");
     } else {
       console.log("No user logged in");
     }
   });
 
   React.useEffect(() => {
-    if (user) navigation.navigate("Dashboard");
+    if (user) navigation.navigate("UsersManage");
   }, [user]);
 
   return (
