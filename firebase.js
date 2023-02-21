@@ -45,10 +45,13 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     const res2 = await axios.post("http://192.168.170.179:5000/members/", {
       memberID: user.uid,
       name: name,
+      email: email,
       gymOwner: "hzaaU5hcJMgOMbPdDWdUzxn37zU2",
-      membershipType: "Gold",
+      membershipType: "",
+      admin: false,
     });
     console.log(res2);
+    return user;
   } catch (err) {
     console.error(err);
     alert(err.message);

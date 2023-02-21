@@ -9,19 +9,12 @@ import { useAuth } from "../contexts/AuthContext";
 export default function Dashboard({ navigation }) {
   //this is a listener that will check if the user is logged in or not
   const { admin, currentUser, setCurrentUser } = useAuth();
-  // onAuthStateChanged(auth, (user) => {
-  //   if (user) {
-  //     // console.log("User logged in");
-  //     console.log("poo");
-  //   } else {
-  //     navigation.navigate("HomeScreen");
-  //   }
-  // });
+
   useEffect(() => {
     if (!currentUser) {
       navigation.navigate("HomeScreen");
     }
-  }, [currentUser]);
+  }, [currentUser, navigation]);
 
   const handleLogout = async () => {
     try {

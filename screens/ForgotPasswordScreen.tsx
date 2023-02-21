@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { emailValidator } from '../core/utils';
 import Background from '../components/Background';
@@ -17,6 +17,9 @@ type Props = {
 const ForgotPasswordScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState({ value: '', error: '' });
 
+  useEffect(() => {
+    
+  }, [navigation]);
   const _onSendPressed = () => {
     const emailError = emailValidator(email.value);
 

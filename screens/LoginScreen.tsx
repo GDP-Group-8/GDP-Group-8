@@ -21,7 +21,7 @@ type Props = {
 const LoginScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
-  const { currentUser,setCurrentUser, setAdmin } = useAuth();
+  const { currentUser, setCurrentUser, setAdmin } = useAuth();
 
   // onAuthStateChanged(auth, async (user) => {
   //   if (user) {
@@ -37,9 +37,8 @@ const LoginScreen = ({ navigation }: Props) => {
     if (currentUser) {
       navigation.navigate("Dashboard");
     }
+    
   }, [currentUser, navigation]);
-  
-
 
   const _onLoginPressed = async () => {
     const emailError = emailValidator(email.value);
