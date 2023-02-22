@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Text, View, TextInput } from "react-native";
+import { Text, View, TextInput, Linking } from "react-native";
 import { Button } from "react-native-paper";
 import { onAuthStateChanged } from "firebase/auth";
 import { Agenda } from "react-native-calendars";
@@ -36,6 +36,16 @@ export default function Dashboard({ navigation }) {
         className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         Sign out
+      </Button>
+      <Button
+        title="Whoop"
+        mode="contained"
+        onPress={() =>
+          Linking.openURL("http://192.168.170.179:5000/whoop/auth")
+        }
+        className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Whoop
       </Button>
       {admin && (
         <Button
