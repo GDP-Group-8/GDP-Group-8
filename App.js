@@ -18,6 +18,7 @@ import UserDetail from "./screens/userdetail";
 import { AuthProvider } from "./contexts/AuthContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Settings from "./screens/settings";
+import ExerciseList from "./screens/exerciseList";
 
 const HomeStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -27,6 +28,7 @@ function HomeTabs() {
   return (
     <HomeTab.Navigator screenOptions={{ headerShown: false }}>
       <HomeTab.Screen name="Home" component={Dashboard} />
+      <HomeTab.Screen name="Exercises" component={ExerciseListStackScreen} />
       <HomeTab.Screen name="Admin" component={AdminStackScreen} />
     </HomeTab.Navigator>
   );
@@ -39,6 +41,15 @@ function AdminStackScreen() {
       <AdminStack.Screen name="UsersManage" component={UsersManage} />
       <AdminStack.Screen name="UserDetail" component={UserDetail} />
     </AdminStack.Navigator>
+  );
+}
+
+const ExerciseListStack = createNativeStackNavigator();
+function ExerciseListStackScreen() {
+  return (
+    <ExerciseListStack.Navigator screenOptions={{ headerShown: false }}>
+      <ExerciseListStack.Screen name="ExerciseList" component={ExerciseList} />
+    </ExerciseListStack.Navigator>
   );
 }
 
