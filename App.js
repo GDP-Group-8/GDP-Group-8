@@ -1,11 +1,12 @@
 import * as React from "react";
 import { Provider } from "react-native-paper";
 import { theme } from "./core/theme";
-import NavBar from "./components/NavBar";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-// import Signin from "./screens/signin";
+import { CleanTabBar } from "react-navigation-tabbar-collection";
+//import icon from hero icons
+import { HomeIcon, Cog8ToothIcon, FireIcon } from "react-native-heroicons/mini";
 import {
   LoginScreen,
   ForgotPasswordScreen,
@@ -26,10 +27,28 @@ const HomeTab = createBottomTabNavigator();
 
 function HomeTabs() {
   return (
-    <HomeTab.Navigator screenOptions={{ headerShown: false }}>
-      <HomeTab.Screen name="Home" component={Dashboard} />
-      <HomeTab.Screen name="Exercises" component={ExerciseListStackScreen} />
-      <HomeTab.Screen name="Admin" component={AdminStackScreen} />
+    //multiple icons for tab bar
+    <HomeTab.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      tabBar={(props) => <CleanTabBar {...props} />}
+    >
+      <HomeTab.Screen
+        name="Home"
+        component={Dashboard}
+        options={{ icon: HomeIcon }}
+      />
+      <HomeTab.Screen
+        name="Exercises"
+        component={ExerciseListStackScreen}
+        options={{ icon: FireIcon }}
+      />
+      <HomeTab.Screen
+        name="Admin"
+        component={AdminStackScreen}
+        options={{ icon: Cog8ToothIcon }}
+      />
     </HomeTab.Navigator>
   );
 }

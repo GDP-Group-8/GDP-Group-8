@@ -20,7 +20,7 @@ export default function UsersManage({ navigation }) {
   }, []);
 
   async function fetchData() {
-    const res = await axios.get("http://192.168.170.179:5000/members/");
+    const res = await axios.get("http://10.6.11.49:5000/members/");
     console.log(res.data[0]);
     setUsers(res.data);
   }
@@ -37,10 +37,10 @@ export default function UsersManage({ navigation }) {
       alert("You cannot delete yourself!");
     } else {
       const res = await axios.delete(
-        "http://192.168.170.179:5000/members/" + memberID
+        "http://10.6.11.49:5000/members/" + memberID
       );
       const res2 = await axios.delete(
-        "http://192.168.170.179:5000/firebase/" + memberID
+        "http://10.6.11.49:5000/firebase/" + memberID
       );
       console.log(res.data);
       console.log(res2.data);
