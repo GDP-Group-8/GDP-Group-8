@@ -71,18 +71,20 @@ export default function ExerciseList({ navigation }) {
       <ScrollView>
         {exercises.map((exercise, index) => {
           return (
-            <View>
-              <View className="mt-1">
-                <List.Item
-                  title={exercise.name}
-                  description={exercise.desc}
-                  left={(props) => (
-                    <List.Icon color="orange" icon="alpha-e-box" />
-                  )}
-                  onPress={() => console.log("Pressed")}
-                />
+            <View key={index}>
+              <View>
+                <View className="mt-1">
+                  <List.Item
+                    title={exercise.name}
+                    description={exercise.desc}
+                    left={(props) => (
+                      <List.Icon color="orange" icon="alpha-e-box" />
+                    )}
+                    onPress={() => console.log("Pressed")}
+                  />
+                </View>
+                <Divider />
               </View>
-              <Divider />
             </View>
           );
         })}
