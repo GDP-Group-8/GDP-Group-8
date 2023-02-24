@@ -12,18 +12,16 @@ export default function Dashboard({ navigation }) {
   const { admin, currentUser, setCurrentUser } = useAuth();
   const [dateString, setDateString] = useState(getDDMMYYYY(new Date()));
   const [classData, setClassData] = useState(NULL_OBJECT);
+
   useEffect(() => {
     if (!currentUser) {
       navigation.navigate("HomeScreen");
     }
-  }, [currentUser, navigation]);
-
-  useEffect(() => {
     // api request to get class data for the date selected
     setTimeout(() => {
       setClassData(data[dateString] || []);
     }, 1000);
-  }, [dateString]);
+  }, [dateString, currentUser, navigation]);
 
   return (
     <View style={styles.container}>
