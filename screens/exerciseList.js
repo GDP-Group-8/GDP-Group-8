@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, ScrollView, TextInput } from "react-native";
 import { Text, Divider, List, Headline, Button } from "react-native-paper";
+import { useAuth } from "../contexts/AuthContext";
 export default function ExerciseList({ navigation }) {
   const exercisesOrigin = [
     {
@@ -65,7 +66,13 @@ export default function ExerciseList({ navigation }) {
     },
   ];
   const [keywords, setKeywords] = useState("");
+  const { currentUser, admin } = useAuth();
   const [exercises, setExercises] = React.useState(exercisesOrigin);
+  useEffect(() => {
+    if (!currentUser) {
+      navigation.navigate("HomeScreen");
+    }
+  }, [currentUser, navigation]);
 
   const handleSearch = (text) => {
     setKeywords(text);
@@ -94,6 +101,9 @@ export default function ExerciseList({ navigation }) {
               <View className="mt-1">
                 <List.Item
                   title={exercise.name}
+                  onPress={() => {
+                    console.log("Pressed");
+                  }}
                   description={exercise.desc}
                   left={(props) => (
                     <List.Icon color="orange" icon="alpha-e-box" />

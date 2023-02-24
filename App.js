@@ -5,7 +5,6 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CleanTabBar } from "react-navigation-tabbar-collection";
-//import icon from hero icons
 import { HomeIcon, Cog8ToothIcon, FireIcon } from "react-native-heroicons/mini";
 import {
   LoginScreen,
@@ -16,6 +15,7 @@ import {
 import Dashboard from "./screens/dashboard";
 import UsersManage from "./screens/usersmanage";
 import UserDetail from "./screens/userdetail";
+import MyProfile from "./screens/myprofile";
 import { AuthProvider } from "./contexts/AuthContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Settings from "./screens/settings";
@@ -45,7 +45,7 @@ function HomeTabs() {
         options={{ icon: FireIcon }}
       />
       <HomeTab.Screen
-        name="Admin"
+        name="Settings"
         component={AdminStackScreen}
         options={{ icon: Cog8ToothIcon }}
       />
@@ -57,6 +57,8 @@ const AdminStack = createNativeStackNavigator();
 function AdminStackScreen() {
   return (
     <AdminStack.Navigator screenOptions={{ headerShown: false }}>
+      <AdminStack.Screen name="Settings" component={Settings} />
+      <AdminStack.Screen name="MyProfile" component={MyProfile} />
       <AdminStack.Screen name="UsersManage" component={UsersManage} />
       <AdminStack.Screen name="UserDetail" component={UserDetail} />
     </AdminStack.Navigator>
