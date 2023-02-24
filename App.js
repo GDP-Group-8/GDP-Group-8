@@ -95,4 +95,6 @@ export default function App() {
       </Provider>
     </AuthProvider>
   );
-}
+};
+
+
