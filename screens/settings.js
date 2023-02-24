@@ -3,9 +3,10 @@ import React, { useEffect } from "react";
 import { View, Text } from "react-native";
 import { Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
+import { auth, logout } from "../firebase";
 
 export default function Settings({ navigation }) {
-  const { currentUser } = useAuth();
+  const { currentUser, setCurrentUser } = useAuth();
   useEffect(() => {
     if (!currentUser) {
       navigation.navigate("HomeScreen");
@@ -21,6 +22,15 @@ export default function Settings({ navigation }) {
     navigation.navigate("UsersManage");
   };
 
+  const handleLogout = async () => {
+    try {
+      logout();
+      setCurrentUser(null);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Button mode="contained" onPress={handleMyProfilePress}>
@@ -28,6 +38,9 @@ export default function Settings({ navigation }) {
       </Button>
       <Button mode="contained" onPress={handleManageUsersPress}>
         Manage Users
+      </Button>
+      <Button title="Sign out" mode="contained" onPress={() => handleLogout()}>
+        Sign out
       </Button>
     </View>
   );
