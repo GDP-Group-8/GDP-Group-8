@@ -81,7 +81,6 @@ export default function App() {
       <Provider theme={theme}>
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Dashboard" component={HomeTabs} />
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
             <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
@@ -89,12 +88,11 @@ export default function App() {
               name="ForgotPasswordScreen"
               component={ForgotPasswordScreen}
             />
+            <Stack.Screen name="Dashboard" component={HomeTabs} />
           </Stack.Navigator>
         </NavigationContainer>
         <StatusBar style="auto" />
       </Provider>
     </AuthProvider>
   );
-};
-
-
+}

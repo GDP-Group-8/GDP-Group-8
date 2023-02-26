@@ -50,7 +50,7 @@ const LoginScreen = ({ navigation }: Props) => {
     }
     const res = await logInWithEmailAndPassword(email.value, password.value);
     const res2 = await axios.get(
-      "http://192.168.170.237:5000/members/" + res.user.uid
+      "http://192.168.170.179:5000/members/" + res.user.uid
     );
     setAdmin(res2.data[0].admin);
     setCurrentUser(res.user);
