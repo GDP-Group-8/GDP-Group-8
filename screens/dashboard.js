@@ -23,6 +23,7 @@ const GymClassesScreen = ({ navigation }) => {
   const [classesToday, setClassesToday] = useState([]);
   const [upcomingClasses, setUpcomingClasses] = useState([]);
   const [membersInClass, setMembersInClass] = useState([]);
+  const [workout, setWorkout] = useState(null);
 
   useEffect(() => {
     if (!currentUser) {
@@ -110,7 +111,13 @@ const GymClassesScreen = ({ navigation }) => {
         members: gymClass.members,
       }
     );
+
+    const res2 = await axios.get(
+      "http://192.168.170.179:5000/workouts/" + gymClass.workout
+    );
+    console.log(res2.data);
     console.log(res.data);
+    setWorkout(res2.data);
     setMembersInClass(res.data);
   };
 
@@ -203,17 +210,24 @@ const GymClassesScreen = ({ navigation }) => {
             {admin && (
               <View>
                 <Text style={styles.modalHeader}>Members booked in:</Text>
+
                 {membersInClass && (
-                  <ScrollView>
+                  <View>
                     {membersInClass.map((member, index) => (
                       <Text key={index} style={styles.modalDescription}>
                         {member.name}
                       </Text>
                     ))}
-                  </ScrollView>
+                  </View>
                 )}
               </View>
             )}
+            <Text style={styles.modalHeader}>Workout: {workout.name}</Text>
+            {workout.exercises.map((exercise, index) => (
+              <View key={index}>
+                <Text style={styles.modalDescription}>{exercise.name}</Text>
+              </View>
+            ))}
             <Button
               mode="contained"
               style={styles.closeButton}
