@@ -6,6 +6,7 @@ import Dashboard from "./screens/dashboard";
 import UsersManage from "./screens/usersmanage";
 import UserDetail from "./screens/userdetail";
 import ExerciseList from "./screens/exerciseList";
+import Instruction from "./screens/instruction";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,8 @@ export default function App() {
         }}
       >
         <Stack.Screen name="ExerciseList" component={ExerciseList} />
+        <Stack.Screen name="Instruction" component={Instruction} />
+
         {/* <Stack.Screen name="Signin" component={Signin} />
         <Stack.Screen name="UsersManage" component={UsersManage}  />
         <Stack.Screen name="UserDetail" component={UserDetail} />

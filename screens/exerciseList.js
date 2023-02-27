@@ -96,7 +96,7 @@ export default function ExerciseList({navigation}){
                                     
                                     <View className="mt-1">
                                         <List.Item
-                                            
+                                            onPress={()=>navigation.push("Instruction",{title:exercise.name})}
                                             title={exercise.name}
                                             description={exercise.desc}
                                             left={props => <List.Icon color="orange"  icon="alpha-e-box" />}
