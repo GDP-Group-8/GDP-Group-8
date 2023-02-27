@@ -1,32 +1,48 @@
-import { StatusBar } from "expo-status-bar";
-import { Text, View, TextInput } from "react-native";
-import { Button } from "react-native-paper";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, logout } from "../firebase";
-import React from "react";
+import { StyleSheet, View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { getDDMMYYYY } from "../util";
+import { useAuth } from "../contexts/AuthContext";
+import data from "../data";
+import Navbar from "../components/Navbar";
+import GymClasses from "../components/GymClasses";
+import { NULL_OBJECT } from "../constants";
 
 export default function Dashboard({ navigation }) {
   //this is a listener that will check if the user is logged in or not
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("User logged in");
-    } else {
-      navigation.navigate("Signin");
+  const { admin, currentUser, setCurrentUser } = useAuth();
+  const [dateString, setDateString] = useState(getDDMMYYYY(new Date()));
+  const [classData, setClassData] = useState(NULL_OBJECT);
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigation.navigate("HomeScreen");
     }
-  });
+    // api request to get class data for the date selected
+    setTimeout(() => {
+      setClassData(data[dateString] || []);
+    }, 1000);
+  }, [dateString, currentUser, navigation]);
 
   return (
-    <View className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <Text>Welcome to dashboard</Text>
-      <Button
-        title="Sign out"
-        mode="contained"
-        onPress={() => logout()}
-        className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-      >
-        Sign out
-      </Button>
-      <StatusBar style="auto" />
+    <View style={styles.container}>
+      <Navbar setClassData={setClassData} setDateString={setDateString} />
+      <View style={styles.body}>
+        <GymClasses classData={classData} />
+      </View>
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+  },
+  body: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: "85%",
+    fontFamily: "Roboto",
+    backgroundColor: "black",
+  },
+});
