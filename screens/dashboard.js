@@ -42,14 +42,14 @@ const GymClassesScreen = ({ navigation }) => {
   }, [navigation]);
 
   async function fetchData() {
-    const res2 = await axios.get("http://192.168.170.179:5000/classes/");
+    const res2 = await axios.get("https://gdp-api.herokuapp.com/classes/");
     // console.log(res2.data["2023-02-19"]);
     const res = await axios.get(
-      "http://192.168.170.179:5000/members/" + currentUser.uid
+      "https://gdp-api.herokuapp.com/members/" + currentUser.uid
     );
     const upcoming = res.data[0].classes;
     const res3 = await axios.post(
-      "http://192.168.170.179:5000/classes/upcoming/",
+      "https://gdp-api.herokuapp.com/classes/upcoming/",
       {
         classes: upcoming,
       }
@@ -70,13 +70,13 @@ const GymClassesScreen = ({ navigation }) => {
 
   const handleBookClass = async (classID) => {
     const res = await axios.put(
-      "http://192.168.170.179:5000/classes/" + classID,
+      "https://gdp-api.herokuapp.com/classes/" + classID,
       {
         memberID: currentUser.uid,
       }
     );
     const res2 = await axios.put(
-      "http://192.168.170.179:5000/members/" + currentUser.uid,
+      "https://gdp-api.herokuapp.com/members/" + currentUser.uid,
       {
         classID: classID,
       }
@@ -89,13 +89,13 @@ const GymClassesScreen = ({ navigation }) => {
   const handleCancelClass = async (classID) => {
     console.log(classID);
     const res = await axios.put(
-      "http://192.168.170.179:5000/classes/cancel/" + classID,
+      "https://gdp-api.herokuapp.com/classes/cancel/" + classID,
       {
         memberID: currentUser.uid,
       }
     );
     const res2 = await axios.put(
-      "http://192.168.170.179:5000/members/cancel/" + currentUser.uid,
+      "https://gdp-api.herokuapp.com/members/cancel/" + currentUser.uid,
       {
         classID: classID,
       }
@@ -107,7 +107,7 @@ const GymClassesScreen = ({ navigation }) => {
     setSelectedClass(gymClass);
     //get members in class
     const res = await axios.post(
-      "http://192.168.170.179:5000/members/getMembers",
+      "https://gdp-api.herokuapp.com/members/getMembers",
       {
         members: gymClass.members,
       }
@@ -117,7 +117,7 @@ const GymClassesScreen = ({ navigation }) => {
       setWorkout(null);
     } else {
       const res2 = await axios.get(
-        "http://192.168.170.179:5000/workouts/" + gymClass.workout
+        "https://gdp-api.herokuapp.com/workouts/" + gymClass.workout
       );
       console.log(res2.data);
       setWorkout(res2.data);

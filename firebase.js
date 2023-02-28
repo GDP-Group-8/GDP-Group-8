@@ -42,7 +42,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
     //axios post to the backend with body containing user.uid and name
-    const res2 = await axios.post("http://192.168.170.179:5000/members/", {
+    const res2 = await axios.post("https://gdp-api.herokuapp.com/members/", {
       memberID: user.uid,
       name: name,
       email: email,

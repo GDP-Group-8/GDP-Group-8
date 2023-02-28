@@ -67,18 +67,25 @@ export default function ExerciseList({ navigation }) {
   ];
   const [keywords, setKeywords] = useState("");
   const { currentUser, admin } = useAuth();
-  const [exercises, setExercises] = React.useState(exercisesOrigin);
+  const [exercises, setExercises] = React.useState([]);
   useEffect(() => {
     if (!currentUser) {
       navigation.navigate("HomeScreen");
     }
+    fetchExercises();
   }, [currentUser, navigation]);
 
   const handleSearch = (text) => {
     setKeywords(text);
   };
 
-  const filteredList = exercisesOrigin.filter((item) =>
+  async function fetchExercises() {
+    const response = await fetch("https://gdp-api.herokuapp.com/exercises");
+    const data = await response.json();
+    setExercises(data);
+  }
+
+  const filteredList = exercises.filter((item) =>
     item.name.toLowerCase().includes(keywords.toLowerCase())
   );
   return (
@@ -102,7 +109,7 @@ export default function ExerciseList({ navigation }) {
                 <List.Item
                   title={exercise.name}
                   onPress={() => {
-                    console.log("Pressed");
+                    navigation.navigate("Instruction", { exercise: exercise });
                   }}
                   description={exercise.desc}
                   left={(props) => (

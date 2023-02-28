@@ -20,6 +20,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Settings from "./screens/settings";
 import ExerciseList from "./screens/exerciseList";
+import Instruction from "./screens/instruction";
 
 const HomeStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -70,6 +71,7 @@ function ExerciseListStackScreen() {
   return (
     <ExerciseListStack.Navigator screenOptions={{ headerShown: false }}>
       <ExerciseListStack.Screen name="ExerciseList" component={ExerciseList} />
+      <ExerciseListStack.Screen name="Instruction" component={Instruction} />
     </ExerciseListStack.Navigator>
   );
 }
