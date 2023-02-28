@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, List } from "react-native-paper";
 import moment from "moment";
 import { useAuth } from "../contexts/AuthContext";
@@ -112,17 +113,20 @@ const GymClassesScreen = ({ navigation }) => {
       }
     );
 
-    const res2 = await axios.get(
-      "http://192.168.170.179:5000/workouts/" + gymClass.workout
-    );
-    console.log(res2.data);
-    console.log(res.data);
-    setWorkout(res2.data);
+    if (!gymClass.workout) {
+      setWorkout(null);
+    } else {
+      const res2 = await axios.get(
+        "http://192.168.170.179:5000/workouts/" + gymClass.workout
+      );
+      console.log(res2.data);
+      setWorkout(res2.data);
+    }
     setMembersInClass(res.data);
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.datePickerContainer}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {dates.map((date, index) => (
@@ -222,12 +226,20 @@ const GymClassesScreen = ({ navigation }) => {
                 )}
               </View>
             )}
-            <Text style={styles.modalHeader}>Workout: {workout.name}</Text>
-            {workout.exercises.map((exercise, index) => (
-              <View key={index}>
-                <Text style={styles.modalDescription}>{exercise.name}</Text>
+            {workout && (
+              <View>
+                <Text style={styles.modalHeader}>Workout: {workout.name}</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {workout.exercises.map((exercise, index) => (
+                    <View styles={styles.card}>
+                      <Text style={styles.modalDescription}>
+                        {exercise.name}
+                      </Text>
+                    </View>
+                  ))}
+                </ScrollView>
               </View>
-            ))}
+            )}
             <Button
               mode="contained"
               style={styles.closeButton}
@@ -238,14 +250,14 @@ const GymClassesScreen = ({ navigation }) => {
           </View>
         </Modal>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000", // set background color to black
+    backgroundColor: "#FFF", // set background color to black
     paddingTop: 16,
   },
   datePickerContainer: {
@@ -280,6 +292,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   card: {
+    backgroundColor: "#222", // set background color to dark gray
+    borderRadius: 8,
+    padding: 16,
+    marginRight: 16,
+    marginBottom: 16,
+  },
+  excerciseCard: {
     backgroundColor: "#222", // set background color to dark gray
     borderRadius: 8,
     padding: 16,
