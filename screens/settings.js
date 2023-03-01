@@ -24,8 +24,8 @@ export default function Settings({ navigation }) {
 
   const handleLogout = async () => {
     try {
-      setCurrentUser(null);
       logout();
+      setCurrentUser(null);
     } catch (error) {
       console.log(error);
     }

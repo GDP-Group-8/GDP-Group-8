@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
+  Card,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, List } from "react-native-paper";
@@ -19,7 +20,7 @@ const GymClassesScreen = ({ navigation }) => {
   );
   const [dates, setDates] = useState([]);
   const [selectedClass, setSelectedClass] = useState(null);
-  const { currentUser, admin } = useAuth();
+  const { currentUser, admin, currentUserUid } = useAuth();
   const [availableClasses, setAvailableClasses] = useState({});
   const [classesToday, setClassesToday] = useState([]);
   const [upcomingClasses, setUpcomingClasses] = useState([]);
@@ -39,7 +40,7 @@ const GymClassesScreen = ({ navigation }) => {
       setDates(newDates);
       fetchData();
     }
-  }, [navigation]);
+  }, [currentUser, navigation]);
 
   async function fetchData() {
     const res2 = await axios.get("https://gdp-api.herokuapp.com/classes/");
@@ -163,7 +164,7 @@ const GymClassesScreen = ({ navigation }) => {
                     mode="contained"
                     disabled={
                       gymClass.spacesAvailable === 0 ||
-                      gymClass.members.includes(currentUser.uid)
+                      gymClass.members.includes(currentUserUid)
                     }
                     style={styles.button}
                     onPress={() => handleBookClass(gymClass.id)}

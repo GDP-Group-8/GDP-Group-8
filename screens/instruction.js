@@ -31,7 +31,7 @@ export default function Instruction({ navigation, route }) {
       <Appbar.Header style={{ backgroundColor: "white" }}>
         <Appbar.BackAction
           onPress={() => {
-            navigation.navigate("ExerciseList");
+            navigation.goBack();
           }}
         />
         <Appbar.Content

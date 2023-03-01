@@ -21,7 +21,8 @@ type Props = {
 const LoginScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
-  const { currentUser, setCurrentUser, setAdmin } = useAuth();
+  const { currentUser, setCurrentUser, setAdmin, setCurrentUserUid } =
+    useAuth();
 
   // onAuthStateChanged(auth, async (user) => {
   //   if (user) {
@@ -54,6 +55,7 @@ const LoginScreen = ({ navigation }: Props) => {
     );
     setAdmin(res2.data[0].admin);
     setCurrentUser(res.user);
+    setCurrentUserUid(res.user.uid);
   };
 
   return (

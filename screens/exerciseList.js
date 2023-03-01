@@ -73,7 +73,7 @@ export default function ExerciseList({ navigation }) {
       navigation.navigate("HomeScreen");
     }
     fetchExercises();
-  }, [currentUser, navigation]);
+  }, [currentUser]);
 
   const handleSearch = (text) => {
     setKeywords(text);
