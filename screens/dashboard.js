@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   Card,
+  FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, List } from "react-native-paper";
@@ -230,7 +231,7 @@ const GymClassesScreen = ({ navigation }) => {
             {workout && (
               <View>
                 <Text style={styles.modalHeader}>Workout: {workout.name}</Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <ScrollView vertical showsHorizontalScrollIndicator={false}>
                   {workout.exercises.map((exercise, index) => (
                     <View styles={styles.card}>
                       <Text style={styles.modalDescription}>
