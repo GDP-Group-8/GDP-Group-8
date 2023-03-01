@@ -42,7 +42,7 @@ export default function Instruction({ navigation, route }) {
       <View style={{ height: 300 }}>
         <WebView
           javaScriptEnabled={true}
-          source={{ uri: route.params.exercise.demo }}
+          source={{ uri: `https://www.youtube.com/embed/${route.params.exercise.demo.toString().split("watch?v=")[1]}` }}
         />
       </View>
       <ScrollView>
