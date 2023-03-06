@@ -16,6 +16,7 @@ import Dashboard from "./screens/dashboard";
 import UsersManage from "./screens/usersmanage";
 import UserDetail from "./screens/userdetail";
 import MyProfile from "./screens/myprofile";
+import CreateClass from "./screens/createClass";
 import { AuthProvider } from "./contexts/AuthContext";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Settings from "./screens/settings";
@@ -37,7 +38,7 @@ function HomeTabs() {
     >
       <HomeTab.Screen
         name="Home"
-        component={Dashboard}
+        component={DashboardStackScreen}
         options={{ icon: HomeIcon }}
       />
       <HomeTab.Screen
@@ -51,6 +52,16 @@ function HomeTabs() {
         options={{ icon: Cog8ToothIcon }}
       />
     </HomeTab.Navigator>
+  );
+}
+
+const DashboardStack = createNativeStackNavigator();
+function DashboardStackScreen() {
+  return (
+    <DashboardStack.Navigator screenOptions={{ headerShown: false }}>
+      <DashboardStack.Screen name="Classes" component={Dashboard} />
+      <DashboardStack.Screen name="CreateClass" component={CreateClass} />
+    </DashboardStack.Navigator>
   );
 }
 

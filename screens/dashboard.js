@@ -44,14 +44,14 @@ const GymClassesScreen = ({ navigation }) => {
   }, [currentUser, navigation]);
 
   async function fetchData() {
-    const res2 = await axios.get("https://gdp-api.herokuapp.com/classes/");
+    const res2 = await axios.get("http://192.168.170.179:5000/classes/");
     // console.log(res2.data["2023-02-19"]);
     const res = await axios.get(
-      "https://gdp-api.herokuapp.com/members/" + currentUser.uid
+      "http://192.168.170.179:5000/members/" + currentUser.uid
     );
     const upcoming = res.data[0].classes;
     const res3 = await axios.post(
-      "https://gdp-api.herokuapp.com/classes/upcoming/",
+      "http://192.168.170.179:5000/classes/upcoming/",
       {
         classes: upcoming,
       }
@@ -72,13 +72,13 @@ const GymClassesScreen = ({ navigation }) => {
 
   const handleBookClass = async (classID) => {
     const res = await axios.put(
-      "https://gdp-api.herokuapp.com/classes/" + classID,
+      "http://192.168.170.179:5000/classes/" + classID,
       {
         memberID: currentUser.uid,
       }
     );
     const res2 = await axios.put(
-      "https://gdp-api.herokuapp.com/members/" + currentUser.uid,
+      "http://192.168.170.179:5000/members/" + currentUser.uid,
       {
         classID: classID,
       }
@@ -91,13 +91,13 @@ const GymClassesScreen = ({ navigation }) => {
   const handleCancelClass = async (classID) => {
     console.log(classID);
     const res = await axios.put(
-      "https://gdp-api.herokuapp.com/classes/cancel/" + classID,
+      "http://192.168.170.179:5000/classes/cancel/" + classID,
       {
         memberID: currentUser.uid,
       }
     );
     const res2 = await axios.put(
-      "https://gdp-api.herokuapp.com/members/cancel/" + currentUser.uid,
+      "http://192.168.170.179:5000/members/cancel/" + currentUser.uid,
       {
         classID: classID,
       }
@@ -109,7 +109,7 @@ const GymClassesScreen = ({ navigation }) => {
     setSelectedClass(gymClass);
     //get members in class
     const res = await axios.post(
-      "https://gdp-api.herokuapp.com/members/getMembers",
+      "http://192.168.170.179:5000/members/getMembers",
       {
         members: gymClass.members,
       }
@@ -119,7 +119,7 @@ const GymClassesScreen = ({ navigation }) => {
       setWorkout(null);
     } else {
       const res2 = await axios.get(
-        "https://gdp-api.herokuapp.com/workouts/" + gymClass.workout
+        "http://192.168.170.179:5000/workouts/" + gymClass.workout
       );
       console.log(res2.data);
       setWorkout(res2.data);
@@ -183,30 +183,41 @@ const GymClassesScreen = ({ navigation }) => {
           </Text>
         )}
         <Text style={styles.title}>Your Upcoming Classes</Text>
-        {upcomingClasses && (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {upcomingClasses.map((gymClass, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => handleClassClick(gymClass)}
-              >
-                <View style={styles.card}>
-                  <Text style={styles.className}>{gymClass.className}</Text>
-                  <Text style={styles.spaces}>
-                    {moment(gymClass.date).format("ddd, MMM D, h:mm a")}
-                  </Text>
-                  <Button
-                    mode="contained"
-                    style={styles.button}
-                    onPress={() => handleCancelClass(gymClass._id)}
-                  >
-                    Cancel
-                  </Button>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        )}
+        <View>
+          {upcomingClasses && (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {upcomingClasses.map((gymClass, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleClassClick(gymClass)}
+                >
+                  <View style={styles.card}>
+                    <Text style={styles.className}>{gymClass.className}</Text>
+                    <Text style={styles.spaces}>
+                      {moment(gymClass.date).format("ddd, MMM D, h:mm a")}
+                    </Text>
+                    <Button
+                      mode="contained"
+                      style={styles.button}
+                      onPress={() => handleCancelClass(gymClass._id)}
+                    >
+                      Cancel
+                    </Button>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          )}
+          <Button
+            mode="contained"
+            style={styles.button}
+            onPress={() => {
+              navigation.navigate("CreateClass");
+            }}
+          >
+            Create Class
+          </Button>
+        </View>
         <Modal visible={selectedClass !== null} animationType="slide">
           <View style={styles.modalContainer}>
             <Text style={styles.modalHeader}>{selectedClass?.className}</Text>
