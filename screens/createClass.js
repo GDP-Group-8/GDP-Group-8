@@ -3,49 +3,56 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   Alert,
   Modal,
   TouchableOpacity,
 } from "react-native";
+import axios from "axios";
+import { Button } from "react-native-paper";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import ExerciseSelector from "../components/ExerciseSelector";
-import { PaperSelect } from "react-native-paper-select";
 const exercises = ["Push-ups", "Squats", "Lunges", "Sit-ups"];
 
 const CreateClass = () => {
   const [className, setClassName] = useState("");
   const [description, setDescription] = useState("");
   const [capacity, setCapacity] = useState("");
-  const [date, setDate] = useState("");
-  const [workoutBlocks, setWorkoutBlocks] = useState({});
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [workoutId, setWorkoutId] = useState("");
   const [selectedExercises, setSelectedExercises] = useState([]);
-  const pickerRef = useRef();
 
   useEffect(() => {}, []);
 
-  const handleAddExercise = (block) => {
-    setWorkoutBlocks((prevBlocks) => ({
-      ...prevBlocks,
-      [block]: prevBlocks[block] ? prevBlocks[block] + 1 : 1,
-    }));
-  };
   const handleSelection = (exercises) => {
     console.log(exercises);
     setSelectedExercises(exercises);
   };
 
-  const handleExerciseSelection = (exercise) => {
-    if (selectedExercises.includes(exercise)) {
-      setSelectedExercises(
-        selectedExercises.filter((item) => item !== exercise)
-      );
-    } else {
-      setSelectedExercises([...selectedExercises, exercise]);
-    }
+  const onDateChange = async (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(false);
+    setDate(currentDate);
+    console.log(selectedDate);
   };
 
-  const handleSubmit = () => {
+  const onTimeChange = (event, selectedTime) => {
+    console.log(selectedTime);
+    const currentTime = selectedTime || date;
+    setShowTimePicker(false);
+    setDate(currentTime);
+  };
+
+  const handleShowDatePicker = () => {
+    setShowDatePicker(true);
+  };
+  const handleShowTimePicker = () => {
+    setShowTimePicker(true);
+  };
+  const handleSubmit = async () => {
     // Validate form data
     if (!className || !description || !capacity || !date) {
       Alert.alert("Error", "Please fill in all fields");
@@ -60,78 +67,48 @@ const CreateClass = () => {
       date,
       selectedExercises,
     });
+    await createWorkout();
+    // await createClass(workoutID);
 
     // Clear the form
     setClassName("");
     setDescription("");
     setCapacity("");
-    setDate("");
+    setDate(new Date());
     setSelectedExercises([]);
     // Show confirmation popup
     Alert.alert("Success", "Class created successfully");
   };
 
+  const createWorkout = async () => {
+    // console.log("create workout");
+    // console.log(selectedExercises);
+    const res = await axios.post("http://192.168.170.179:5000/workouts", {
+      exercises: selectedExercises,
+    });
+    console.log(res.data._id);
+    const res2 = await axios.post("http://192.168.170.179:5000/classes", {
+      name: className,
+      description: description,
+      capacity: capacity,
+      date: date,
+      workout: res.data._id,
+    });
+    console.log(res2);
+  };
+  const createClass = async (workoutID) => {
+    console.log(workoutId);
+    const res = await axios.post("http://192.168.170.179:5000/classes", {
+      name: className,
+      description: description,
+      capacity: capacity,
+      date: date,
+      workout: workoutID,
+    });
+    return res;
+  };
+
   return (
-    // <View style={styles.container}>
-    //   <Text style={styles.heading}>Create a Class</Text>
-    //   <TextInput
-    //     style={styles.input}
-    //     placeholder="Class Name"
-    //     value={className}
-    //     onChangeText={setClassName}
-    //   />
-    //   <TextInput
-    //     style={styles.input}
-    //     placeholder="Description"
-    //     value={description}
-    //     onChangeText={setDescription}
-    //   />
-    //   <TextInput
-    //     style={styles.input}
-    //     placeholder="Capacity"
-    //     keyboardType="numeric"
-    //     value={capacity}
-    //     onChangeText={setCapacity}
-    //   />
-    //   <TextInput
-    //     style={styles.input}
-    //     placeholder="Date"
-    //     value={date}
-    //     onChangeText={setDate}
-    //   />
-    //    <Text style={styles.subHeading}>Workout Blocks:</Text>
-    //   <View style={styles.blocksContainer}>
-    //     <View style={styles.block}>
-    //       <Text style={styles.blockHeading}>Block A:</Text>
-    //       <Button title="Add Exercise" onPress={() => handleAddExercise("A")} />
-    //       <Text style={styles.blockText}>
-    //         {workoutBlocks["A"] || 0} exercises
-    //       </Text>
-    //     </View>
-    //     <View style={styles.block}>
-    //       <Text style={styles.blockHeading}>Block B:</Text>
-    //       <Button title="Add Exercise" onPress={() => handleAddExercise("B")} />
-    //       <Text style={styles.blockText}>
-    //         {workoutBlocks["B"] || 0} exercises
-    //       </Text>
-    //     </View>
-    //     <View style={styles.block}>
-    //       <Text style={styles.blockHeading}>Block C:</Text>
-    //       <Button title="Add Exercise" onPress={() => handleAddExercise("C")} />
-    //       <Text style={styles.blockText}>
-    //         {workoutBlocks["C"] || 0} exercises
-    //       </Text>
-    //     </View>
-    //     <View style={styles.block}>
-    //       <Text style={styles.blockHeading}>Block D:</Text>
-    //       <Button title="Add Exercise" onPress={() => handleAddExercise("D")} />
-    //       <Text style={styles.blockText}>
-    //         {workoutBlocks["D"] || 0} exercises
-    //       </Text>
-    //     </View>
-    //   </View>
-    //   <Button title="Create Class" onPress={handleSubmit} />
-    // </View>
     <View style={styles.container}>
       <Text style={styles.heading}>Create a Class</Text>
       <TextInput
@@ -153,14 +130,22 @@ const CreateClass = () => {
         value={capacity}
         onChangeText={setCapacity}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Date"
-        value={date}
-        onChangeText={setDate}
-      />
+      <TouchableOpacity style={styles.dateInput} onPress={handleShowDatePicker}>
+        <Text>{date.toUTCString()}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.dateInput} onPress={handleShowTimePicker}>
+        <Text>{date.toTimeString()}</Text>
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker mode="date" value={date} onChange={onDateChange} />
+      )}
+      {showTimePicker && (
+        <DateTimePicker mode="time" value={date} onChange={onTimeChange} />
+      )}
       <ExerciseSelector onSelection={handleSelection}></ExerciseSelector>
-      <Button title="Create Class" onPress={handleSubmit} />
+      <Button mode="contained" styles={styles.button} onPress={handleSubmit}>
+        Create Class
+      </Button>
     </View>
   );
 };
@@ -176,6 +161,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+  },
+  button: {
+    marginTop: 20,
+    padding: 10,
   },
   input: {
     width: "100%",
@@ -210,6 +199,88 @@ const styles = StyleSheet.create({
   blockText: {
     fontSize: 16,
   },
+  dateInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
 });
 
 export default CreateClass;
+// <View style={styles.container}>
+//   <Text style={styles.heading}>Create a Class</Text>
+//   <TextInput
+//     style={styles.input}
+//     placeholder="Class Name"
+//     value={className}
+//     onChangeText={setClassName}
+//   />
+//   <TextInput
+//     style={styles.input}
+//     placeholder="Description"
+//     value={description}
+//     onChangeText={setDescription}
+//   />
+//   <TextInput
+//     style={styles.input}
+//     placeholder="Capacity"
+//     keyboardType="numeric"
+//     value={capacity}
+//     onChangeText={setCapacity}
+//   />
+//   <TextInput
+//     style={styles.input}
+//     placeholder="Date"
+//     value={date}
+//     onChangeText={setDate}
+//   />
+//    <Text style={styles.subHeading}>Workout Blocks:</Text>
+//   <View style={styles.blocksContainer}>
+//     <View style={styles.block}>
+//       <Text style={styles.blockHeading}>Block A:</Text>
+//       <Button title="Add Exercise" onPress={() => handleAddExercise("A")} />
+//       <Text style={styles.blockText}>
+//         {workoutBlocks["A"] || 0} exercises
+//       </Text>
+//     </View>
+//     <View style={styles.block}>
+//       <Text style={styles.blockHeading}>Block B:</Text>
+//       <Button title="Add Exercise" onPress={() => handleAddExercise("B")} />
+//       <Text style={styles.blockText}>
+//         {workoutBlocks["B"] || 0} exercises
+//       </Text>
+//     </View>
+//     <View style={styles.block}>
+//       <Text style={styles.blockHeading}>Block C:</Text>
+//       <Button title="Add Exercise" onPress={() => handleAddExercise("C")} />
+//       <Text style={styles.blockText}>
+//         {workoutBlocks["C"] || 0} exercises
+//       </Text>
+//     </View>
+//     <View style={styles.block}>
+//       <Text style={styles.blockHeading}>Block D:</Text>
+//       <Button title="Add Exercise" onPress={() => handleAddExercise("D")} />
+//       <Text style={styles.blockText}>
+//         {workoutBlocks["D"] || 0} exercises
+//       </Text>
+//     </View>
+//   </View>
+//   <Button title="Create Class" onPress={handleSubmit} />
+// </View>
+//   const handleExerciseSelection = (exercise) => {
+//     if (selectedExercises.includes(exercise)) {
+//       setSelectedExercises(
+//         selectedExercises.filter((item) => item !== exercise)
+//       );
+//     } else {
+//       setSelectedExercises([...selectedExercises, exercise]);
+//     }
+//   };
+//   const handleAddExercise = (block) => {
+//     setWorkoutBlocks((prevBlocks) => ({
+//       ...prevBlocks,
+//       [block]: prevBlocks[block] ? prevBlocks[block] + 1 : 1,
+//     }));
+//   };

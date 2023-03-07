@@ -39,9 +39,13 @@ const GymClassesScreen = ({ navigation }) => {
         newDates.push(date);
       }
       setDates(newDates);
-      fetchData();
+      const unsubscribe = navigation.addListener("focus", () => {
+        fetchData();
+      });
+      return unsubscribe;
     }
   }, [currentUser, navigation]);
+  //refresh data when we navigate to this page
 
   async function fetchData() {
     const res2 = await axios.get("http://192.168.170.179:5000/classes/");

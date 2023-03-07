@@ -1,16 +1,34 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 
 const ExerciseSelector = ({ onSelection }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedExercises, setSelectedExercises] = useState([]);
+  const [availableExercises, setAvailableExercises] = useState([]);
 
-  const availableExercises = [
-    { name: "Exercise 1", id: "1" },
-    { name: "Exercise 2", id: "2" },
-    { name: "Exercise 3", id: "3" },
-    { name: "Exercise 4", id: "4" },
-  ];
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const response = await fetch("http://192.168.170.179:5000/exercises");
+    const data = await response.json();
+    setAvailableExercises(data);
+  };
+
+  //   tcons availableExercises = [
+  //     { name: "Exercise 1", id: "1" },
+  //     { name: "Exercise 2", id: "2" },
+  //     { name: "Exercise 3", id: "3" },
+  //     { name: "Exercise 4", id: "4" },
+  //   ];
 
   const handleExerciseSelection = (exercise) => {
     const isSelected = selectedExercises.includes(exercise);
@@ -52,18 +70,21 @@ const ExerciseSelector = ({ onSelection }) => {
       <Modal animationType="slide" transparent={false} visible={modalVisible}>
         <View style={styles.modal}>
           <Text style={styles.title}>Select exercises:</Text>
-          {availableExercises.map((exercise) => (
-            <TouchableOpacity
-              key={exercise.id}
-              style={[
-                styles.exercise,
-                selectedExercises.includes(exercise) && styles.selectedExercise,
-              ]}
-              onPress={() => handleExerciseSelection(exercise)}
-            >
-              <Text>{exercise.name}</Text>
-            </TouchableOpacity>
-          ))}
+          <ScrollView>
+            {availableExercises.map((exercise) => (
+              <TouchableOpacity
+                key={exercise.id}
+                style={[
+                  styles.exercise,
+                  selectedExercises.includes(exercise) &&
+                    styles.selectedExercise,
+                ]}
+                onPress={() => handleExerciseSelection(exercise)}
+              >
+                <Text>{exercise.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
           <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
             <Text style={styles.submitText}>Submit</Text>
           </TouchableOpacity>
