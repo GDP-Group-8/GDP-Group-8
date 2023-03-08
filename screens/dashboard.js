@@ -212,15 +212,17 @@ const GymClassesScreen = ({ navigation }) => {
               ))}
             </ScrollView>
           )}
-          <Button
-            mode="contained"
-            style={styles.button}
-            onPress={() => {
-              navigation.navigate("CreateClass");
-            }}
-          >
-            Create Class
-          </Button>
+          {admin && (
+            <Button
+              mode="contained"
+              style={styles.button}
+              onPress={() => {
+                navigation.navigate("CreateClass");
+              }}
+            >
+              Create Class
+            </Button>
+          )}
         </View>
         <Modal visible={selectedClass !== null} animationType="slide">
           <View style={styles.modalContainer}>
