@@ -15,7 +15,7 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import ExerciseSelector from "../components/ExerciseSelector";
 const exercises = ["Push-ups", "Squats", "Lunges", "Sit-ups"];
 
-const CreateClass = () => {
+const CreateClass = ({ navigation }) => {
   const [className, setClassName] = useState("");
   const [description, setDescription] = useState("");
   const [capacity, setCapacity] = useState("");
@@ -87,11 +87,16 @@ const CreateClass = () => {
       exercises: selectedExercises,
     });
     console.log(res.data._id);
+    const formattedDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .replace("Z", "+00:00");
     const res2 = await axios.post("http://192.168.170.179:5000/classes", {
       name: className,
       description: description,
       capacity: capacity,
-      date: date,
+      date: formattedDate,
       workout: res.data._id,
     });
     console.log(res2);
@@ -145,6 +150,15 @@ const CreateClass = () => {
       <ExerciseSelector onSelection={handleSelection}></ExerciseSelector>
       <Button mode="contained" styles={styles.button} onPress={handleSubmit}>
         Create Class
+      </Button>
+      <Button
+        mode="contained"
+        styles={styles.button}
+        onPress={() => {
+          navigation.navigate("CreateWorkout");
+        }}
+      >
+        Create Workout
       </Button>
     </View>
   );

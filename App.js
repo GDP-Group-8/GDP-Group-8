@@ -22,7 +22,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Settings from "./screens/settings";
 import ExerciseList from "./screens/exerciseList";
 import Instruction from "./screens/instruction";
-
+import CreateWorkoutScreen from "./screens/CreateWorkout";
 const HomeStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const HomeTab = createBottomTabNavigator();
@@ -61,6 +61,10 @@ function DashboardStackScreen() {
     <DashboardStack.Navigator screenOptions={{ headerShown: false }}>
       <DashboardStack.Screen name="Classes" component={Dashboard} />
       <DashboardStack.Screen name="CreateClass" component={CreateClass} />
+      <DashboardStack.Screen
+        name="CreateWorkout"
+        component={CreateWorkoutScreen}
+      />
     </DashboardStack.Navigator>
   );
 }
