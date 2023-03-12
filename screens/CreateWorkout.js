@@ -7,7 +7,12 @@ import {
   StyleSheet,
   ScrollView,
   FlatList,
+  Image,
+  TouchableOpacity,
 } from "react-native";
+import { FontFamily, Color } from "../GlobalStyles";
+import { LinearGradient } from "expo-linear-gradient";
+
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SearchableDropdown from "react-native-searchable-dropdown";
 import { useAuth } from "../contexts/AuthContext";
@@ -55,29 +60,48 @@ const ExerciseCard = ({
   };
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>Exercise Name</Text>
-      <ExerciseDropdown exercises={exercises} onChange={handleExerciseChange} />
+    <View style={styles.exerciseContainer}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Exercise Name</Text>
+        <ExerciseDropdown
+          exercises={exercises}
+          onChange={handleExerciseChange}
+        />
+        {/* <TouchableOpacity style={styles.helpButton}>
+          <Text style={styles.helpButtonText}>?</Text>
+          <Image
+            style={styles.helpButtonImage}
+            resizeMode="cover"
+            source={require("../assets/ellipse-1.png")}
+          />
+        </TouchableOpacity> */}
+      </View>
+
       {selectedExercise && (
-        <>
+        <View style={styles.body}>
           {sets.map((set, index) => (
-            <View key={index} style={styles.setRow}>
-              <Text style={styles.repsInput}>Set {index + 1}:</Text>
+            <View key={index} style={styles.row}>
+              <Text style={styles.repsText}>Set {index + 1}:</Text>
               <TextInput
-                style={styles.setLabel}
+                style={styles.weightText}
                 keyboardType="numeric"
                 placeholder="Reps"
+                placeholderTextColor={Color.gainsboro_100}
                 value={set.reps}
                 onChangeText={(reps) => handleSetRepsChange(index, reps)}
               />
-              <Button
-                title="Remove Set"
+              <TouchableOpacity
+                style={styles.removeButton}
                 onPress={() => handleRemoveSet(index)}
-              />
+              >
+                <Text style={styles.removeButtonText}>-</Text>
+              </TouchableOpacity>
             </View>
           ))}
-          <Button title="Add Set" onPress={handleAddSet} />
-        </>
+          <TouchableOpacity style={styles.addButton} onPress={handleAddSet}>
+            <Text style={styles.addButtonText}>+</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
@@ -102,7 +126,7 @@ const ExerciseDropdown = ({ exercises, onChange }) => {
       <SearchableDropdown
         onTextChange={(text) => console.log(text)}
         onItemSelect={handleExerciseChange}
-        containerStyle={styles.dropdownContainer}
+        // containerStyle={styles.dropdownContainer}
         itemStyle={styles.dropdownItem}
         itemTextStyle={styles.dropdownItemText}
         itemsContainerStyle={styles.dropdownItemsContainer}
@@ -110,6 +134,8 @@ const ExerciseDropdown = ({ exercises, onChange }) => {
         placeholder={
           selectedExercise ? selectedExercise.name : "Select Exercise"
         }
+        placeholderTextColor={Color.gainsboro_100}
+        placeholderStyle={styles.dropdownItemText}
         resetValue={false}
         textInputProps={{ style: styles.dropdownTextInput }}
       />
@@ -161,33 +187,48 @@ const CreateWorkoutScreen = () => {
       exercises: workoutData,
     };
     console.log(workout);
-    const res = await axios.post("http://192.168.170.179:5000/exercises", {
+    const res = await axios.post("http://192.168.170.179:5000/workouts", {
       name: workoutName,
       type: workoutType,
       member_id: currentUserUid,
       exercises: workoutData,
     });
     console.log(res);
+    alert("Workout Saved");
   };
 
   return (
     <SafeAreaProvider>
-      <View style={styles.container}>
-        <View style={styles.inputs}>
-          <TextInput
-            style={styles.input}
-            placeholder="Workout Name"
-            onChangeText={setWorkoutName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Workout Type"
-            onChangeText={setWorkoutType}
-          />
+      <View style={[styles.container, { backgroundColor: Color.gray_100 }]}>
+        <View style={styles.header}>
+          <View style={{ flexDirection: "column" }}>
+            <Text style={styles.title}>Workout Name</Text>
+            <TextInput
+              style={styles.input}
+              placeholderTextColor={Color.gainsboro_100}
+              placeholder="Enter workout name"
+              onChangeText={setWorkoutName}
+            />
+          </View>
+          <View style={{ flexDirection: "column" }}>
+            <Text style={styles.title}>Workout Type</Text>
+            <TextInput
+              style={styles.input}
+              placeholderTextColor={Color.gainsboro_100}
+              placeholder="Enter workout type"
+              onChangeText={setWorkoutType}
+            />
+          </View>
         </View>
-        <View>{exerciseCards}</View>
-        <Button title="Add Exercise" onPress={handleAddExercise} />
-        <Button title="Save Workout" onPress={handleSaveWorkout} />
+
+        <View style={styles.body}>{exerciseCards}</View>
+
+        <TouchableOpacity style={styles.addButton} onPress={handleAddExercise}>
+          <Text style={styles.addButtonText}>Add Exercise</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.addButton} onPress={handleSaveWorkout}>
+          <Text style={styles.addButtonText}>Save Workout</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaProvider>
   );
@@ -260,10 +301,117 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+    fontSize: 16,
+    fontWeight: "bold",
+    color: Color.gainsboro_100,
   },
   dropdownItemText: {
     fontSize: 16,
+    fontWeight: "bold",
+    color: Color.gainsboro_100,
+  },
+  exerciseContainer: {
+    backgroundColor: Color.darkslategray,
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 20,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: Color.gainsboro_100,
+  },
+  helpButton: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: Color.gainsboro_100,
+  },
+  helpButtonText: {
+    fontSize: 16,
+    marginRight: 5,
+    color: Color.gainsboro_100,
+  },
+  helpButtonImage: {
+    width: 20,
+    height: 20,
+  },
+  body: {
+    paddingBottom: 20,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  repsText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: Color.gainsboro_100,
+  },
+  weightText: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: Color.gainsboro_100,
+  },
+  set1Text: {
+    flex: 1,
+    fontSize: 16,
+    textAlign: "center",
+    color: Color.gainsboro_100,
+  },
+  set2Text: {
+    flex: 1,
+    fontSize: 16,
+    textAlign: "center",
+    color: Color.gainsboro_100,
+  },
+  set3Text: {
+    flex: 1,
+    fontSize: 16,
+    textAlign: "center",
+    color: Color.gainsboro_100,
+  },
+  removeButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "#FF0000",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  removeButtonText: {
+    fontSize: 16,
+    color: "#FFFFFF",
+    fontWeight: "bold",
+  },
+  addButton: {
+    backgroundColor: Color.darkgoldenrod_200,
+    width: "100%",
+    height: 40,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addButtonText: {
+    fontSize: 20,
+    color: Color.gainsboro_100,
+    fontWeight: "bold",
   },
 });
-
 export default CreateWorkoutScreen;

@@ -12,6 +12,7 @@ import {
   HomeScreen,
   RegisterScreen,
 } from "./screens";
+import { Color } from "./GlobalStyles";
 import Dashboard from "./screens/dashboard";
 import UsersManage from "./screens/usersmanage";
 import UserDetail from "./screens/userdetail";
@@ -27,6 +28,17 @@ const HomeStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const HomeTab = createBottomTabNavigator();
 
+const navColour = {
+  primary: Color.darkgoldenrod_100,
+  secondary: Color.gray_100,
+  success: Color.darkgoldenrod_100,
+  danger: Color.darkgoldenrod_100,
+  warning: Color.darkgoldenrod_100,
+  info: Color.darkgoldenrod_100,
+  light: Color.gray_100, //Background Color
+  dark: Color.gray_100,
+};
+
 function HomeTabs() {
   return (
     //multiple icons for tab bar
@@ -34,12 +46,12 @@ function HomeTabs() {
       screenOptions={{
         headerShown: false,
       }}
-      tabBar={(props) => <CleanTabBar {...props} />}
+      tabBar={(props) => <CleanTabBar {...props} colorPalette={navColour} />}
     >
       <HomeTab.Screen
         name="Home"
         component={DashboardStackScreen}
-        options={{ icon: HomeIcon }}
+        options={{ icon: HomeIcon, color: "primary" }}
       />
       <HomeTab.Screen
         name="Exercises"
