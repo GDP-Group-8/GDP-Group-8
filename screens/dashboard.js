@@ -8,12 +8,14 @@ import {
   Modal,
   Card,
   FlatList,
+  TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, List } from "react-native-paper";
 import moment from "moment";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
+import ExerciseBlock from "../components/ExerciseBlock";
 
 const GymClassesScreen = ({ navigation }) => {
   const [selectedDate, setSelectedDate] = useState(
@@ -245,20 +247,20 @@ const GymClassesScreen = ({ navigation }) => {
                 )}
               </View>
             )}
+
             {workout && (
-              <View>
-                <Text style={styles.modalHeader}>Workout: {workout.name}</Text>
-                <ScrollView vertical showsHorizontalScrollIndicator={false}>
-                  {workout.exercises.map((exercise, index) => (
-                    <View styles={styles.card}>
-                      <Text style={styles.modalDescription}>
-                        {exercise.name}
-                      </Text>
-                    </View>
-                  ))}
-                </ScrollView>
-              </View>
+              <ScrollView vertical showsHorizontalScrollIndicator={false}>
+                <View>
+                  <Text style={styles.modalHeader}>
+                    Workout: {workout.name}
+                  </Text>
+                  <ScrollView vertical showsVerticalScrollIndicator={false}>
+                    <ExerciseBlock exercises={workout.exercises} />
+                  </ScrollView>
+                </View>
+              </ScrollView>
             )}
+
             <Button
               mode="contained"
               style={styles.closeButton}
@@ -371,6 +373,55 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     marginTop: "auto",
+  },
+  exerciseBlock: {
+    backgroundColor: "#444",
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+  },
+  exerciseName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#fff",
+    marginBottom: 8,
+  },
+  setContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  setLabel: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#fff",
+    marginRight: 8,
+  },
+  repLabel: {
+    fontSize: 14,
+    color: "#fff",
+    marginLeft: 16,
+    marginRight: 8,
+  },
+  repInput: {
+    width: 50,
+    height: 30,
+    backgroundColor: "#fff",
+    borderRadius: 4,
+    paddingHorizontal: 4,
+    marginRight: 8,
+  },
+  weightLabel: {
+    fontSize: 14,
+    color: "#fff",
+    marginLeft: 16,
+    marginRight: 8,
+  },
+  weightInput: {
+    width: 60,
+    height: 30,
+    backgroundColor: "#fff",
+    borderRadius: 4,
+    paddingHorizontal: 4,
   },
 });
 

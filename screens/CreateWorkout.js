@@ -143,7 +143,7 @@ const ExerciseDropdown = ({ exercises, onChange }) => {
   );
 };
 
-const CreateWorkoutScreen = () => {
+const CreateWorkoutScreen = ({ navigation }) => {
   const [exercises, setExercises] = useState([]);
   const [workoutData, setWorkoutData] = useState([]);
   const [workoutName, setWorkoutName] = useState("");
@@ -193,8 +193,10 @@ const CreateWorkoutScreen = () => {
       member_id: currentUserUid,
       exercises: workoutData,
     });
-    console.log(res);
+    console.log(res.data._id);
     alert("Workout Saved");
+    //go back with workout id
+    navigation.navigate("CreateClass", { workoutId: res.data._id });
   };
 
   return (
