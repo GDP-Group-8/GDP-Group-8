@@ -89,35 +89,43 @@ export default function ExerciseList({ navigation }) {
     item.name.toLowerCase().includes(keywords.toLowerCase())
   );
   return (
-    <View className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-      <Headline style={{ textAlign: "center" }}>Exercises List</Headline>
-      <View className="flex flex-row mt-5">
+    <View className=" py-8 shadow sm:rounded-lg sm:px-10" style={{backgroundColor:"rgb(31,31,31)"}}>
+      {/* <Headline style={{ textAlign: "center",marginBottom:0,color:'white' }}>Exercises List</Headline> */}
+      <View className="flex flex-row mt-5" style={{width:'80%',marginLeft:"10%",marginBottom:30}}>
         <TextInput
           label="Exercise Name"
           value={keywords}
-          placeholder="Search exercises"
-          onC
+          placeholder="Search Exercises"
+          placeholderTextColor={'white'}
+          style={{backgroundColor:'rgb(47,47,47)',border:"1px solid white",color:"white"}}
           onChangeText={handleSearch}
-          className="block flex-grow appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+          className="block flex-grow appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm  focus:outline-none  sm:text-sm"
         />
       </View>
-      <ScrollView>
+      <ScrollView style={{backgroundColor:"rgb(47,47,47)",marginBottom:60}} >
         {filteredList.map((exercise, index) => {
           return (
             <View key={index}>
-              <View className="mt-1">
+              <View style={{minHeight:60}}>
                 <List.Item
                   title={exercise.name}
+                  titleStyle={{color:"white",marginBottom:5,fontWeight:"bold"}}
+                  descriptionStyle={{color:"white"}}
+                  style={{backgroundColor:'rgb(47,47,47)',borderTopWidth:1,borderTopColor:"white",paddingLeft:10}}
                   onPress={() => {
                     navigation.navigate("Instruction", { exercise: exercise });
                   }}
+                  
                   description={exercise.desc}
                   left={(props) => (
-                    <List.Icon color="orange" icon="alpha-e-box" />
+                    <List.Icon color="orange" icon="triangle" style={{transform:[{rotate:"90deg"}]}} />
                   )}
                 />
               </View>
+              
+              
             </View>
+            
           );
         })}
       </ScrollView>
