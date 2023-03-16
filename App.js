@@ -6,6 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CleanTabBar } from "react-navigation-tabbar-collection";
 import { HomeIcon, Cog8ToothIcon, FireIcon } from "react-native-heroicons/mini";
+import { Camera } from 'expo-camera';
 import {
   LoginScreen,
   ForgotPasswordScreen,
@@ -98,3 +99,7 @@ export default function App() {
     </AuthProvider>
   );
 }
+
+
+ 
+
