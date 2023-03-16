@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CleanTabBar } from "react-navigation-tabbar-collection";
 import { HomeIcon, Cog8ToothIcon, FireIcon } from "react-native-heroicons/mini";
 import { Camera } from 'expo-camera';
+
 import {
   LoginScreen,
   ForgotPasswordScreen,
@@ -22,6 +23,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Settings from "./screens/settings";
 import ExerciseList from "./screens/exerciseList";
 import Instruction from "./screens/instruction";
+import Camera from "./screens/camera.js";
+
 
 const HomeStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -73,6 +76,7 @@ function ExerciseListStackScreen() {
     <ExerciseListStack.Navigator screenOptions={{ headerShown: false }}>
       <ExerciseListStack.Screen name="ExerciseList" component={ExerciseList} />
       <ExerciseListStack.Screen name="Instruction" component={Instruction} />
+      <ExerciseListStack.Screen name="Camera" component={CameraScreen} />
     </ExerciseListStack.Navigator>
   );
 }
