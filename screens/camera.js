@@ -1,12 +1,12 @@
-import * as React from "react";
-import { View } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text } from "react-native";
 import { Camera } from 'expo-camera';
 
 function CameraScreen() {
-  const [hasPermission, setHasPermission] = React.useState(null);
-  const [cameraRef, setCameraRef] = React.useState(null);
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === 'granted');
