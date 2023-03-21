@@ -24,6 +24,8 @@ import Settings from "./screens/settings";
 import ExerciseList from "./screens/exerciseList";
 import Instruction from "./screens/instruction";
 import CreateWorkoutScreen from "./screens/CreateWorkout";
+import PersonalRecords from "./screens/personalRecords";
+
 const HomeStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const HomeTab = createBottomTabNavigator();
@@ -57,6 +59,11 @@ function HomeTabs() {
         name="Exercises"
         component={ExerciseListStackScreen}
         options={{ icon: FireIcon }}
+      />
+      <HomeTab.Screen
+        name="Records"
+        component={PersonalRecordsStackScreen}
+        options={{ icon: Cog8ToothIcon }}
       />
       <HomeTab.Screen
         name="Settings"
@@ -100,6 +107,18 @@ function ExerciseListStackScreen() {
       <ExerciseListStack.Screen name="ExerciseList" component={ExerciseList} />
       <ExerciseListStack.Screen name="Instruction" component={Instruction} />
     </ExerciseListStack.Navigator>
+  );
+}
+
+const PersonalRecordsStack = createNativeStackNavigator();
+function PersonalRecordsStackScreen() {
+  return (
+    <PersonalRecordsStack.Navigator screenOptions={{ headerShown: false }}>
+      <PersonalRecordsStack.Screen
+        name="PersonalRecords"
+        component={PersonalRecords}
+      />
+    </PersonalRecordsStack.Navigator>
   );
 }
 
