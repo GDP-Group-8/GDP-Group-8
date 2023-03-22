@@ -21,7 +21,7 @@ export default function MyProfile({ navigation }) {
     const res2 = await axios.get(
       "https://gdp-api.herokuapp.com/members/" + currentUser.uid
     );
-    console.log(res2.data[0]);
+    console.log(void res2.data[0]);
     setName(res2.data[0].name);
     setEmail(res2.data[0].email);
   }

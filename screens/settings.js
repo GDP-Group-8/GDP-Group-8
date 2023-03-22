@@ -27,7 +27,7 @@ export default function Settings({ navigation }) {
       logout();
       setCurrentUser(null);
     } catch (error) {
-      console.log(error);
+      console.log(void error);
     }
   };
 

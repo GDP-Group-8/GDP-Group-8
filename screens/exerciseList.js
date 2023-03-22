@@ -89,14 +89,25 @@ export default function ExerciseList({ navigation }) {
     item.name.toLowerCase().includes(keywords.toLowerCase())
   );
   return (
-    <View className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-      <Headline style={{ textAlign: "center" }}>Exercises List</Headline>
+    <View
+      className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10"
+      style={{ backgroundColor: "black" }}
+    >
+      <Headline style={{ textAlign: "center", color: "white" }}>
+        Exercises List
+      </Headline>
       <View className="flex flex-row mt-5">
         <TextInput
           label="Exercise Name"
           value={keywords}
           placeholder="Search exercises"
           onChangeText={handleSearch}
+          placeholderTextColor="#d9d9d9"
+          style={{
+            backgroundColor: "#222",
+            borderColor: "white",
+            borderWidth: 3,
+          }}
           className="block flex-grow appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
         />
       </View>
@@ -107,12 +118,14 @@ export default function ExerciseList({ navigation }) {
               <View className="mt-1">
                 <List.Item
                   title={exercise.name}
-                  onPress={() => {
-                    navigation.navigate("Instruction", { exercise: exercise });
-                  }}
+                  onPress={() =>
+                    navigation.navigate("Instruction", { exercise: exercise })
+                  }
+                  titleStyle={{ color: "white" }}
+                  style={{ color: "red" }}
                   description={exercise.desc}
-                  left={(props) => (
-                    <List.Icon color="orange" icon="alpha-e-box" />
+                  left={() => (
+                    <List.Icon color="#D9D9D9" icon={`alpha-${"o"}-box`} />
                   )}
                 />
               </View>

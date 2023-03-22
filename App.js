@@ -5,7 +5,12 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CleanTabBar } from "react-navigation-tabbar-collection";
-import { HomeIcon, Cog8ToothIcon, FireIcon } from "react-native-heroicons/mini";
+import {
+  HomeIcon,
+  Cog8ToothIcon,
+  FireIcon,
+  Cog6ToothIcon,
+} from "react-native-heroicons/mini";
 import {
   LoginScreen,
   ForgotPasswordScreen,
@@ -32,6 +37,10 @@ function HomeTabs() {
     <HomeTab.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarLabelStyle: {
+          color: "blue",
+          textShadowColor: "red",
+        },
       }}
       tabBar={(props) => <CleanTabBar {...props} />}
     >
@@ -43,12 +52,15 @@ function HomeTabs() {
       <HomeTab.Screen
         name="Exercises"
         component={ExerciseListStackScreen}
-        options={{ icon: FireIcon }}
+        options={{
+          icon: FireIcon,
+          tabBarLabelStyle: { backgroundColor: "green" },
+        }}
       />
       <HomeTab.Screen
         name="Settings"
         component={AdminStackScreen}
-        options={{ icon: Cog8ToothIcon }}
+        options={{ icon: Cog6ToothIcon }}
       />
     </HomeTab.Navigator>
   );

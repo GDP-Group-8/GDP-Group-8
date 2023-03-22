@@ -24,7 +24,7 @@ export default function UsersManage({ navigation }) {
 
   async function fetchData() {
     const res = await axios.get("https://gdp-api.herokuapp.com/members/");
-    console.log(res.data[0]);
+    console.log(void res.data[0]);
     setUsers(res.data);
   }
 
@@ -45,8 +45,8 @@ export default function UsersManage({ navigation }) {
       const res2 = await axios.delete(
         "https://gdp-api.herokuapp.com/firebase/" + memberID
       );
-      console.log(res.data);
-      console.log(res2.data);
+      console.log(void res.data);
+      console.log(void res2.data);
     }
     fetchData();
   };

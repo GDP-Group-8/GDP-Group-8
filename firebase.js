@@ -15,8 +15,10 @@ import {
   FIREBASE_APP_ID,
   FIREBASE_MEASUREMENT_ID,
 } from "@env";
+
 import axios from "axios";
 import { useAuth } from "./contexts/AuthContext";
+
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,
   authDomain: FIREBASE_AUTH_DOMAIN,
@@ -51,7 +53,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       admin: false,
     });
     await res2;
-    console.log(res2);
+    console.log(void res2);
     return user;
   } catch (err) {
     console.error(err);
