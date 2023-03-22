@@ -45,8 +45,8 @@ export default function UsersManage({ navigation }) {
       const res2 = await axios.delete(
         "http://192.168.170.179:5000/firebase/" + memberID
       );
-      console.log(res.data);
-      console.log(res2.data);
+      console.log(void res.data);
+      console.log(void res2.data);
     }
     fetchData();
   };

@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
-import { View, Text, Linking } from "react-native";
+import { View, Text, Linking, SafeAreaView } from "react-native";
 import { Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
 import { logout } from "../firebase";
@@ -28,7 +28,7 @@ export default function Settings({ navigation }) {
       logout();
       setCurrentUser(null);
     } catch (error) {
-      console.log(error);
+      console.log(void error);
     }
   };
 
@@ -42,12 +42,12 @@ export default function Settings({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "rgb(31,31,31)" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "rgb(31,31,31)" }}>
       <View style={{ margin: 20 }}>
         <Button
           mode="contained"
           onPress={handleMyProfilePress}
-          style={{ marginBottom: 20 }}
+          style={{ marginBottom: 20, backgroundColor: "orange" }}
           labelStyle={{ color: "white" }}
           contentStyle={{ paddingVertical: 5 }}
         >
@@ -56,7 +56,7 @@ export default function Settings({ navigation }) {
         <Button
           mode="contained"
           onPress={handleManageUsersPress}
-          style={{ marginBottom: 20 }}
+          style={{ marginBottom: 20, backgroundColor: "orange" }}
           labelStyle={{ color: "white" }}
           contentStyle={{ paddingVertical: 5 }}
         >
@@ -65,7 +65,7 @@ export default function Settings({ navigation }) {
         <Button
           mode="contained"
           onPress={whoop}
-          style={{ marginBottom: 20 }}
+          style={{ marginBottom: 20, backgroundColor: "orange" }}
           labelStyle={{ color: "white" }}
           contentStyle={{ paddingVertical: 5 }}
         >
@@ -75,11 +75,12 @@ export default function Settings({ navigation }) {
           mode="contained"
           onPress={() => handleLogout()}
           labelStyle={{ color: "white" }}
+          style={{ backgroundColor: "orange" }}
           contentStyle={{ paddingVertical: 5 }}
         >
           Sign out
         </Button>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

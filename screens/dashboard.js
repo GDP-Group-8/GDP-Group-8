@@ -9,6 +9,8 @@ import {
   Card,
   FlatList,
   TextInput,
+  Image,
+  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, List } from "react-native-paper";
@@ -16,6 +18,24 @@ import moment from "moment";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import ExerciseBlock from "../components/ExerciseBlock";
+import CalenderStrip from "react-native-calendar-strip";
+const images = {
+  image_0: require("../assets/image_0.png"),
+  image_1: require("../assets/image_1.png"),
+  image_2: require("../assets/image_2.png"),
+  image_3: require("../assets/image_3.png"),
+  image_4: require("../assets/image_4.png"),
+  image_5: require("../assets/image_5.png"),
+  image_6: require("../assets/image_6.png"),
+  image_7: require("../assets/image_7.png"),
+  image_8: require("../assets/image_8.png"),
+  image_9: require("../assets/image_9.png"),
+  image_10: require("../assets/image_10.png"),
+  image_11: require("../assets/image_11.png"),
+};
+// import { Row, Col } from 'react-native-flexbox-grid';
+
+const { width, height } = Dimensions.get("window");
 
 const GymClassesScreen = ({ navigation }) => {
   const [selectedDate, setSelectedDate] = useState(
@@ -31,6 +51,7 @@ const GymClassesScreen = ({ navigation }) => {
   const [workout, setWorkout] = useState(null);
   const [bookedIn, setBookedIn] = useState(false);
 
+  const [imageIndex, setImageIndex] = useState("image_0");
   useEffect(() => {
     if (!currentUser) {
       navigation.navigate("HomeScreen");
@@ -65,7 +86,6 @@ const GymClassesScreen = ({ navigation }) => {
       }
     );
     setUpcomingClasses(res3.data);
-    console.log(res3.data);
     setAvailableClasses(res2.data);
 
     setClassesToday(res2.data[selectedDate]);
@@ -79,6 +99,7 @@ const GymClassesScreen = ({ navigation }) => {
   };
 
   const handleBookClass = async (classID, workoutId) => {
+    console.log(workoutId);
     try {
       const res = await axios.put(
         "http://192.168.170.179:5000/classes/" + classID,
@@ -112,7 +133,7 @@ const GymClassesScreen = ({ navigation }) => {
   };
 
   const handleCancelClass = async (classID) => {
-    console.log(classID);
+    console.log(void classID);
     const res = await axios.put(
       "http://192.168.170.179:5000/classes/cancel/" + classID,
       {
@@ -145,7 +166,7 @@ const GymClassesScreen = ({ navigation }) => {
       const res2 = await axios.get(
         "http://192.168.170.179:5000/workouts/" + gymClass.workout
       );
-      console.log(res2.data);
+      console.log(void res2.data);
       setWorkout(res2.data);
     }
     setMembersInClass(res.data);
@@ -192,73 +213,111 @@ const GymClassesScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.datePickerContainer}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {dates.map((date, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handleDateChange(date)}
-              style={[
-                styles.datePicker,
-                selectedDate === date.format("YYYY-MM-DD") &&
-                  styles.selectedDate,
-                moment().isSame(date, "day") && styles.todayDate,
-              ]}
-            >
-              <Text style={styles.dateText}>{date.format("ddd, MMM D")}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
+      <CalenderStrip
+        numDaysInWeek={7}
+        scrollable
+        scrollerPaging
+        onDateSelected={(date) => handleDateChange(moment(date))}
+        scrollToOnSetSelectedDate={false}
+        selectedDate={moment(selectedDate)}
+        style={{ height: 100, width }}
+        calendarHeaderStyle={{ color: "white" }}
+        dateNumberStyle={{ color: "white", fontSize: 15, fontWeight: "900" }}
+        dateNameStyle={{ color: "white", fontSize: 16, fontWeight: "900" }}
+        highlightDateNumberStyle={{
+          color: "white",
+          borderBottomColor: "orange",
+          borderBottomWidth: 4,
+        }}
+      />
+      <View
+        style={{ width: "100%", height: 2, backgroundColor: "white" }}
+      ></View>
       <View style={styles.availableClassesContainer}>
-        <Text style={styles.sectionTitle}>Available Classes</Text>
-        {classesToday && (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {classesToday.map((gymClass, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => handleClassClick(gymClass)}
-              >
-                <View style={styles.card}>
-                  <Text style={styles.className}>{gymClass.className}</Text>
-                  <Text style={styles.spaces}>
-                    Spaces Available: {gymClass.spacesAvailable}
-                  </Text>
-                  <Button
-                    mode="contained"
-                    disabled={
-                      gymClass.spacesAvailable === 0 ||
-                      gymClass.members.includes(currentUserUid)
-                    }
-                    style={styles.button}
-                    onPress={() =>
-                      handleBookClass(gymClass.id, gymClass.workout)
-                    }
-                  >
-                    Book Now
-                  </Button>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        )}
-        {!classesToday && (
-          <Text style={styles.noClassesText}>
-            No classes available on this day
-          </Text>
-        )}
-        <Text style={styles.title}>Your Upcoming Classes</Text>
         <View>
-          {upcomingClasses && (
+          <Text style={styles.sectionTitle}>Available Classes</Text>
+          {classesToday && (
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {classesToday.map((gymClass, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => {
+                    handleClassClick(gymClass);
+                    setImageIndex(`image_${(index + 4) % 12}`);
+                  }}
+                >
+                  <View style={styles.cardContainer}>
+                    <View style={styles.card}>
+                      <Image
+                        source={images[imageIndex]}
+                        resizeMode="cover"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: 8,
+                          position: "absolute",
+                        }}
+                      ></Image>
+                      <View style={styles.cardInfo}>
+                        <Text style={styles.className}>
+                          {gymClass.className}
+                        </Text>
+                        <Text style={styles.spaces}>
+                          Spaces Available: {gymClass.spacesAvailable}
+                        </Text>
+                        <Button
+                          mode="contained"
+                          disabled={
+                            gymClass.spacesAvailable === 0 ||
+                            gymClass.members.includes(currentUserUid)
+                          }
+                          textColor="#000"
+                          style={styles.button}
+                          onPress={() =>
+                            handleBookClass(gymClass.id, gymClass.workout)
+                          }
+                        >
+                          Book Now
+                        </Button>
+                      </View>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          )}
+
+          {!classesToday && (
+            <Text style={styles.noClassesText}>
+              No classes available on this day
+            </Text>
+          )}
+        </View>
+        <View style={styles.upcomingClassesView}>
+          <Text style={styles.title}>Your Upcoming Classes</Text>
+          {upcomingClasses && (
+            <ScrollView showsVerticalScrollIndicator={false}>
               {upcomingClasses.map((gymClass, index) => (
                 <TouchableOpacity
                   key={index}
                   onPress={() => handleBookedClassClick(gymClass)}
+                  style={{ width: "100%" }}
                 >
-                  <View style={styles.card}>
-                    <Text style={styles.className}>{gymClass.className}</Text>
-                    <Text style={styles.spaces}>
+                  <View style={styles.upcomingClassCard}>
+                    <Text
+                      style={[
+                        styles.className,
+                        { alignSelf: "center", color: "white", marginTop: 32 },
+                      ]}
+                    >
+                      {gymClass.className}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.spaces,
+                        { alignSelf: "center", color: "white" },
+                      ]}
+                    >
                       {moment(gymClass.date).format("ddd, MMM D, h:mm a")}
                     </Text>
                     <Button
@@ -273,32 +332,86 @@ const GymClassesScreen = ({ navigation }) => {
               ))}
             </ScrollView>
           )}
-          {admin && (
-            <Button
-              mode="contained"
-              style={styles.button}
-              onPress={() => {
-                navigation.navigate("CreateClass");
+        </View>
+        <Modal visible={selectedClass !== null} animationType="fade">
+          <View style={styles.modalContainer}>
+            <View
+              style={{
+                width: "100%",
+                height: height * 0.3,
+                backgroundColor: "#D9D9D9",
+                justifyContent: "flex-end",
               }}
             >
-              Create Class
-            </Button>
-          )}
-        </View>
-        <Modal visible={selectedClass !== null} animationType="slide">
-          <View style={styles.modalContainer}>
-            <Text style={styles.modalHeader}>{selectedClass?.className}</Text>
+              <Image
+                source={images[imageIndex]}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  resizeMode: "cover",
+                }}
+              ></Image>
+
+              <TouchableOpacity
+                onPress={() => closeModal()}
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: 20,
+                  height: 50,
+                  justifyContent: "center",
+                }}
+              >
+                <Image
+                  source={require("../assets/left.png")}
+                  style={{
+                    height: "80%",
+                    width: 30,
+                    position: "absolute",
+                    resizeMode: "contain",
+                  }}
+                ></Image>
+                <Text
+                  style={{
+                    position: "absolute",
+                    left: 30,
+                    height: "80%",
+                    textAlignVertical: "center",
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Back
+                </Text>
+              </TouchableOpacity>
+              <Text style={styles.modalHeader}>{selectedClass?.className}</Text>
+            </View>
             <Text style={styles.modalDescription}>
               {selectedClass?.description}
             </Text>
             {admin && (
               <View>
-                <Text style={styles.modalHeader}>Members booked in:</Text>
+                <Text
+                  style={{
+                    ...styles.modalHeader,
+                    color: "white",
+                    alignSelf: "baseline",
+                    paddingLeft: 24,
+                    width,
+                    marginBottom: 0,
+                  }}
+                >
+                  Members booked in:
+                </Text>
 
                 {membersInClass && (
                   <View>
                     {membersInClass.map((member, index) => (
-                      <Text key={index} style={styles.modalDescription}>
+                      <Text
+                        key={index}
+                        style={{ ...styles.modalDescription, marginLeft: 24 }}
+                      >
                         {member.name}
                       </Text>
                     ))}
@@ -321,11 +434,41 @@ const GymClassesScreen = ({ navigation }) => {
                   </ScrollView>
                 </View>
               </ScrollView>
+              //   <View>
+              //     <Text
+              //       style={{
+              //         ...styles.modalHeader,
+              //         borderColor: "red",
+              //         width,
+              //         textAlign: "center",
+              //         // color: "orange",
+              //       }}
+              //     >
+              //       Workout: {workout.name}
+              //     </Text>
+              //     <ScrollView vertical showsHorizontalScrollIndicator={false}>
+              //       {workout.exercises.map((exercise, index) => (
+              //         <View styles={styles.card}>
+              //           <Text
+              //             style={{
+              //               ...styles.modalDescription,
+              //               marginBottom: 4,
+              //               marginTop: 0,
+              //               textAlign: "center",
+              //               textAlignVertical: "center",
+              //             }}
+              //           >
+              //             {exercise.name}
+              //           </Text>
+              //         </View>
+              //       ))}
+              //     </ScrollView>
+              //   </View>
             )}
 
             <Button
-              mode="contained"
-              style={styles.closeButton}
+              textColor="black"
+              contentStyle={{ fontSize: 1 }}
               onPress={() => closeModal()}
             >
               Close
@@ -333,6 +476,30 @@ const GymClassesScreen = ({ navigation }) => {
           </View>
         </Modal>
       </View>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("CreateClass")}
+        style={{
+          position: "absolute",
+          right: 24,
+          width: 60,
+          height: 60,
+          bottom: 20, // Adjust this value based on your preference
+          borderRadius: 30,
+          backgroundColor: "#2F2F2F",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: "orange",
+            fontSize: 24,
+            fontWeight: "bold",
+          }}
+        >
+          +
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -340,47 +507,90 @@ const GymClassesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFF", // set background color to black
+    backgroundColor: "#111", // set background color to black
     paddingTop: 16,
   },
   datePickerContainer: {
-    height: 100,
+    height: 65,
   },
   datePicker: {
-    backgroundColor: "#222", // set background color to dark gray
-    borderRadius: 8,
-    padding: 16,
-    marginRight: 16,
+    backgroundColor: "#111", // set background color to dark gray
+    // borderRadius: 8,
+    // marginRight: 16,
+    width: width / 7,
   },
   selectedDate: {
-    backgroundColor: "#4a90e2", // set background color to blue
+    backgroundColor: "transparent", // set background color to blue
   },
   todayDate: {
-    backgroundColor: "#555", // set background color to a darker gray
+    backgroundColor: "#111", // set background color to a darker gray
   },
-  dateText: {
+  dateTextDate: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#fff", // set text color to white
+    textAlign: "center",
+  },
+  dateTextWeekDay: {
     fontSize: 16,
     color: "#fff", // set text color to white
+    textAlign: "center",
+  },
+  dateIndicator: {
+    width: width / 7,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: "orange", // set background color to white
+    marginTop: 4,
+    left: 0,
+  },
+
+  horizontalBar: {
+    width: width,
+    alignSelf: "center",
+    height: 4,
+    backgroundColor: "#fff", // set background color to white
   },
   availableClassesContainer: {
-    backgroundColor: "#333", // set background color to dark gray
+    backgroundColor: "#111", // set background color to dark gray
     borderRadius: 8,
     padding: 16,
     marginTop: 16,
+    flex: 1,
   },
+  upcomingClassesView: {
+    flex: 1,
+  },
+
   sectionTitle: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#fff", // set text color to white
     marginBottom: 16,
   },
-  card: {
-    backgroundColor: "#222", // set background color to dark gray
-    borderRadius: 8,
-    padding: 16,
-    marginRight: 16,
-    marginBottom: 16,
+  cardContainer: {
+    width: width * 0.7,
+    height: height * 0.3,
   },
+  card: {
+    backgroundColor: "#222",
+    borderRadius: 8,
+    marginBottom: 16,
+    width: "80%",
+    height: height * 0.2,
+    position: "absolute",
+    left: "10%",
+  },
+
+  cardInfo: {
+    backgroundColor: "#D9D9D9",
+    borderRadius: 8,
+    width: "80%",
+    height: "70%",
+    alignSelf: "center",
+    marginTop: "30%",
+  },
+
   excerciseCard: {
     backgroundColor: "#222", // set background color to dark gray
     borderRadius: 8,
@@ -388,19 +598,28 @@ const styles = StyleSheet.create({
     marginRight: 16,
     marginBottom: 16,
   },
+  upcomingClassesScrollView: {
+    flexGrow: 1,
+  },
   className: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#fff", // set text color to white
+    color: "black", // set text color to white
     marginBottom: 8,
+    alignSelf: "flex-start",
+    paddingLeft: 8,
   },
   spaces: {
     fontSize: 14,
-    color: "#fff", // set text color to white
+    color: "black", // set text color to white
     marginBottom: 16,
+    alignSelf: "flex-start",
+    paddingLeft: 8,
   },
   button: {
     marginTop: "auto",
+    backgroundColor: "transparent",
+    fontSize: 16,
   },
   noClassesText: {
     fontSize: 16,
@@ -414,27 +633,52 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 16,
   },
+  classScrollContainer: {
+    flexGrow: 1,
+  },
+  classRow: {
+    // width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  upcomingClassCard: {
+    width: "100%",
+    marginVertical: 10,
+    backgroundColor: "#2F2F2F",
+    borderRadius: 8,
+    height: height * 0.2,
+    alignSelf: "center",
+    flex: 1,
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#222", // set background color to dark gray
-    borderRadius: 8,
-    padding: 16,
   },
   modalHeader: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#fff", // set text color to white
+    color: "white", // set text color to white
     marginBottom: 16,
+    alignSelf: "center",
   },
   modalDescription: {
     fontSize: 16,
     color: "#fff", // set text color to white
     marginBottom: 16,
+    marginTop: 16,
   },
   closeButton: {
     marginTop: "auto",
+    backgroundColor: "#D9D9D9",
+    width: "100%",
+    borderRadius: 8,
+    height: 0,
   },
   exerciseBlock: {
     backgroundColor: "#444",

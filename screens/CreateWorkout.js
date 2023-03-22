@@ -3,12 +3,15 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   ScrollView,
   FlatList,
   Image,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Modal,
+  TouchableHighlight,
 } from "react-native";
 import { FontFamily, Color } from "../GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
@@ -106,14 +109,14 @@ const ExerciseCard = ({
     </View>
   );
 };
-
 const ExerciseDropdown = ({ exercises, onChange }) => {
+  const [modalVisible, setModalVisible] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState(null);
 
   const handleExerciseChange = (item) => {
     setSelectedExercise(item);
-    console.log(item);
     onChange(item);
+    setModalVisible(false);
   };
 
   const dropdownItems = exercises.map((exercise) => ({
@@ -123,25 +126,85 @@ const ExerciseDropdown = ({ exercises, onChange }) => {
 
   return (
     <View>
-      <SearchableDropdown
-        onTextChange={(text) => console.log(text)}
-        onItemSelect={handleExerciseChange}
-        // containerStyle={styles.dropdownContainer}
-        itemStyle={styles.dropdownItem}
-        itemTextStyle={styles.dropdownItemText}
-        itemsContainerStyle={styles.dropdownItemsContainer}
-        items={dropdownItems}
-        placeholder={
-          selectedExercise ? selectedExercise.name : "Select Exercise"
-        }
-        placeholderTextColor={Color.gainsboro_100}
-        placeholderStyle={styles.dropdownItemText}
-        resetValue={false}
-        textInputProps={{ style: styles.dropdownTextInput }}
-      />
+      <TouchableHighlight
+        onPress={() => setModalVisible(true)}
+        style={styles.dropdownContainer}
+      >
+        <Text style={styles.dropdownItemText}>
+          {selectedExercise ? selectedExercise.name : "Select Exercise"}
+        </Text>
+      </TouchableHighlight>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <FlatList
+              data={dropdownItems}
+              renderItem={({ item }) => (
+                <TouchableHighlight
+                  onPress={() => handleExerciseChange(item)}
+                  style={styles.modalItem}
+                >
+                  <Text style={styles.modalText}>{item.name}</Text>
+                </TouchableHighlight>
+              )}
+              keyExtractor={(item) => item.id}
+            />
+            <TouchableHighlight
+              style={styles.closeButton}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.modalText}>Close</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
+
+// const ExerciseDropdown = ({ exercises, onChange }) => {
+//   const [selectedExercise, setSelectedExercise] = useState(null);
+
+//   const handleExerciseChange = (item) => {
+//     setSelectedExercise(item);
+//     console.log(item);
+//     onChange(item);
+//   };
+
+//   const dropdownItems = exercises.map((exercise) => ({
+//     id: exercise._id,
+//     name: `${exercise.name}`,
+//   }));
+
+//   return (
+//     <View>
+//       <SearchableDropdown
+//         onTextChange={(text) => console.log(text)}
+//         onItemSelect={handleExerciseChange}
+//         // containerStyle={styles.dropdownContainer}
+//         itemStyle={styles.dropdownItem}
+//         itemTextStyle={styles.dropdownItemText}
+//         itemsContainerStyle={styles.dropdownItemsContainer}
+//         items={dropdownItems}
+//         placeholder={
+//           selectedExercise ? selectedExercise.name : "Select Exercise"
+//         }
+//         placeholderTextColor={Color.gainsboro_100}
+//         placeholderStyle={styles.dropdownItemText}
+//         resetValue={false}
+//         textInputProps={{ style: styles.dropdownTextInput }}
+//       />
+//     </View>
+//   );
+// };
 
 const CreateWorkoutScreen = ({ navigation }) => {
   const [exercises, setExercises] = useState([]);
@@ -202,35 +265,48 @@ const CreateWorkoutScreen = ({ navigation }) => {
   return (
     <SafeAreaProvider>
       <View style={[styles.container, { backgroundColor: Color.gray_100 }]}>
-        <View style={styles.header}>
-          <View style={{ flexDirection: "column" }}>
-            <Text style={styles.title}>Workout Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor={Color.gainsboro_100}
-              placeholder="Enter workout name"
-              onChangeText={setWorkoutName}
-            />
-          </View>
-          <View style={{ flexDirection: "column" }}>
-            <Text style={styles.title}>Workout Type</Text>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor={Color.gainsboro_100}
-              placeholder="Enter workout type"
-              onChangeText={setWorkoutType}
-            />
-          </View>
-        </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+            <View style={styles.header}>
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.title}>Workout Name</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholderTextColor={Color.gainsboro_100}
+                  placeholder="Enter workout name"
+                  onChangeText={setWorkoutName}
+                />
+              </View>
+              <View style={{ flexDirection: "column" }}>
+                <Text style={styles.title}>Workout Type</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholderTextColor={Color.gainsboro_100}
+                  placeholder="Enter workout type"
+                  onChangeText={setWorkoutType}
+                />
+              </View>
+            </View>
 
-        <View style={styles.body}>{exerciseCards}</View>
+            <View style={styles.body}>{exerciseCards}</View>
 
-        <TouchableOpacity style={styles.addButton} onPress={handleAddExercise}>
-          <Text style={styles.addButtonText}>Add Exercise</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.addButton} onPress={handleSaveWorkout}>
-          <Text style={styles.addButtonText}>Save Workout</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={handleAddExercise}
+            >
+              <Text style={styles.addButtonText}>Add Exercise</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={handleSaveWorkout}
+            >
+              <Text style={styles.addButtonText}>Save Workout</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     </SafeAreaProvider>
   );
@@ -414,6 +490,45 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Color.gainsboro_100,
     fontWeight: "bold",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    width: "80%",
+    backgroundColor: Color.darkslategray,
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalItem: {
+    width: "100%",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  modalText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: Color.gainsboro_100,
+  },
+  closeButton: {
+    backgroundColor: "orange",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 15,
   },
 });
 export default CreateWorkoutScreen;

@@ -21,7 +21,7 @@ export default function MyProfile({ navigation }) {
     const res2 = await axios.get(
       "http://192.168.170.179:5000/members/" + currentUser.uid
     );
-    console.log(res2.data[0]);
+    console.log(void res2.data[0]);
     setName(res2.data[0].name);
     setEmail(res2.data[0].email);
   }

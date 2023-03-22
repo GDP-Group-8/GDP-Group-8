@@ -5,7 +5,12 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CleanTabBar } from "react-navigation-tabbar-collection";
-import { HomeIcon, Cog8ToothIcon, FireIcon } from "react-native-heroicons/mini";
+import {
+  HomeIcon,
+  Cog8ToothIcon,
+  FireIcon,
+  Cog6ToothIcon,
+} from "react-native-heroicons/mini";
 import {
   LoginScreen,
   ForgotPasswordScreen,
@@ -32,14 +37,24 @@ const HomeTab = createBottomTabNavigator();
 
 const navColour = {
   primary: Color.darkgoldenrod_100,
-  secondary: Color.gray_100,
-  success: Color.darkgoldenrod_100,
-  danger: Color.darkgoldenrod_100,
-  warning: Color.darkgoldenrod_100,
-  info: Color.darkgoldenrod_100,
+  secondary: Color.darkgoldenrod_100,
+  success: Color.orange_100,
+  danger: Color.orange_100,
+  warning: Color.orange_100,
+  info: Color.orange_100,
   light: Color.gray_100, //Background Color
   dark: Color.gray_100,
 };
+// const navColour = {
+//   primary: Color.orange_100,
+//   secondary: Color.gray_100,
+//   success: Color.orange_100,
+//   danger: Color.orange_100,
+//   warning: Color.orange_100,
+//   info: Color.orange_100,
+//   light: Color.darkgoldenrod_100, // Background Color
+//   dark: Color.gray_100, // Foreground Color
+// };
 
 function HomeTabs() {
   return (
@@ -47,28 +62,35 @@ function HomeTabs() {
     <HomeTab.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarLabelStyle: {
+          color: "blue",
+          textShadowColor: "red",
+        },
       }}
       tabBar={(props) => <CleanTabBar {...props} colorPalette={navColour} />}
     >
       <HomeTab.Screen
         name="Home"
         component={DashboardStackScreen}
-        options={{ icon: HomeIcon, color: "primary" }}
+        options={{ icon: HomeIcon, tabBarActiveTintColor: "primary" }}
       />
       <HomeTab.Screen
         name="Exercises"
         component={ExerciseListStackScreen}
-        options={{ icon: FireIcon }}
+        options={{
+          icon: FireIcon,
+          tabBarActiveTintColor: "primary",
+        }}
       />
       <HomeTab.Screen
         name="Records"
         component={PersonalRecordsStackScreen}
-        options={{ icon: Cog8ToothIcon }}
+        options={{ icon: Cog8ToothIcon, tabBarActiveTintColor: "primary" }}
       />
       <HomeTab.Screen
         name="Settings"
         component={AdminStackScreen}
-        options={{ icon: Cog8ToothIcon }}
+        options={{ icon: Cog6ToothIcon, tabBarActiveTintColor: "primary" }}
       />
     </HomeTab.Navigator>
   );

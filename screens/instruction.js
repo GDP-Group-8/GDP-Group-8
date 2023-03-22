@@ -27,23 +27,27 @@ export default function Instruction({ navigation, route }) {
     },
   ];
   return (
-    <View style={{ flex: 1 ,backgroundColor: "rgb(47,47,47)"}}>
-      <Appbar.Header style={{backgroundColor: "rgb(47,47,47)"}} >
-        <Appbar.BackAction 
+    <View style={{ flex: 1, backgroundColor: "rgb(47,47,47)" }}>
+      <Appbar.Header style={{ backgroundColor: "rgb(47,47,47)" }}>
+        <Appbar.BackAction
           onPress={() => {
             navigation.goBack();
           }}
-          color={'white'}
+          color={"white"}
         />
         <Appbar.Content
-          titleStyle={{fontWeight:"bold",color:'white'}}
+          titleStyle={{ fontWeight: "bold", color: "white" }}
           title={route.params.exercise.name.toString().toUpperCase()}
         />
       </Appbar.Header>
       <View style={{ height: 300 }}>
         <WebView
           javaScriptEnabled={true}
-          source={{ uri: `https://www.youtube.com/embed/${route.params.exercise.demo.toString().split("watch?v=")[1]}` }}
+          source={{
+            uri: `https://www.youtube.com/embed/${
+              route.params.exercise.demo.toString().split("watch?v=")[1]
+            }`,
+          }}
         />
       </View>
       <ScrollView>
@@ -53,16 +57,33 @@ export default function Instruction({ navigation, route }) {
             marginTop: 20,
             fontWeight: "800",
             fontSize: 30,
-            color:'white'
+            color: "white",
           }}
         >
           Instruction
         </Headline>
-        {instructions.map((instruction,index) => (
-          <View style={{display:"flex",flexDirection:"row",paddingRight:40}}>
-            <Text style={{marginLeft:25,fontSize:18,marginTop:10,color:'white'}}>{index + 1}.</Text>
+        {instructions.map((instruction, index) => (
+          <View
+            key={index}
+            style={{ display: "flex", flexDirection: "row", paddingRight: 40 }}
+          >
             <Text
-              style={{ marginLeft: 5, fontSize: 18, marginTop: 10 ,color:'white'}}
+              style={{
+                marginLeft: 25,
+                fontSize: 18,
+                marginTop: 10,
+                color: "white",
+              }}
+            >
+              {index + 1}.
+            </Text>
+            <Text
+              style={{
+                marginLeft: 5,
+                fontSize: 18,
+                marginTop: 10,
+                color: "white",
+              }}
               key={instruction.id}
             >
               {instruction.text}

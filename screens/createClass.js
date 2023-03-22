@@ -12,9 +12,9 @@ import axios from "axios";
 import { Button } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const primaryColor = "#4a69ff";
-const secondaryColor = "#ff704a";
-const backgroundColor = "#fff";
+const primaryColor = "orange"; // Orange
+const secondaryColor = "#2F2F2F"; // Dark gray
+const backgroundColor = "#1E1E1E"; // Even darker gray for background
 
 const CreateClass = ({ navigation, workoutID }) => {
   const [className, setClassName] = useState("");
@@ -192,6 +192,7 @@ const CreateClass = ({ navigation, workoutID }) => {
       <Button
         mode="contained"
         styles={styles.button}
+        buttonColor="orange"
         onPress={() => {
           navigation.navigate("CreateWorkout");
         }}
@@ -225,7 +226,12 @@ const CreateClass = ({ navigation, workoutID }) => {
         <DateTimePicker mode="time" value={date} onChange={onTimeChange} />
       )}
 
-      <Button mode="contained" styles={styles.button} onPress={handleSubmit}>
+      <Button
+        mode="contained"
+        styles={styles.button}
+        buttonColor="orange"
+        onPress={handleSubmit}
+      >
         Create Class
       </Button>
     </View>
@@ -233,28 +239,19 @@ const CreateClass = ({ navigation, workoutID }) => {
 };
 
 const styles = StyleSheet.create({
-  scrollViewContainer: {
-    flexGrow: 1,
-  },
   container: {
     flex: 1,
     padding: 20,
-  },
-  inputs: {
-    marginBottom: 20,
+    backgroundColor: backgroundColor,
   },
   input: {
     height: 40,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: secondaryColor,
     paddingHorizontal: 10,
     marginBottom: 10,
-  },
-  card: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    marginBottom: 20,
+    color: primaryColor,
+    backgroundColor: secondaryColor,
   },
   heading: {
     fontWeight: "bold",
@@ -277,30 +274,20 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: secondaryColor,
     borderRadius: 5,
+    backgroundColor: secondaryColor,
+    color: primaryColor,
   },
   dateInput: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: secondaryColor,
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
     marginTop: 10,
-  },
-  dropdownContainer: {
-    padding: 5,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  dropdownTextInput: {
-    paddingHorizontal: 10,
-    height: 40,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
+    backgroundColor: secondaryColor,
+    color: primaryColor,
   },
   customButton: {
     backgroundColor: primaryColor,
@@ -311,11 +298,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   customButtonText: {
-    color: "#fff",
+    color: backgroundColor,
     fontSize: 18,
   },
   button: {
-    backgroundColor: secondaryColor,
+    color: "orange",
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
@@ -328,104 +315,3 @@ const styles = StyleSheet.create({
 });
 
 export default CreateClass;
-
-{
-  /* <View style={styles.container}>
-      <Text style={styles.heading}>Create a Class</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Class Name"
-        value={className}
-        onChangeText={setClassName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Description"
-        value={description}
-        onChangeText={setDescription}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Capacity"
-        keyboardType="numeric"
-        value={capacity}
-        onChangeText={setCapacity}
-      />
-      <View style={styles.pickerContainer}>
-        <Text style={styles.pickerLabel}>Select Instructor:</Text>
-        <Picker
-          selectedValue={selectedInstructor}
-          style={styles.picker}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedInstructor(itemValue)
-          }
-        >
-          {instructors.map((instructor) => (
-            <Picker.Item
-              key={instructor}
-              label={instructor.name}
-              value={instructor.memberID}
-            />
-          ))}
-        </Picker>
-      </View>
-      <View style={styles.pickerContainer}>
-        <Text style={styles.pickerLabel}>Select Workout:</Text>
-        <Picker
-          selectedValue={selectedWorkout}
-          style={styles.picker}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedWorkout(itemValue)
-          }
-        >
-          {workouts.map((workout) => (
-            <Picker.Item
-              key={workout._id}
-              label={workout.name}
-              value={workout._id}
-            />
-          ))}
-        </Picker>
-      </View>
-      <Text>Or</Text>
-      <Button
-        mode="contained"
-        styles={styles.button}
-        onPress={() => {
-          navigation.navigate("CreateWorkout");
-        }}
-      >
-        Create Workout
-      </Button>
-      <View style={styles.pickerContainer}>
-        <Text style={styles.pickerLabel}>Select day:</Text>
-
-        <TouchableOpacity
-          style={styles.dateInput}
-          onPress={handleShowDatePicker}
-        >
-          <Text>{date.toDateString()}</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.pickerContainer}>
-        <Text style={styles.pickerLabel}>Select Time:</Text>
-
-        <TouchableOpacity
-          style={styles.dateInput}
-          onPress={handleShowTimePicker}
-        >
-          <Text>{date.toLocaleTimeString()}</Text>
-        </TouchableOpacity>
-      </View>
-      {showDatePicker && (
-        <DateTimePicker mode="date" value={date} onChange={onDateChange} />
-      )}
-      {showTimePicker && (
-        <DateTimePicker mode="time" value={date} onChange={onTimeChange} />
-      )}
-
-      <Button mode="contained" styles={styles.button} onPress={handleSubmit}>
-        Create Class
-      </Button>
-    </View> */
-}
