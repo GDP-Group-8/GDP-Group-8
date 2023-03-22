@@ -11,9 +11,7 @@ import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import { Button } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import ExerciseSelector from "../components/ExerciseSelector";
 
-const exercises = ["Push-ups", "Squats", "Lunges", "Sit-ups"];
 const primaryColor = "#4a69ff";
 const secondaryColor = "#ff704a";
 const backgroundColor = "#fff";
@@ -32,8 +30,11 @@ const CreateClass = ({ navigation, workoutID }) => {
   const [selectedWorkout, setSelectedWorkout] = useState(workoutID);
 
   useEffect(() => {
-    getWorkouts();
-    getInstructors();
+    const unsubscribe = navigation.addListener("focus", () => {
+      getWorkouts();
+      getInstructors();
+    });
+    return unsubscribe;
   }, []);
 
   const getWorkouts = async () => {

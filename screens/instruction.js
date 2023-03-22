@@ -19,7 +19,7 @@ export default function Instruction({ navigation, route }) {
     },
     {
       id: 4,
-      text: "Straighten both hands up at the same time",
+      text: "Straighten both hands up at the same time Straighten both hands up at the same time",
     },
     {
       id: 5,
@@ -27,15 +27,16 @@ export default function Instruction({ navigation, route }) {
     },
   ];
   return (
-    <View style={{ flex: 1 }}>
-      <Appbar.Header style={{ backgroundColor: "white" }}>
-        <Appbar.BackAction
+    <View style={{ flex: 1 ,backgroundColor: "rgb(47,47,47)"}}>
+      <Appbar.Header style={{backgroundColor: "rgb(47,47,47)"}} >
+        <Appbar.BackAction 
           onPress={() => {
             navigation.goBack();
           }}
+          color={'white'}
         />
         <Appbar.Content
-          titleStyle={{ fontStyle: "italic" }}
+          titleStyle={{fontWeight:"bold",color:'white'}}
           title={route.params.exercise.name.toString().toUpperCase()}
         />
       </Appbar.Header>
@@ -52,17 +53,21 @@ export default function Instruction({ navigation, route }) {
             marginTop: 20,
             fontWeight: "800",
             fontSize: 30,
+            color:'white'
           }}
         >
           Instruction
         </Headline>
-        {instructions.map((instruction) => (
-          <Text
-            style={{ marginLeft: 25, fontSize: 18, marginTop: 10 }}
-            key={instruction.id}
-          >
-            {instruction.text}
-          </Text>
+        {instructions.map((instruction,index) => (
+          <View style={{display:"flex",flexDirection:"row",paddingRight:40}}>
+            <Text style={{marginLeft:25,fontSize:18,marginTop:10,color:'white'}}>{index + 1}.</Text>
+            <Text
+              style={{ marginLeft: 5, fontSize: 18, marginTop: 10 ,color:'white'}}
+              key={instruction.id}
+            >
+              {instruction.text}
+            </Text>
+          </View>
         ))}
         {/* <Text style={{marginLeft:25,fontSize:18,marginTop:10}} >Detailed instructions</Text> */}
       </ScrollView>

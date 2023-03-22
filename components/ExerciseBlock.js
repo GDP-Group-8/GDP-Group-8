@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
-const ExerciseBlock = ({ exercises }) => {
+const ExerciseBlock = ({ exercises, bookedIn }) => {
   const groupedExercises = exercises.reduce((acc, exercise) => {
     if (!acc[exercise.exercise]) {
       acc[exercise.exercise] = [];
@@ -27,6 +27,7 @@ const ExerciseBlock = ({ exercises }) => {
                 style={styles.repInput}
                 keyboardType="numeric"
                 maxLength={3}
+                editable={bookedIn}
                 defaultValue={`${exercise.reps}`}
               />
               <Text style={styles.weightLabel}>Weight (kg):</Text>
@@ -34,6 +35,7 @@ const ExerciseBlock = ({ exercises }) => {
                 style={styles.weightInput}
                 keyboardType="numeric"
                 maxLength={5}
+                editable={bookedIn}
                 defaultValue={`${exercise.weight}`}
               />
             </View>

@@ -3,8 +3,7 @@ import React, { useEffect } from "react";
 import { View, Text, Linking } from "react-native";
 import { Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
-import axios from "axios";
-import { auth, logout } from "../firebase";
+import { logout } from "../firebase";
 
 export default function Settings({ navigation }) {
   const { currentUser, setCurrentUser } = useAuth();
@@ -13,6 +12,7 @@ export default function Settings({ navigation }) {
       navigation.navigate("HomeScreen");
     }
   }, [currentUser, navigation]);
+
   const handleMyProfilePress = () => {
     // navigate to MyProfile screen
     navigation.navigate("MyProfile");
@@ -42,19 +42,44 @@ export default function Settings({ navigation }) {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Button mode="contained" onPress={handleMyProfilePress}>
-        My Profile
-      </Button>
-      <Button mode="contained" onPress={handleManageUsersPress}>
-        Manage Users
-      </Button>
-      <Button mode="contained" onPress={whoop}>
-        Whoop
-      </Button>
-      <Button title="Sign out" mode="contained" onPress={() => handleLogout()}>
-        Sign out
-      </Button>
+    <View style={{ flex: 1, backgroundColor: "rgb(31,31,31)" }}>
+      <View style={{ margin: 20 }}>
+        <Button
+          mode="contained"
+          onPress={handleMyProfilePress}
+          style={{ marginBottom: 20 }}
+          labelStyle={{ color: "white" }}
+          contentStyle={{ paddingVertical: 5 }}
+        >
+          My Profile
+        </Button>
+        <Button
+          mode="contained"
+          onPress={handleManageUsersPress}
+          style={{ marginBottom: 20 }}
+          labelStyle={{ color: "white" }}
+          contentStyle={{ paddingVertical: 5 }}
+        >
+          Manage Users
+        </Button>
+        <Button
+          mode="contained"
+          onPress={whoop}
+          style={{ marginBottom: 20 }}
+          labelStyle={{ color: "white" }}
+          contentStyle={{ paddingVertical: 5 }}
+        >
+          Whoop
+        </Button>
+        <Button
+          mode="contained"
+          onPress={() => handleLogout()}
+          labelStyle={{ color: "white" }}
+          contentStyle={{ paddingVertical: 5 }}
+        >
+          Sign out
+        </Button>
+      </View>
     </View>
   );
 }

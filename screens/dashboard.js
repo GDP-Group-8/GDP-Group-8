@@ -29,6 +29,7 @@ const GymClassesScreen = ({ navigation }) => {
   const [upcomingClasses, setUpcomingClasses] = useState([]);
   const [membersInClass, setMembersInClass] = useState([]);
   const [workout, setWorkout] = useState(null);
+  const [bookedIn, setBookedIn] = useState(false);
 
   useEffect(() => {
     if (!currentUser) {
@@ -56,6 +57,7 @@ const GymClassesScreen = ({ navigation }) => {
       "http://192.168.170.179:5000/members/" + currentUser.uid
     );
     const upcoming = res.data[0].classes;
+    console.log(upcoming);
     const res3 = await axios.post(
       "http://192.168.170.179:5000/classes/upcoming/",
       {
@@ -76,22 +78,37 @@ const GymClassesScreen = ({ navigation }) => {
     // console.log(selectedDate);
   };
 
-  const handleBookClass = async (classID) => {
-    const res = await axios.put(
-      "http://192.168.170.179:5000/classes/" + classID,
-      {
-        memberID: currentUser.uid,
-      }
-    );
-    const res2 = await axios.put(
-      "http://192.168.170.179:5000/members/" + currentUser.uid,
-      {
-        classID: classID,
-      }
-    );
-    console.log(res.data);
-    console.log(res2.data);
-    fetchData();
+  const handleBookClass = async (classID, workoutId) => {
+    try {
+      const res = await axios.put(
+        "http://192.168.170.179:5000/classes/" + classID,
+        {
+          memberID: currentUser.uid,
+        }
+      );
+
+      const duplicateRes = await axios.post(
+        `http://192.168.170.179:5000/workouts/duplicate/${workoutId}`,
+        {
+          memberID: currentUser.uid,
+        }
+      );
+
+      const res2 = await axios.put(
+        "http://192.168.170.179:5000/members/" + currentUser.uid,
+        {
+          classID: classID,
+          workoutID: duplicateRes.data._id,
+        }
+      );
+
+      console.log(res.data);
+      console.log(duplicateRes.data);
+      console.log(res2.data);
+      fetchData();
+    } catch (error) {
+      console.error("Error in handleBookClass:", error);
+    }
   };
 
   const handleCancelClass = async (classID) => {
@@ -114,6 +131,7 @@ const GymClassesScreen = ({ navigation }) => {
   const handleClassClick = async (gymClass) => {
     setSelectedClass(gymClass);
     //get members in class
+    console.log(gymClass.workout + " poooooo");
     const res = await axios.post(
       "http://192.168.170.179:5000/members/getMembers",
       {
@@ -131,6 +149,45 @@ const GymClassesScreen = ({ navigation }) => {
       setWorkout(res2.data);
     }
     setMembersInClass(res.data);
+  };
+
+  const handleBookedClassClick = async (gymClass) => {
+    setBookedIn(true);
+    setSelectedClass(gymClass);
+    //get members in class
+    //get workout from workout id in members class
+    const getMemberWorkout = await axios.post(
+      "http://192.168.170.179:5000/members/getWorkout/" + currentUser.uid,
+      {
+        classID: gymClass._id,
+      }
+    );
+
+    const res = await axios.post(
+      "http://192.168.170.179:5000/members/getMembers",
+      {
+        members: gymClass.members,
+      }
+    );
+
+    if (!gymClass.workout) {
+      setWorkout(null);
+    } else {
+      const res2 = await axios.get(
+        "http://192.168.170.179:5000/workouts/" +
+          getMemberWorkout.data[0].workout
+      );
+      console.log(res2.data);
+      setWorkout(res2.data);
+    }
+    setMembersInClass(res.data);
+  };
+
+  const closeModal = () => {
+    setSelectedClass(null);
+    setMembersInClass(null);
+    setWorkout(null);
+    setBookedIn(false);
   };
 
   return (
@@ -174,7 +231,9 @@ const GymClassesScreen = ({ navigation }) => {
                       gymClass.members.includes(currentUserUid)
                     }
                     style={styles.button}
-                    onPress={() => handleBookClass(gymClass.id)}
+                    onPress={() =>
+                      handleBookClass(gymClass.id, gymClass.workout)
+                    }
                   >
                     Book Now
                   </Button>
@@ -195,7 +254,7 @@ const GymClassesScreen = ({ navigation }) => {
               {upcomingClasses.map((gymClass, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() => handleClassClick(gymClass)}
+                  onPress={() => handleBookedClassClick(gymClass)}
                 >
                   <View style={styles.card}>
                     <Text style={styles.className}>{gymClass.className}</Text>
@@ -255,7 +314,10 @@ const GymClassesScreen = ({ navigation }) => {
                     Workout: {workout.name}
                   </Text>
                   <ScrollView vertical showsVerticalScrollIndicator={false}>
-                    <ExerciseBlock exercises={workout.exercises} />
+                    <ExerciseBlock
+                      exercises={workout.exercises}
+                      bookedIn={bookedIn}
+                    />
                   </ScrollView>
                 </View>
               </ScrollView>
@@ -264,7 +326,7 @@ const GymClassesScreen = ({ navigation }) => {
             <Button
               mode="contained"
               style={styles.closeButton}
-              onPress={() => setSelectedClass(null)}
+              onPress={() => closeModal()}
             >
               Close
             </Button>
