@@ -80,7 +80,7 @@ export default function ExerciseList({ navigation }) {
   };
 
   async function fetchExercises() {
-    const response = await fetch("http://192.168.170.179:5000/exercises");
+    const response = await fetch("http://10.6.20.74:5000/exercises");
     const data = await response.json();
     setExercises(data);
   }

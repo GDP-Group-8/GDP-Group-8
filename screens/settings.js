@@ -34,10 +34,10 @@ export default function Settings({ navigation }) {
 
   const whoop = async () => {
     console.log("whoop");
-    // const res = await axios.get("http://192.168.170.179:5000/whoop/auth");
+    // const res = await axios.get("http://10.6.20.74:5000/whoop/auth");
     // Linking.openURL("https://gdp-api.herokuapp.com/whoop/auth");
     Linking.openURL(
-      "http://192.168.170.179:5000/whoop/auth?memberId=" + currentUser.uid
+      "http://10.6.20.74:5000/whoop/auth?memberId=" + currentUser.uid
     );
   };
 

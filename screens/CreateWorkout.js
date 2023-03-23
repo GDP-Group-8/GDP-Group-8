@@ -218,7 +218,7 @@ const CreateWorkoutScreen = ({ navigation }) => {
   }, []);
 
   const fetchExercises = async () => {
-    const response = await fetch("http://192.168.170.179:5000/exercises");
+    const response = await fetch("http://10.6.20.74:5000/exercises");
     const data = await response.json();
     console.log(data[0]._id);
     setExercises(data);
@@ -250,7 +250,7 @@ const CreateWorkoutScreen = ({ navigation }) => {
       exercises: workoutData,
     };
     console.log(workout);
-    const res = await axios.post("http://192.168.170.179:5000/workouts", {
+    const res = await axios.post("http://10.6.20.74:5000/workouts", {
       name: workoutName,
       type: workoutType,
       member_id: currentUserUid,

@@ -1,8 +1,9 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
-const ExerciseBlock = ({ exercises, bookedIn }) => {
+const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const groupedExercises = exercises.reduce((acc, exercise) => {
+    console.log(exercise);
     if (!acc[exercise.exercise]) {
       acc[exercise.exercise] = [];
     }
@@ -13,7 +14,26 @@ const ExerciseBlock = ({ exercises, bookedIn }) => {
   const handleOnPress = () => {
     console.log(exercises);
   };
+  const updateExercise = async (exerciseId, field, value) => {
+    try {
+      const response = await fetch(
+        `http://10.6.20.74:5000/workouts/exercise/${workoutId}?exerciseId=${exerciseId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ [field]: value }),
+        }
+      );
 
+      if (!response.ok) {
+        throw new Error("Error updating exercise");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   return (
     <View>
       {Object.entries(groupedExercises).map(([name, exercises]) => (
@@ -29,6 +49,9 @@ const ExerciseBlock = ({ exercises, bookedIn }) => {
                 maxLength={3}
                 editable={bookedIn}
                 defaultValue={`${exercise.reps}`}
+                onChangeText={(text) =>
+                  updateExercise(exercise._id, "reps", text)
+                }
               />
               <Text style={styles.weightLabel}>Weight (kg):</Text>
               <TextInput
@@ -37,6 +60,9 @@ const ExerciseBlock = ({ exercises, bookedIn }) => {
                 maxLength={5}
                 editable={bookedIn}
                 defaultValue={`${exercise.weight}`}
+                onChangeText={(text) =>
+                  updateExercise(exercise._id, "weight", text)
+                }
               />
             </View>
           ))}
