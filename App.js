@@ -17,6 +17,9 @@ import {
   HomeScreen,
   RegisterScreen,
 } from "./screens";
+import { getAccessToken, uploadVideo } from "./youtube";
+import { storeVideoLink } from "./database";
+
 import { Color } from "./GlobalStyles";
 import Dashboard from "./screens/dashboard";
 import UsersManage from "./screens/usersmanage";
