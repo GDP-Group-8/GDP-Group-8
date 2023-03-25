@@ -2,8 +2,8 @@ import axios from "axios";
 // Replace with your API key and client ID
 const API_KEY = "YOUR_API_KEY";
 const CLIENT_ID =
-  "621404247856-b9n4c4unp3eksr6i73lgjsee6499p6nr.apps.googleusercontent.com";
-//client secret= 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
+  "114397723313-b2b9mn4401nt72anlmk9fqosbu0jlc3b.apps.googleusercontent.com";
+//client secret= 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
 const youtubeApi = axios.create({
   baseURL: "https://www.googleapis.com/youtube/v3",
   params: {

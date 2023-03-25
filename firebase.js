@@ -1,4 +1,6 @@
 import { initializeApp } from "firebase/app";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Add this import
+
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -31,6 +33,24 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const storage = getStorage(app); // Add this line
+const storageRef = ref(storage);
+const videosRef = ref(storageRef, "videos");
+
+const uploadVideo = async (video) => {
+  //upload into videos folder in the storage
+  const videoRef = ref(videosRef, "video");
+  const uploadTask = await uploadBytes(videoRef, video);
+  console.log(uploadTask);
+  //get the download url
+  const downloadURL = await getDownloadURL(uploadTask.ref);
+  console.log(downloadURL);
+  //get path of the video in the storage
+  const path = uploadTask.ref.fullPath;
+  console.log(path);
+  return downloadURL;
+};
+
 const logInWithEmailAndPassword = async (email, password) => {
   try {
     return await signInWithEmailAndPassword(auth, email, password);
@@ -44,7 +64,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
     //axios post to the backend with body containing user.uid and name
-    const res2 = await axios.post("http://10.6.20.74:5000/members/", {
+    const res2 = await axios.post("http://192.168.170.179:5000/members/", {
       memberID: user.uid,
       name: name,
       email: email,
@@ -68,4 +88,5 @@ export {
   logInWithEmailAndPassword,
   logout,
   registerWithEmailAndPassword,
+  uploadVideo,
 };

@@ -17,7 +17,7 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const updateExercise = async (exerciseId, field, value) => {
     try {
       const response = await fetch(
-        `http://10.6.20.74:5000/workouts/exercise/${workoutId}?exerciseId=${exerciseId}`,
+        `http://192.168.170.179:5000/workouts/exercise/${workoutId}?exerciseId=${exerciseId}`,
         {
           method: "PATCH",
           headers: {

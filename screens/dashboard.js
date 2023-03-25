@@ -72,16 +72,19 @@ const GymClassesScreen = ({ navigation }) => {
   //refresh data when we navigate to this page
 
   async function fetchData() {
-    const res2 = await axios.get("http://10.6.20.74:5000/classes/");
+    const res2 = await axios.get("http://192.168.170.179:5000/classes/");
     // console.log(res2.data["2023-02-19"]);
     const res = await axios.get(
-      "http://10.6.20.74:5000/members/" + currentUser.uid
+      "http://192.168.170.179:5000/members/" + currentUser.uid
     );
     const upcoming = res.data[0].classes;
     console.log(upcoming);
-    const res3 = await axios.post("http://10.6.20.74:5000/classes/upcoming/", {
-      classes: upcoming,
-    });
+    const res3 = await axios.post(
+      "http://192.168.170.179:5000/classes/upcoming/",
+      {
+        classes: upcoming,
+      }
+    );
     setUpcomingClasses(res3.data);
     setAvailableClasses(res2.data);
 
@@ -98,19 +101,22 @@ const GymClassesScreen = ({ navigation }) => {
   const handleBookClass = async (classID, workoutId) => {
     console.log(workoutId);
     try {
-      const res = await axios.put("http://10.6.20.74:5000/classes/" + classID, {
-        memberID: currentUser.uid,
-      });
+      const res = await axios.put(
+        "http://192.168.170.179:5000/classes/" + classID,
+        {
+          memberID: currentUser.uid,
+        }
+      );
 
       const duplicateRes = await axios.post(
-        `http://10.6.20.74:5000/workouts/duplicate/${workoutId}`,
+        `http://192.168.170.179:5000/workouts/duplicate/${workoutId}`,
         {
           memberID: currentUser.uid,
         }
       );
 
       const res2 = await axios.put(
-        "http://10.6.20.74:5000/members/" + currentUser.uid,
+        "http://192.168.170.179:5000/members/" + currentUser.uid,
         {
           classID: classID,
           workoutID: duplicateRes.data._id,
@@ -129,13 +135,13 @@ const GymClassesScreen = ({ navigation }) => {
   const handleCancelClass = async (classID) => {
     console.log(void classID);
     const res = await axios.put(
-      "http://10.6.20.74:5000/classes/cancel/" + classID,
+      "http://192.168.170.179:5000/classes/cancel/" + classID,
       {
         memberID: currentUser.uid,
       }
     );
     const res2 = await axios.put(
-      "http://10.6.20.74:5000/members/cancel/" + currentUser.uid,
+      "http://192.168.170.179:5000/members/cancel/" + currentUser.uid,
       {
         classID: classID,
       }
@@ -147,15 +153,18 @@ const GymClassesScreen = ({ navigation }) => {
     setSelectedClass(gymClass);
     //get members in class
     console.log(gymClass.workout + " poooooo");
-    const res = await axios.post("http://10.6.20.74:5000/members/getMembers", {
-      members: gymClass.members,
-    });
+    const res = await axios.post(
+      "http://192.168.170.179:5000/members/getMembers",
+      {
+        members: gymClass.members,
+      }
+    );
 
     if (!gymClass.workout) {
       setWorkout(null);
     } else {
       const res2 = await axios.get(
-        "http://10.6.20.74:5000/workouts/" + gymClass.workout
+        "http://192.168.170.179:5000/workouts/" + gymClass.workout
       );
       console.log(void res2.data);
       setWorkout(res2.data);
@@ -169,21 +178,25 @@ const GymClassesScreen = ({ navigation }) => {
     //get members in class
     //get workout from workout id in members class
     const getMemberWorkout = await axios.post(
-      "http://10.6.20.74:5000/members/getWorkout/" + currentUser.uid,
+      "http://192.168.170.179:5000/members/getWorkout/" + currentUser.uid,
       {
         classID: gymClass._id,
       }
     );
 
-    const res = await axios.post("http://10.6.20.74:5000/members/getMembers", {
-      members: gymClass.members,
-    });
+    const res = await axios.post(
+      "http://192.168.170.179:5000/members/getMembers",
+      {
+        members: gymClass.members,
+      }
+    );
 
     if (!gymClass.workout) {
       setWorkout(null);
     } else {
       const res2 = await axios.get(
-        "http://10.6.20.74:5000/workouts/" + getMemberWorkout.data[0].workout
+        "http://192.168.170.179:5000/workouts/" +
+          getMemberWorkout.data[0].workout
       );
       console.log(res2.data);
       setWorkout(res2.data);

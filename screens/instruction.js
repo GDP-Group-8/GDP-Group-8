@@ -44,9 +44,9 @@ export default function Instruction({ navigation, route }) {
         <WebView
           javaScriptEnabled={true}
           source={{
-            uri: `https://www.youtube.com/embed/${
+            uri: route.params.exercise.demo.toString() /*`https://www.youtube.com/embed/${
               route.params.exercise.demo.toString().split("watch?v=")[1]
-            }`,
+            }`,*/,
           }}
         />
       </View>

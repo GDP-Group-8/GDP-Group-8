@@ -19,7 +19,7 @@ export default function MyProfile({ navigation }) {
 
   async function fetchData() {
     const res2 = await axios.get(
-      "http://10.6.20.74:5000/members/" + currentUser.uid
+      "http://192.168.170.179:5000/members/" + currentUser.uid
     );
     console.log(void res2.data[0]);
     setName(res2.data[0].name);
