@@ -11,7 +11,7 @@ import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import { Button } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
+import { yourIp } from "../firebase";
 const primaryColor = "orange"; // Orange
 const secondaryColor = "#2F2F2F"; // Dark gray
 const backgroundColor = "#1E1E1E"; // Even darker gray for background
@@ -38,14 +38,14 @@ const CreateClass = ({ navigation, workoutID }) => {
   }, []);
 
   const getWorkouts = async () => {
-    const res = await axios.get("http://192.168.170.179:5000/workouts");
+    const res = await axios.get(yourIp + "/workouts");
     console.log(res.data);
 
     setWorkouts(res.data);
   };
 
   const getInstructors = async () => {
-    const res = await axios.get("http://192.168.170.179:5000/members");
+    const res = await axios.get(yourIp + "/members");
     //go through the list of users and filter out the instructors
     console.log(res.data);
     const instructors = res.data.filter((user) => user.admin === true);
@@ -111,7 +111,7 @@ const CreateClass = ({ navigation, workoutID }) => {
     )
       .toISOString()
       .replace("Z", "+00:00");
-    const res2 = await axios.post("http://192.168.170.179:5000/classes", {
+    const res2 = await axios.post(yourIp + "/classes", {
       name: className,
       description: description,
       capacity: capacity,

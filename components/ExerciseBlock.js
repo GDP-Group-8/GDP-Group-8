@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
+import { yourIp } from "../firebase";
 const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const groupedExercises = exercises.reduce((acc, exercise) => {
     console.log(exercise);
@@ -17,7 +18,7 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const updateExercise = async (exerciseId, field, value) => {
     try {
       const response = await fetch(
-        `http://192.168.170.179:5000/workouts/exercise/${workoutId}?exerciseId=${exerciseId}`,
+        yourIp + `/workouts/exercise/${workoutId}?exerciseId=${exerciseId}`,
         {
           method: "PATCH",
           headers: {

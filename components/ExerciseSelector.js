@@ -18,7 +18,7 @@ const ExerciseSelector = ({ onSelection }) => {
   }, []);
 
   const fetchData = async () => {
-    const response = await fetch("http://192.168.170.179:5000/exercises");
+    const response = await fetch(yourIp + "/exercises");
     const data = await response.json();
     setAvailableExercises(data);
   };

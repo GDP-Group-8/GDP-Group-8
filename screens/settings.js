@@ -4,7 +4,7 @@ import { View, Text, Linking, SafeAreaView } from "react-native";
 import { Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
 import { logout } from "../firebase";
-
+import { yourIp } from "../firebase";
 export default function Settings({ navigation }) {
   const { currentUser, setCurrentUser } = useAuth();
   useEffect(() => {
@@ -34,11 +34,9 @@ export default function Settings({ navigation }) {
 
   const whoop = async () => {
     console.log("whoop");
-    // const res = await axios.get("http://192.168.170.179:5000/whoop/auth");
+    // const res = await axios.get(yourIp+"/whoop/auth");
     // Linking.openURL("https://gdp-api.herokuapp.com/whoop/auth");
-    Linking.openURL(
-      "http://192.168.170.179:5000/whoop/auth?memberId=" + currentUser.uid
-    );
+    Linking.openURL(yourIp + "/whoop/auth?memberId=" + currentUser.uid);
   };
 
   return (

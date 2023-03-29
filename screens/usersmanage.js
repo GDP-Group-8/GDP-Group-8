@@ -9,7 +9,7 @@ import {
   Text,
 } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
-
+import { yourIp } from "../firebase";
 export default function UsersManage({ navigation }) {
   const [newUser, setNewUser] = React.useState({});
   const { currentUser, admin } = useAuth();
@@ -23,7 +23,7 @@ export default function UsersManage({ navigation }) {
   }, [currentUser, navigation]);
 
   async function fetchData() {
-    const res = await axios.get("http://192.168.170.179:5000/members/");
+    const res = await axios.get(yourIp + "/members/");
     console.log(res.data[0]);
     setUsers(res.data);
   }
@@ -39,12 +39,8 @@ export default function UsersManage({ navigation }) {
     if (memberID === currentUser.uid) {
       alert("You cannot delete yourself!");
     } else {
-      const res = await axios.delete(
-        "http://192.168.170.179:5000/members/" + memberID
-      );
-      const res2 = await axios.delete(
-        "http://192.168.170.179:5000/firebase/" + memberID
-      );
+      const res = await axios.delete(yourIp + "/members/" + memberID);
+      const res2 = await axios.delete(yourIp + "/firebase/" + memberID);
       console.log(void res.data);
       console.log(void res2.data);
     }

@@ -8,6 +8,7 @@ import Logo from "../components/Logo";
 import Header from "../components/Header";
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
+import { yourIp } from "../firebase";
 import BackButton from "../components/BackButton";
 import { theme } from "../core/theme";
 import { emailValidator, passwordValidator } from "../core/utils";
@@ -50,9 +51,7 @@ const LoginScreen = ({ navigation }: Props) => {
       return;
     }
     const res = await logInWithEmailAndPassword(email.value, password.value);
-    const res2 = await axios.get(
-      "http://192.168.170.179:5000/members/" + res.user.uid
-    );
+    const res2 = await axios.get(yourIp + "/members/" + res.user.uid);
     setAdmin(res2.data[0].admin);
     setCurrentUser(res.user);
     setCurrentUserUid(res.user.uid);

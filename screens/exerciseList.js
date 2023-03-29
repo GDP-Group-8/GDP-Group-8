@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, ScrollView, TextInput } from "react-native";
 import { Text, Divider, List, Headline, Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
+import { yourIp } from "../firebase";
 export default function ExerciseList({ navigation }) {
   const exercisesOrigin = [
     {
@@ -80,7 +81,7 @@ export default function ExerciseList({ navigation }) {
   };
 
   async function fetchExercises() {
-    const response = await fetch("http://192.168.170.179:5000/exercises");
+    const response = await fetch(yourIp + "/exercises");
     const data = await response.json();
     setExercises(data);
   }

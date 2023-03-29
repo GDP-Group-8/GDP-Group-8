@@ -18,6 +18,7 @@ import { useAuth } from "../contexts/AuthContext";
 //     </View>
 //   );
 // }
+import { yourIp } from "../firebase";
 import React, { useState, useEffect, useRef } from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { Camera } from "expo-camera";
@@ -76,7 +77,7 @@ export default function PersonalRecords({ navigation }) {
 
         // Send the video URL to the backend
         try {
-          await axios.post("http://192.168.170.179:5000/exercises/upload", {
+          await axios.post(yourIp + "/exercises/upload", {
             title: "My Video 3",
             description: "This is a test video",
             videoURL: uploadTaskPath, // Send the video URL as videoURL

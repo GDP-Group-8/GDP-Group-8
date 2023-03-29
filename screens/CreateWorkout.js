@@ -13,6 +13,7 @@ import {
   Modal,
   TouchableHighlight,
 } from "react-native";
+import { yourIp } from "../firebase";
 import { FontFamily, Color } from "../GlobalStyles";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -218,7 +219,7 @@ const CreateWorkoutScreen = ({ navigation }) => {
   }, []);
 
   const fetchExercises = async () => {
-    const response = await fetch("http://192.168.170.179:5000/exercises");
+    const response = await fetch(yourIp + "/exercises");
     const data = await response.json();
     console.log(data[0]._id);
     setExercises(data);
@@ -250,7 +251,7 @@ const CreateWorkoutScreen = ({ navigation }) => {
       exercises: workoutData,
     };
     console.log(workout);
-    const res = await axios.post("http://192.168.170.179:5000/workouts", {
+    const res = await axios.post(yourIp + "/workouts", {
       name: workoutName,
       type: workoutType,
       member_id: currentUserUid,

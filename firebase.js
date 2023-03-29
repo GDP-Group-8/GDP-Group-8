@@ -36,7 +36,7 @@ const auth = getAuth(app);
 const storage = getStorage(app); // Add this line
 const storageRef = ref(storage);
 const videosRef = ref(storageRef, "videos");
-
+const yourIp = "http://10.6.22.188:5000";
 const uploadVideo = async (video) => {
   //upload into videos folder in the storage
   const videoRef = ref(videosRef, "video");
@@ -64,7 +64,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     const user = res.user;
     //axios post to the backend with body containing user.uid and name
-    const res2 = await axios.post("http://192.168.170.179:5000/members/", {
+    const res2 = await axios.post(yourIp + "/members/", {
       memberID: user.uid,
       name: name,
       email: email,
@@ -89,4 +89,5 @@ export {
   logout,
   registerWithEmailAndPassword,
   uploadVideo,
+  yourIp,
 };

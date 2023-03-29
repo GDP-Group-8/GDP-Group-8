@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
-
+import { yourIp } from "../firebase";
 export default function MyProfile({ navigation }) {
   const [name, setName] = useState("");
   const { currentUser, admin } = useAuth();
@@ -18,9 +18,7 @@ export default function MyProfile({ navigation }) {
   }, [currentUser, navigation]);
 
   async function fetchData() {
-    const res2 = await axios.get(
-      "http://192.168.170.179:5000/members/" + currentUser.uid
-    );
+    const res2 = await axios.get(yourIp + "/members/" + currentUser.uid);
     console.log(void res2.data[0]);
     setName(res2.data[0].name);
     setEmail(res2.data[0].email);
