@@ -36,7 +36,7 @@ const auth = getAuth(app);
 const storage = getStorage(app); // Add this line
 const storageRef = ref(storage);
 const videosRef = ref(storageRef, "videos");
-const yourIp = "http://10.6.22.188:5000";
+const yourIp = "http://192.168.170.179:5000";
 const uploadVideo = async (video) => {
   //upload into videos folder in the storage
   const videoRef = ref(videosRef, "video");

@@ -102,7 +102,7 @@ const GymClassesScreen = ({ navigation }) => {
       });
 
       const duplicateRes = await axios.post(
-        yourIp + "/workouts/duplicate/${workoutId}",
+        yourIp + `/workouts/duplicate/${workoutId}`,
         {
           memberID: currentUser.uid,
         }
