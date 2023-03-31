@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { yourIp } from "../firebase";
+import { useAuth } from "../contexts/AuthContext";
+
 const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const groupedExercises = exercises.reduce((acc, exercise) => {
     console.log(exercise);
@@ -15,6 +17,38 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const handleOnPress = () => {
     console.log(exercises);
   };
+
+  const { currentUser, admin, currentUserUid } = useAuth();
+
+  const updateRecord = async (exercise, weight) => {
+    try {
+      
+      var today = new Date();
+
+      const response = await fetch(
+        yourIp + `/records`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ 
+            member: currentUser.uid, 
+            exercise: exercise,
+            date: today, 
+            weight: weight
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error updating exercise");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const updateExercise = async (exerciseId, field, value) => {
     try {
       const response = await fetch(
@@ -31,6 +65,11 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
       if (!response.ok) {
         throw new Error("Error updating exercise");
       }
+
+      if (field === "weight") {
+        updateRecord(exerciseId, value);
+      }
+
     } catch (error) {
       console.error("Error:", error);
     }
