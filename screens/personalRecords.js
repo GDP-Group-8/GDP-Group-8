@@ -20,12 +20,8 @@ export default function PersonalRecords({ navigation }) {
     fetchRecords();
   }, [currentUser]);
 
-  const demoRecords = [
-
-  ];
-
   async function fetchRecords(exercise) {
-    const response = await fetch("https://gdp-api.herokuapp.com/records/" + exercise);
+    const response = await fetch(`https://gdp-api.herokuapp.com/records/${currentUser.uid}/${exercise}`);
     const data = await response.json();
     setRecords(data);
   }
