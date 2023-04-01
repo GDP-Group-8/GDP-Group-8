@@ -32,7 +32,7 @@ import ExerciseList from "./screens/exerciseList";
 import Instruction from "./screens/instruction";
 import CreateWorkoutScreen from "./screens/CreateWorkout";
 import PersonalRecords from "./screens/personalRecords";
-
+import { SlidingScreen } from "./screens/SlidingScreen";
 const HomeStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const HomeTab = createBottomTabNavigator();
@@ -138,10 +138,11 @@ const PersonalRecordsStack = createNativeStackNavigator();
 function PersonalRecordsStackScreen() {
   return (
     <PersonalRecordsStack.Navigator screenOptions={{ headerShown: false }}>
-      <PersonalRecordsStack.Screen
+      {/* <PersonalRecordsStack.Screen
         name="PersonalRecords"
         component={PersonalRecords}
-      />
+      /> */}
+      <PersonalRecordsStack.Screen name="MyData" component={SlidingScreen} />
     </PersonalRecordsStack.Navigator>
   );
 }
