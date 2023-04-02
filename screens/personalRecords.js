@@ -1,7 +1,7 @@
 // import React, { useState, useEffect } from "react";
 // import { View, ScrollView, TextInput } from "react-native";
 // import { Text, Divider, List, Headline, Button } from "react-native-paper";
-import { useAuth } from "../contexts/AuthContext";
+// import { useAuth } from "../contexts/AuthContext";
 // export default function PersonalRecords({ navigation }) {
 //   const { currentUser, admin } = useAuth();
 //   useEffect(() => {
@@ -20,18 +20,23 @@ import { useAuth } from "../contexts/AuthContext";
 // }
 import { yourIp } from "../firebase";
 import React, { useState, useEffect, useRef } from "react";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import {  View, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, Headline, Appbar } from "react-native-paper";
+
 import { Camera } from "expo-camera";
 import { uploadVideo } from "../firebase";
 import * as MediaLibrary from "expo-media-library";
 import axios from "axios";
-export default function PersonalRecords({ navigation }) {
+export default function PersonalRecords({ navigation,route }) {
   const [cameraPermission, setCameraPermission] = useState(null);
   let camera = useRef();
   const [isRecording, setIsRecording] = useState(false);
   const [microphoneStatus, setMicrophoneStatus] = useState(null);
   const [video, setVideo] = useState(null);
-  const { currentUser, admin } = useAuth();
+  // const { currentUser, admin } = useAuth();
+  
+  const newExercise = route.params.newExercise;
+  const setNewExercise = route.params.setNewExercise;
 
   useEffect(() => {
     //everytime the component is rendered, it will request permission
@@ -75,21 +80,26 @@ export default function PersonalRecords({ navigation }) {
         // Get the download URL
         console.log(uploadTaskPath);
 
-        // Send the video URL to the backend
-        try {
-          await axios.post(yourIp + "/exercises/upload", {
-            title: "My Video 3",
-            description: "This is a test video",
-            videoURL: uploadTaskPath, // Send the video URL as videoURL
-          });
-        } catch (error) {
-          alert("Error uploading video and storing link: " + error);
-        }
+        setNewExercise({...newExercise,demo:uploadTaskPath});
+
+        
       });
     }
   };
   return (
     <View style={styles.container}>
+      <Appbar.Header style={{ backgroundColor: "rgb(47,47,47)" }}>
+        <Appbar.BackAction
+          onPress={() => {
+            navigation.goBack();
+          }}
+          color={"white"}
+        />
+        <Appbar.Content
+          titleStyle={{ fontWeight: "bold", color: "white" }}
+          title="Record Video"
+        />
+      </Appbar.Header>
       <Camera style={styles.camera} ref={camera}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={handleRecord} style={styles.button}>

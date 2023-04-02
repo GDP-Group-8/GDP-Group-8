@@ -113,6 +113,24 @@ export default function ExerciseList({ navigation }) {
           className="block flex-grow appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm  focus:outline-none  sm:text-sm"
         />
       </View>
+      <View className="mb-5">
+        <Button
+            icon="plus"
+            mode="contained"
+            buttonColor="orange"
+            style={{
+                color: "orange",
+                borderRadius: 10,
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+            onPress={() => {
+                navigation.push("AddExercise");
+            }}
+        >
+            Add Exercise
+        </Button>
+      </View>
       <ScrollView
         style={{ backgroundColor: "rgb(47,47,47)", marginBottom: 60 }}
       >
