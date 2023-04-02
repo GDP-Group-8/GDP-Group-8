@@ -58,7 +58,6 @@ const RegisterScreen = ({ navigation }: Props) => {
     <Background>
       <BackButton goBack={() => navigation.navigate("HomeScreen")} />
 
-      <Logo />
 
       <Header>Create Account</Header>
 

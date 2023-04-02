@@ -15,7 +15,6 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <Background>
-      <Logo />
       <Header>Login Template</Header>
 
       <Paragraph>

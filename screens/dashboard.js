@@ -66,6 +66,9 @@ const GymClassesScreen = ({ navigation }) => {
       setDates(newDates);
       const unsubscribe = navigation.addListener("focus", () => {
         fetchData();
+        var formattedDate = moment().format("YYYY-MM-DD");
+        setSelectedDate(formattedDate);
+        setClassesToday(availableClasses[formattedDate]);
       });
       return unsubscribe;
     }
@@ -87,6 +90,18 @@ const GymClassesScreen = ({ navigation }) => {
     setClassesToday(res2.data[selectedDate]);
     // console.log(availableClasses);
   }
+
+  // Helper function to check if the class time has already passed
+  const isClassPast = (classTime) => {
+    //use Selected date and class time to create a moment object
+    const classMoment = moment(
+      selectedDate + " " + classTime,
+      "YYYY-MM-DD HH:mm"
+    );
+
+    return moment().isAfter(classMoment);
+  };
+
   const handleDateChange = async (date) => {
     var formattedDate = date.format("YYYY-MM-DD");
     setSelectedDate(formattedDate);
@@ -224,7 +239,12 @@ const GymClassesScreen = ({ navigation }) => {
                     setImageIndex(`image_${(index + 4) % 12}`);
                   }}
                 >
-                  <View style={styles.cardContainer}>
+                  <View
+                    style={[
+                      styles.cardContainer,
+                      { opacity: isClassPast(gymClass.time) ? 0.5 : 1 },
+                    ]}
+                  >
                     <View style={styles.card}>
                       <Image
                         source={images[imageIndex]}
@@ -247,7 +267,8 @@ const GymClassesScreen = ({ navigation }) => {
                           mode="contained"
                           disabled={
                             gymClass.spacesAvailable === 0 ||
-                            gymClass.members.includes(currentUserUid)
+                            gymClass.members.includes(currentUserUid) ||
+                            isClassPast(gymClass.time)
                           }
                           textColor="#000"
                           style={styles.button}
@@ -413,36 +434,6 @@ const GymClassesScreen = ({ navigation }) => {
                   </ScrollView>
                 </View>
               </ScrollView>
-              //   <View>
-              //     <Text
-              //       style={{
-              //         ...styles.modalHeader,
-              //         borderColor: "red",
-              //         width,
-              //         textAlign: "center",
-              //         // color: "orange",
-              //       }}
-              //     >
-              //       Workout: {workout.name}
-              //     </Text>
-              //     <ScrollView vertical showsHorizontalScrollIndicator={false}>
-              //       {workout.exercises.map((exercise, index) => (
-              //         <View styles={styles.card}>
-              //           <Text
-              //             style={{
-              //               ...styles.modalDescription,
-              //               marginBottom: 4,
-              //               marginTop: 0,
-              //               textAlign: "center",
-              //               textAlignVertical: "center",
-              //             }}
-              //           >
-              //             {exercise.name}
-              //           </Text>
-              //         </View>
-              //       ))}
-              //     </ScrollView>
-              //   </View>
             )}
 
             <Button
@@ -455,30 +446,32 @@ const GymClassesScreen = ({ navigation }) => {
           </View>
         </Modal>
       </View>
-      <TouchableOpacity
-        onPress={() => navigation.navigate("CreateClass")}
-        style={{
-          position: "absolute",
-          right: 24,
-          width: 60,
-          height: 60,
-          bottom: 20, // Adjust this value based on your preference
-          borderRadius: 30,
-          backgroundColor: "#2F2F2F",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Text
+      {admin && (
+        <TouchableOpacity
+          onPress={() => navigation.navigate("CreateClass")}
           style={{
-            color: "orange",
-            fontSize: 24,
-            fontWeight: "bold",
+            position: "absolute",
+            right: 24,
+            width: 60,
+            height: 60,
+            bottom: 20, // Adjust this value based on your preference
+            borderRadius: 30,
+            backgroundColor: "#2F2F2F",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          +
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={{
+              color: "orange",
+              fontSize: 24,
+              fontWeight: "bold",
+            }}
+          >
+            +
+          </Text>
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 };

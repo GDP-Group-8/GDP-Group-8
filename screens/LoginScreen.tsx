@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
-import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, logInWithEmailAndPassword } from "../firebase";
+import { TouchableOpacity, StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import {  logInWithEmailAndPassword } from "../firebase";
 import { useAuth } from "../contexts/AuthContext";
 import Background from "../components/Background";
 import Logo from "../components/Logo";
@@ -22,18 +21,10 @@ type Props = {
 const LoginScreen = ({ navigation }: Props) => {
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
+  const [loading, setLoading] = useState(false);
+
   const { currentUser, setCurrentUser, setAdmin, setCurrentUserUid } =
     useAuth();
-
-  // onAuthStateChanged(auth, async (user) => {
-  //   if (user) {
-  //     setCurrentUser(user);
-
-  //     navigation.navigate("Dashboard");
-  //   } else {
-  //     console.log("No user logged in");
-  //   }
-  // });
 
   useEffect(() => {
     if (currentUser) {
@@ -42,12 +33,15 @@ const LoginScreen = ({ navigation }: Props) => {
   }, [currentUser, navigation]);
 
   const _onLoginPressed = async () => {
+    setLoading(true);
+
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
 
     if (emailError || passwordError) {
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
+      setLoading(false);
       return;
     }
     const res = await logInWithEmailAndPassword(email.value, password.value);
@@ -55,13 +49,15 @@ const LoginScreen = ({ navigation }: Props) => {
     setAdmin(res2.data[0].admin);
     setCurrentUser(res.user);
     setCurrentUserUid(res.user.uid);
+    setLoading(false);
+
   };
 
   return (
     <Background>
       <BackButton goBack={() => navigation.navigate("HomeScreen")} />
 
-      <Logo />
+      {/* <Logo /> */}
 
       <Header>Welcome back.</Header>
 
@@ -99,7 +95,9 @@ const LoginScreen = ({ navigation }: Props) => {
       <Button mode="contained" onPress={_onLoginPressed}>
         Login
       </Button>
-
+      {loading ? (
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      ) : null}
       <View style={styles.row}>
         <Text style={styles.label}>Don’t have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate("RegisterScreen")}>
