@@ -9,6 +9,7 @@ export const MyRecordsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   scene: {
     flex: 1,
+    backgroundColor: "#111",
   },
   safeArea: {
     flex: 1,

@@ -5,6 +5,7 @@ import PagerView from "react-native-pager-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MyRecordsScreen } from "./MyRecords";
 import { MyDataScreen } from "./WearableData";
+
 export const SlidingScreen = () => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -20,7 +21,7 @@ export const SlidingScreen = () => {
   const renderTabBar = (props) => (
     <TabBar
       {...props}
-      indicatorStyle={styles.indicator}
+      indicatorStyle={{ ...styles.indicator, height: 4 }} // Adjust the height property for a thicker indicator
       style={styles.tabBar}
       labelStyle={styles.label}
     />
@@ -46,14 +47,16 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+    backgroundColor: "#111",
   },
   tabBar: {
-    backgroundColor: "#FFF", // Adjust the background color of the tab bar
+    backgroundColor: "#111", // Adjusted the background color of the tab bar to dark
   },
   label: {
-    color: "#000", // Adjust the color of the tab labels
+    color: "#FFF", // Adjusted the color of the tab labels to white
+    fontWeight: "bold",
   },
   indicator: {
-    backgroundColor: "#000", // Adjust the color of the active tab indicator
+    backgroundColor: "orange", // Adjusted the color of the active tab indicator to orange
   },
 });
