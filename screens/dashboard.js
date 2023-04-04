@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -11,6 +11,7 @@ import {
   TextInput,
   Image,
   Dimensions,
+  RefreshControl,
 } from "react-native";
 import { yourIp } from "../firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -51,6 +52,7 @@ const GymClassesScreen = ({ navigation }) => {
   const [membersInClass, setMembersInClass] = useState([]);
   const [workout, setWorkout] = useState(null);
   const [bookedIn, setBookedIn] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const [imageIndex, setImageIndex] = useState("image_0");
   useEffect(() => {
@@ -64,17 +66,21 @@ const GymClassesScreen = ({ navigation }) => {
         newDates.push(date);
       }
       setDates(newDates);
-      const unsubscribe = navigation.addListener("focus", () => {
-        fetchData();
-        var formattedDate = moment().format("YYYY-MM-DD");
-        setSelectedDate(formattedDate);
-        setClassesToday(availableClasses[formattedDate]);
-      });
-      return unsubscribe;
+      fetchData();
+      var formattedDate = moment().format("YYYY-MM-DD");
+      setSelectedDate(formattedDate);
+      setClassesToday(availableClasses[formattedDate]);
     }
   }, [currentUser, navigation]);
   //refresh data when we navigate to this page
-
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchData();
+    var formattedDate = moment().format("YYYY-MM-DD");
+    setSelectedDate(formattedDate);
+    setClassesToday(availableClasses[formattedDate]);
+    setRefreshing(false);
+  }, []);
   async function fetchData() {
     const res2 = await axios.get(yourIp + "/classes/");
     // console.log(res2.data["2023-02-19"]);
@@ -226,7 +232,12 @@ const GymClassesScreen = ({ navigation }) => {
       <View
         style={{ width: "100%", height: 2, backgroundColor: "white" }}
       ></View>
-      <View style={styles.availableClassesContainer}>
+      <ScrollView
+        style={styles.availableClassesContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View>
           <Text style={styles.sectionTitle}>Available Classes</Text>
           {classesToday && (
@@ -445,7 +456,7 @@ const GymClassesScreen = ({ navigation }) => {
             </Button>
           </View>
         </Modal>
-      </View>
+      </ScrollView>
       {admin && (
         <TouchableOpacity
           onPress={() => navigation.navigate("CreateClass")}

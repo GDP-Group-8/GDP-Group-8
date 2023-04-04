@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import { RecoveryStrainDonut } from "../components/RecoveryStrainDonut";
 import { yourIp } from "../firebase";
@@ -25,28 +26,36 @@ export const MyDataScreen = ({ navigation }) => {
   const { currentUser, admin, currentUserUid } = useAuth();
   const [loading, setLoading] = useState(true);
   const [dailyData, setDailyData] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        yourIp + "/whoop/getData/" + currentUserUid
-      );
-      console.log(response.data.sevenDayData.dailyData);
-      setDailyData(response.data.sevenDayData.dailyData);
-      setStrain(response.data.cyclesToSend.score.strain);
-      setRecovery(response.data.recovery.score.recovery_score);
-      setRhr(response.data.recovery.score.resting_heart_rate);
-      setHrv(response.data.recovery.score.hrv_rmssd_milli.toFixed(0));
-      setSleepPerformance(
-        response.data.sleep.score.sleep_performance_percentage
-      );
-      setRespiratoryRate(response.data.sleep.score.respiratory_rate.toFixed(1));
-      setAvgHeartRate(response.data.sevenDayData.averageRHR.toFixed(0));
-      setAvgHrv(response.data.sevenDayData.averageHRV.toFixed(0));
-      setLoading(false); // Set loading to false here
-    };
 
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    const response = await axios.get(
+      yourIp + "/whoop/getData/" + currentUserUid
+    );
+    console.log(response.data.sevenDayData.dailyData);
+    setDailyData(response.data.sevenDayData.dailyData);
+    setStrain(response.data.cyclesToSend.score.strain);
+    setRecovery(response.data.recovery.score.recovery_score);
+    setRhr(response.data.recovery.score.resting_heart_rate);
+    setHrv(response.data.recovery.score.hrv_rmssd_milli.toFixed(0));
+    setSleepPerformance(response.data.sleep.score.sleep_performance_percentage);
+    setRespiratoryRate(response.data.sleep.score.respiratory_rate.toFixed(1));
+    setAvgHeartRate(response.data.sevenDayData.averageRHR.toFixed(0));
+    setAvgHrv(response.data.sevenDayData.averageHRV.toFixed(0));
+    setLoading(false); // Set loading to false here    setLoading(false);
+  }, [currentUserUid]);
+
+  useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchData();
+    setRefreshing(false);
+  }, [fetchData]);
 
   const InfoCard = ({ title, value, unit, iconName, average, isRhr }) => (
     <View style={styles.infoCard}>
@@ -65,13 +74,13 @@ export const MyDataScreen = ({ navigation }) => {
           <View style={styles.arrowContainer}>
             <FontAwesome5
               name={
-                (isRhr && value > average) || (!isRhr && value > average)
+                (isRhr && value > average) || (!isRhr && value < average)
                   ? "arrow-up"
                   : "arrow-down"
               }
               size={12}
               color={
-                (isRhr && value > average) || (!isRhr && value < average)
+                (isRhr && value > average) || (!isRhr && value > average)
                   ? "red"
                   : "green"
               }
@@ -85,7 +94,12 @@ export const MyDataScreen = ({ navigation }) => {
   );
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {loading ? (
         <ActivityIndicator size="large" color="orange" style={styles.loading} />
       ) : (

@@ -40,7 +40,7 @@ export default function Settings({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "rgb(31,31,31)" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#111" }}>
       <View style={{ margin: 20 }}>
         <Button
           mode="contained"

@@ -116,7 +116,7 @@ const AdminStack = createNativeStackNavigator();
 function AdminStackScreen() {
   return (
     <AdminStack.Navigator screenOptions={{ headerShown: false }}>
-      <AdminStack.Screen name="Settings" component={Settings} />
+      <AdminStack.Screen name="SettingsScreen" component={Settings} />
       <AdminStack.Screen name="MyProfile" component={MyProfile} />
       <AdminStack.Screen name="UsersManage" component={UsersManage} />
       <AdminStack.Screen name="UserDetail" component={UserDetail} />
