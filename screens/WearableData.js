@@ -77,13 +77,13 @@ export const MyDataScreen = ({ navigation }) => {
           <View style={styles.arrowContainer}>
             <FontAwesome5
               name={
-                (isRhr && value > average) || (!isRhr && value < average)
+                (isRhr && value > average) || (!isRhr && value > average)
                   ? "arrow-up"
                   : "arrow-down"
               }
               size={12}
               color={
-                (isRhr && value > average) || (!isRhr && value > average)
+                (isRhr && value > average) || (!isRhr && value < average)
                   ? "red"
                   : "green"
               }
