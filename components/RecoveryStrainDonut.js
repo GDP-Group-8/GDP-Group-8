@@ -6,9 +6,9 @@ const screenWidth = Dimensions.get("window").width;
 
 export const RecoveryStrainDonut = ({ recovery, strain }) => {
   const recoveryColor =
-    recovery >= 66
+    recovery >= 67
       ? `rgba(105, 255, 63,`
-      : recovery >= 33
+      : recovery >= 34
       ? `rgba(255, 165, 0,`
       : `rgba(255, 0, 0,`;
   const strainColor = `rgba(0, 160, 255,`;

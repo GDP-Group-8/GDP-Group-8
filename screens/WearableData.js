@@ -14,6 +14,8 @@ import axios from "axios";
 import { useAuth } from "../contexts/AuthContext";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { WhoopLineChart } from "../components/WhoopLineChart";
+import { Picker } from "@react-native-picker/picker";
+
 export const MyDataScreen = ({ navigation }) => {
   const [recovery, setRecovery] = useState(80);
   const [strain, setStrain] = useState(12);
@@ -26,6 +28,7 @@ export const MyDataScreen = ({ navigation }) => {
   const { currentUser, admin, currentUserUid } = useAuth();
   const [loading, setLoading] = useState(true);
   const [dailyData, setDailyData] = useState([]);
+  const [selectedDataSource, setSelectedDataSource] = useState("whoop");
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -103,43 +106,59 @@ export const MyDataScreen = ({ navigation }) => {
       {loading ? (
         <ActivityIndicator size="large" color="orange" style={styles.loading} />
       ) : (
-        <View>
-          <View style={styles.donutContainer}>
-            <RecoveryStrainDonut recovery={recovery} strain={strain} />
-          </View>
-          <View style={styles.infoCards}>
-            <InfoCard
-              title="Resting Heart Rate"
-              value={rhr}
-              unit="bpm"
-              iconName="heart"
-              average={avgHeartRate}
-              isRhr
-            />
-            <InfoCard
-              title="Heart Rate Variability"
-              value={hrv}
-              unit="ms"
-              iconName="heartbeat"
-              average={avgHrv}
-            />
-          </View>
-          <View style={styles.infoCards}>
-            <InfoCard
-              title="Sleep Performance"
-              value={sleepPerformance}
-              unit="%"
-              iconName="moon"
-            />
-            <InfoCard
-              title="Respiratory Rate"
-              value={respiratoryRate}
-              unit="br/min"
-              iconName="lungs"
-            />
-          </View>
-          <WhoopLineChart sevenDayData={dailyData} />
-        </View>
+        <>
+          <Picker
+            selectedValue={selectedDataSource}
+            style={styles.picker}
+            itemStyle={styles.pickerItem}
+            onValueChange={(itemValue) => setSelectedDataSource(itemValue)}
+          >
+            <Picker.Item label="Whoop" value="whoop" />
+            <Picker.Item label="Google Fit" value="googleFit" />
+          </Picker>
+
+          {selectedDataSource === "whoop" ? (
+            <View>
+              <View style={styles.donutContainer}>
+                <RecoveryStrainDonut recovery={recovery} strain={strain} />
+              </View>
+              <View style={styles.infoCards}>
+                <InfoCard
+                  title="Resting Heart Rate"
+                  value={rhr}
+                  unit="bpm"
+                  iconName="heart"
+                  average={avgHeartRate}
+                  isRhr
+                />
+                <InfoCard
+                  title="Heart Rate Variability"
+                  value={hrv}
+                  unit="ms"
+                  iconName="heartbeat"
+                  average={avgHrv}
+                />
+              </View>
+              <View style={styles.infoCards}>
+                <InfoCard
+                  title="Sleep Performance"
+                  value={sleepPerformance}
+                  unit="%"
+                  iconName="moon"
+                />
+                <InfoCard
+                  title="Respiratory Rate"
+                  value={respiratoryRate}
+                  unit="br/min"
+                  iconName="lungs"
+                />
+              </View>
+              <WhoopLineChart sevenDayData={dailyData} />
+            </View>
+          ) : (
+            <Text>Display Google Fit data here</Text>
+          )}
+        </>
       )}
     </ScrollView>
   );
@@ -153,6 +172,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  picker: {
+    height: 50,
+    width: "100%",
+    color: "#FFF",
+    backgroundColor: "#222",
+    marginBottom: 16,
+  },
+  pickerItem: {
+    color: "#FFF",
   },
   container: {
     flex: 1,

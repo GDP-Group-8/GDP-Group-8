@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "GDP-Group-8",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -33,7 +34,8 @@
     "extra": {
       "eas": {
         "projectId": "be71dc4d-eebb-4410-b070-6cb2364e5fdc"
-      }
+      },
+      "googleClientId": "114397723313-b2b9mn4401nt72anlmk9fqosbu0jlc3b.apps.googleusercontent.com"
     }
   }
 }
