@@ -13,33 +13,12 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function Settings({ navigation }) {
   const { currentUser, setCurrentUser } = useAuth();
-  const [token, setToken] = useState("");
-  const [userInfo, setUserInfo] = useState(null);
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId:
-      "114397723313-b2b9mn4401nt72anlmk9fqosbu0jlc3b.apps.googleusercontent.com",
-    scopes: [
-      "profile",
-      "email",
-      "https://www.googleapis.com/auth/fitness.activity.read",
-    ],
-    redirectUri: makeRedirectUri({
-      useProxy: true,
-    }),
-  });
+
   useEffect(() => {
     if (!currentUser) {
       navigation.navigate("HomeScreen");
     }
-    if (response?.type === "success") {
-      console.log("response ", response);
-      setToken(response.authentication.accessToken);
-      console.log("Access token " + response.authentication.accessToken);
-      console.log("Refresh token " + response.authentication.refreshToken);
-      console.log("expires " + response.authentication.expiresIn);
-      getUserInfo();
-    }
-  }, [currentUser, navigation, response, token]);
+  }, [currentUser, navigation]);
 
   const getUserInfo = async () => {
     try {
@@ -83,6 +62,13 @@ export default function Settings({ navigation }) {
     Linking.openURL(yourIp + "/whoop/auth?memberId=" + currentUser.uid);
   };
 
+  const googleFit = async () => {
+    console.log("Google Fit");
+    // const res = await axios.get(yourIp+"/whoop/auth");
+    // Linking.openURL("https://gdp-api.herokuapp.com/whoop/auth");
+    Linking.openURL(yourIp + "/googlefit/auth?memberId=" + currentUser.uid);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#111" }}>
       <View style={{ margin: 20 }}>
@@ -113,25 +99,16 @@ export default function Settings({ navigation }) {
         >
           Whoop
         </Button>
-        {userInfo === null ? (
-          <Button
-            mode="contained"
-            disabled={!request}
-            onPress={() => {
-              promptAsync({ useProxy: true });
-            }}
-            style={{ marginBottom: 20, backgroundColor: "orange" }}
-            labelStyle={{ color: "white" }}
-            contentStyle={{ paddingVertical: 5 }}
-          >
-            Sign in with Google
-          </Button>
-        ) : (
-          //text with user info in white
-          <Text style={{ color: "white" }}>
-            {userInfo.name} {userInfo.email}
-          </Text>
-        )}
+        <Button
+          mode="contained"
+          onPress={googleFit}
+          style={{ marginBottom: 20, backgroundColor: "orange" }}
+          labelStyle={{ color: "white" }}
+          contentStyle={{ paddingVertical: 5 }}
+        >
+          Sign in with Google
+        </Button>
+
         <Button
           mode="contained"
           onPress={() => handleLogout()}
