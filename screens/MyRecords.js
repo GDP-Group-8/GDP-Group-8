@@ -30,7 +30,8 @@ const Table = ({ records }) => (
   <View style={styles.mainGraph}>
     <Text style={styles.infoCardValue}>{records[0].exercise}</Text>
     <View style={styles.valueContainer}>
-      {records.map(record => (
+      
+      {records && records.map(record => (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}> 
           <Text style={styles.infoCardTitle}>{record.date}</Text>
           <Text style={styles.infoCardTitle}>{record.weight} kg</Text>
@@ -45,7 +46,7 @@ export const MyRecordsScreen = ({ navigation }) => {
 
   const screenWidth = (Dimensions.get("window").width) - (Dimensions.get("window").width)/13;
   const { currentUser, admin } = useAuth();
-  //const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState([]);
   const [exercise, setExercise] = useState("Squat");
   const exercises = ["Squat", "Bench", "Overhead Press", "Bicep Curls"];
   const [modalVisible, setModalVisible] = useState(false);
@@ -58,55 +59,36 @@ export const MyRecordsScreen = ({ navigation }) => {
     if (!currentUser) {
       navigation.navigate("HomeScreen");
     }
-    //fetchRecords();
+    fetchRecords();
   }, [currentUser, exercise]);
 
-  const records = [
-    {
-      memberID: "123",
-      exercise: "Squat",
-      date: "03/02/23",
-      weight: 64
-    },
-    {
-      memberID: "123",
-      exercise: "Squat",
-      date: "07/02/23",
-      weight: 70
-    },
-    {
-      memberID: "123",
-      exercise: "Squat",
-      date: "13/02/23",
-      weight: 90
-    },
-  ]
-  // async function fetchRecords() {
-  //   // const response = await fetch(`https://gdp-api.herokuapp.com/records/${currentUser.uid}/${exercise}`);
-  //   // const data = await response.json();
-  //   // setRecords(data);
-  //   // for demo purposes, setting static data
-  //   setRecords([
-  //     {
-  //       memberID: "123",
-  //       exercise: "Squat",
-  //       date: "03/02/23",
-  //       weight: 64
-  //     },
-  //     {
-  //       memberID: "123",
-  //       exercise: "Squat",
-  //       date: "07/02/23",
-  //       weight: 70
-  //     },
-  //     {
-  //       memberID: "123",
-  //       exercise: "Squat",
-  //       date: "13/02/23",
-  //       weight: 90
-  //     },
-  //   ]);
-  // }
+  async function fetchRecords() {
+    console.log(currentUser.uid)
+    // const response = await fetch(`https://gdp-api.herokuapp.com/records/${currentUser.uid}/${exercise}`);
+    // const data = await response.json();
+    // setRecords(data);
+    // for demo purposes, setting static data
+    setRecords([
+      {
+        memberID: "123",
+        exercise: "Squat",
+        date: "03/02/23",
+        weight: 64
+      },
+      {
+        memberID: "123",
+        exercise: "Squat",
+        date: "07/02/23",
+        weight: 70
+      },
+      {
+        memberID: "123",
+        exercise: "Squat",
+        date: "13/02/23",
+        weight: 90
+      }
+    ]);
+  }
 
 
   return (
