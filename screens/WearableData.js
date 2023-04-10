@@ -15,7 +15,7 @@ import { useAuth } from "../contexts/AuthContext";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { WhoopLineChart } from "../components/WhoopLineChart";
 import { Picker } from "@react-native-picker/picker";
-
+import { GoogleFitBarChart } from "../components/GoogleFitBarChart";
 export const MyDataScreen = ({ navigation }) => {
   const [recovery, setRecovery] = useState(80);
   const [strain, setStrain] = useState(12);
@@ -28,31 +28,59 @@ export const MyDataScreen = ({ navigation }) => {
   const { currentUser, admin, currentUserUid } = useAuth();
   const [loading, setLoading] = useState(true);
   const [dailyData, setDailyData] = useState([]);
+  const [googleFitData, setGoogleFitData] = useState([]);
   const [selectedDataSource, setSelectedDataSource] = useState("whoop");
-
+  const [whoopDataIsTrue, setWhoopDataIsTrue] = useState(true);
+  const [googleFitDataIsTrue, setGoogleFitDataIsTrue] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [isAnyDataAvailable, setIsAnyDataAvailable] = useState(false);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const response = await axios.get(
-      yourIp + "/whoop/getData/" + currentUserUid
-    );
-    console.log(response.data.sevenDayData.dailyData);
-    setDailyData(response.data.sevenDayData.dailyData);
-    setStrain(response.data.cyclesToSend.score.strain);
-    setRecovery(response.data.recovery.score.recovery_score);
-    setRhr(response.data.recovery.score.resting_heart_rate);
-    setHrv(response.data.recovery.score.hrv_rmssd_milli.toFixed(0));
-    setSleepPerformance(response.data.sleep.score.sleep_performance_percentage);
-    setRespiratoryRate(response.data.sleep.score.respiratory_rate.toFixed(1));
-    setAvgHeartRate(response.data.sevenDayData.averageRHR.toFixed(0));
-    setAvgHrv(response.data.sevenDayData.averageHRV.toFixed(0));
+    try {
+      const response = await axios.get(
+        yourIp + "/whoop/getData/" + currentUserUid
+      );
+      console.log(response.data.sevenDayData.dailyData);
+      setDailyData(response.data.sevenDayData.dailyData);
+      setIsAnyDataAvailable(true);
+      setStrain(response.data.cyclesToSend.score.strain);
+      setRecovery(response.data.recovery.score.recovery_score);
+      setRhr(response.data.recovery.score.resting_heart_rate);
+      setHrv(response.data.recovery.score.hrv_rmssd_milli.toFixed(0));
+      setSleepPerformance(
+        response.data.sleep.score.sleep_performance_percentage
+      );
+      setRespiratoryRate(response.data.sleep.score.respiratory_rate.toFixed(1));
+      setAvgHeartRate(response.data.sevenDayData.averageRHR.toFixed(0));
+      setAvgHrv(response.data.sevenDayData.averageHRV.toFixed(0));
+    } catch (error) {
+      setWhoopDataIsTrue(false);
+      console.log(error);
+    }
     setLoading(false); // Set loading to false here    setLoading(false);
+  }, [currentUserUid]);
+
+  const fetchGoogleFitData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        yourIp + "/googleFit/google-fit-data/" + currentUserUid
+      );
+      setGoogleFitData(response.data);
+      setIsAnyDataAvailable(true);
+      console.log(response.data);
+    } catch (error) {
+      setGoogleFitDataIsTrue(false);
+      console.log(error);
+    }
+    setLoading(false);
   }, [currentUserUid]);
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+    fetchGoogleFitData();
+  }, [fetchData, fetchGoogleFitData]);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -105,7 +133,7 @@ export const MyDataScreen = ({ navigation }) => {
     >
       {loading ? (
         <ActivityIndicator size="large" color="orange" style={styles.loading} />
-      ) : (
+      ) : isAnyDataAvailable ? (
         <>
           <Picker
             selectedValue={selectedDataSource}
@@ -113,11 +141,11 @@ export const MyDataScreen = ({ navigation }) => {
             itemStyle={styles.pickerItem}
             onValueChange={(itemValue) => setSelectedDataSource(itemValue)}
           >
-            <Picker.Item label="Whoop" value="whoop" />
             <Picker.Item label="Google Fit" value="googleFit" />
+            <Picker.Item label="Whoop" value="whoop" />
           </Picker>
 
-          {selectedDataSource === "whoop" ? (
+          {selectedDataSource === "whoop" && whoopDataIsTrue ? (
             <View>
               <View style={styles.donutContainer}>
                 <RecoveryStrainDonut recovery={recovery} strain={strain} />
@@ -156,9 +184,16 @@ export const MyDataScreen = ({ navigation }) => {
               <WhoopLineChart sevenDayData={dailyData} />
             </View>
           ) : (
-            <Text>Display Google Fit data here</Text>
+            <GoogleFitBarChart data={googleFitData} />
           )}
         </>
+      ) : (
+        <View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>
+            No external data has been linked to the app. Please link your data
+            in the settings.
+          </Text>
+        </View>
       )}
     </ScrollView>
   );
@@ -167,6 +202,17 @@ export const MyDataScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  noDataText: {
+    fontSize: 16,
+    color: "#fff",
+    textAlign: "center",
   },
   loading: {
     flex: 1,

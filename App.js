@@ -120,6 +120,7 @@ function AdminStackScreen() {
       <AdminStack.Screen name="MyProfile" component={MyProfile} />
       <AdminStack.Screen name="UsersManage" component={UsersManage} />
       <AdminStack.Screen name="UserDetail" component={UserDetail} />
+      <AdminStack.Screen name="HomeScreen" component={HomeScreen} />
     </AdminStack.Navigator>
   );
 }

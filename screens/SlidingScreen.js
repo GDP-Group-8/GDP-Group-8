@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MyRecordsScreen } from "./MyRecords";
 import { MyDataScreen } from "./WearableData";
 
-export const SlidingScreen = () => {
+export const SlidingScreen = ({ navigation }) => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: "myRecords", title: "My Records" },

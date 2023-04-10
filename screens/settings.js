@@ -1,40 +1,17 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { View, Text, Linking, SafeAreaView } from "react-native";
 import { Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
-import { makeRedirectUri } from "expo-auth-session";
 import { logout } from "../firebase";
 import { yourIp } from "../firebase";
-import { useAuthRequest } from "expo-auth-session/providers/google";
-WebBrowser.maybeCompleteAuthSession();
-
 export default function Settings({ navigation }) {
   const { currentUser, setCurrentUser } = useAuth();
-
   useEffect(() => {
-    if (!currentUser) {
+    if (!currentUser && navigation) {
       navigation.navigate("HomeScreen");
     }
   }, [currentUser, navigation]);
-
-  const getUserInfo = async () => {
-    try {
-      const response = await fetch(
-        "https://www.googleapis.com/userinfo/v2/me",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      const user = await response.json();
-      setUserInfo(user);
-    } catch (error) {
-      // Add your own error handler here
-    }
-  };
 
   const handleMyProfilePress = () => {
     // navigate to MyProfile screen
@@ -51,7 +28,7 @@ export default function Settings({ navigation }) {
       logout();
       setCurrentUser(null);
     } catch (error) {
-      console.log(void error);
+      console.log(error);
     }
   };
 
