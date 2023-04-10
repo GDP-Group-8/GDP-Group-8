@@ -272,40 +272,46 @@ const CreateWorkoutScreen = ({ navigation }) => {
         >
           <ScrollView contentContainerStyle={styles.scrollViewContainer}>
             <View style={styles.header}>
-              <View style={{ flexDirection: "column" }}>
+              <View
+                style={{
+                  flexDirection: "column",
+                  flex: 1,
+                  width: "100%",
+                }}
+              >
                 <Text style={styles.title}>Workout Name</Text>
                 <TextInput
                   style={styles.input}
-                  placeholderTextColor={Color.gainsboro_100}
-                  placeholder="Enter workout name"
+                  placeholderTextColor="#FFFFFF80"
+                  placeholder="Enter Workout Name"
                   onChangeText={setWorkoutName}
                 />
               </View>
-              <View style={{ flexDirection: "column" }}>
+              <View style={{ flexDirection: "column", width: "100%" }}>
                 <Text style={styles.title}>Workout Type</Text>
                 <TextInput
                   style={styles.input}
-                  placeholderTextColor={Color.gainsboro_100}
-                  placeholder="Enter workout type"
+                  placeholderTextColor="#FFFFFF80"
+                  placeholder="Enter Workout Type"
                   onChangeText={setWorkoutType}
                 />
               </View>
             </View>
-
             <View style={styles.body}>{exerciseCards}</View>
-
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={handleAddExercise}
-            >
-              <Text style={styles.addButtonText}>Add Exercise</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={handleSaveWorkout}
-            >
-              <Text style={styles.addButtonText}>Save Workout</Text>
-            </TouchableOpacity>
+            <View style={{ flex: 1, flexDirection: "column" }}>
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={handleAddExercise}
+              >
+                <Text style={styles.addButtonText}>Add Exercise</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={handleSaveWorkout}
+              >
+                <Text style={styles.addButtonText}>Save Workout</Text>
+              </TouchableOpacity>
+            </View>
           </ScrollView>
         </KeyboardAvoidingView>
       </View>
@@ -326,9 +332,9 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    paddingHorizontal: 10,
+    borderBottomWidth: 1,
+    borderColor: "#FFA500",
+    // paddingHorizontal: 10,
     marginBottom: 10,
   },
   card: {
@@ -396,10 +402,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   header: {
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
+    alignItems: "flex-start",
+    // marginBottom: 20,
   },
   title: {
     fontSize: 20,
@@ -480,17 +486,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   addButton: {
-    backgroundColor: Color.darkgoldenrod_200,
+    backgroundColor: "#2e2e2e",
     width: "100%",
-    height: 40,
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
+    overflow: "hidden",
+    marginBottom: 20,
   },
   addButtonText: {
     fontSize: 20,
     color: Color.gainsboro_100,
     fontWeight: "bold",
+    paddingVertical: 10,
   },
   centeredView: {
     flex: 1,

@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
-import { View, Text, Linking, SafeAreaView } from "react-native";
+import { View, Text, Linking, SafeAreaView, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
 import { logout } from "../firebase";
@@ -40,12 +40,12 @@ export default function Settings({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "rgb(31,31,31)" }}>
-      <View style={{ margin: 20 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#111" }}>
+      <View style={{ margin: 20, flex: 1, justifyContent: "center" }}>
         <Button
           mode="contained"
           onPress={handleMyProfilePress}
-          style={{ marginBottom: 20, backgroundColor: "orange" }}
+          style={styles.button}
           labelStyle={{ color: "white" }}
           contentStyle={{ paddingVertical: 5 }}
         >
@@ -54,7 +54,7 @@ export default function Settings({ navigation }) {
         <Button
           mode="contained"
           onPress={handleManageUsersPress}
-          style={{ marginBottom: 20, backgroundColor: "orange" }}
+          style={styles.button}
           labelStyle={{ color: "white" }}
           contentStyle={{ paddingVertical: 5 }}
         >
@@ -63,7 +63,7 @@ export default function Settings({ navigation }) {
         <Button
           mode="contained"
           onPress={whoop}
-          style={{ marginBottom: 20, backgroundColor: "orange" }}
+          style={styles.button}
           labelStyle={{ color: "white" }}
           contentStyle={{ paddingVertical: 5 }}
         >
@@ -73,7 +73,7 @@ export default function Settings({ navigation }) {
           mode="contained"
           onPress={() => handleLogout()}
           labelStyle={{ color: "white" }}
-          style={{ backgroundColor: "orange" }}
+          style={{ ...styles.button, marginBottom: 0 }}
           contentStyle={{ paddingVertical: 5 }}
         >
           Sign out
@@ -82,3 +82,11 @@ export default function Settings({ navigation }) {
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: "#2e2e2e",
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+});

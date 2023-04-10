@@ -4,6 +4,7 @@ import { TextInput, Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import { yourIp } from "../firebase";
+
 export default function MyProfile({ navigation }) {
   const [name, setName] = useState("");
   const { currentUser, admin } = useAuth();
@@ -35,7 +36,7 @@ export default function MyProfile({ navigation }) {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>My Profile</Text>
+      <Text style={{ fontSize: 24, marginBottom: 20 }}>My Profiles</Text>
       <TextInput
         label="Name"
         value={name}

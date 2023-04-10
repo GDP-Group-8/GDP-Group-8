@@ -363,7 +363,9 @@ const GymClassesScreen = ({ navigation }) => {
                   Back
                 </Text>
               </TouchableOpacity>
-              <Text style={styles.modalHeader}>{selectedClass?.className}</Text>
+              <Text style={{ ...styles.modalHeader, alignSelf: "center" }}>
+                {selectedClass?.className}
+              </Text>
             </View>
             <Text style={styles.modalDescription}>
               {selectedClass?.description}
@@ -446,7 +448,7 @@ const GymClassesScreen = ({ navigation }) => {
             )}
 
             <Button
-              textColor="black"
+              textColor="white"
               contentStyle={{ fontSize: 1 }}
               onPress={() => closeModal()}
             >
@@ -471,7 +473,7 @@ const GymClassesScreen = ({ navigation }) => {
       >
         <Text
           style={{
-            color: "orange",
+            color: "white",
             fontSize: 24,
             fontWeight: "bold",
           }}
@@ -644,7 +646,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white", // set text color to white
     marginBottom: 16,
-    alignSelf: "center",
+    alignSelf: "flex-start",
   },
   modalDescription: {
     fontSize: 16,

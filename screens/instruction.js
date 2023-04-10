@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { View, ScrollView } from "react-native";
 import { Text, Headline, Appbar } from "react-native-paper";
 import WebView from "react-native-webview";
 import ExerciseList from "./exerciseList";
+import YoutubePlayer from "react-native-youtube-iframe";
+
 export default function Instruction({ navigation, route }) {
+  const [playing, setPlaying] = useState(false);
+
+  const onStateChange = useCallback((state) => {
+    if (state === "ended") {
+      setPlaying(false);
+      Alert.alert("video has finished playing!");
+    }
+  }, []);
+
   const instructions = [
     {
       id: 1,
@@ -26,13 +37,14 @@ export default function Instruction({ navigation, route }) {
       text: "Sit-ups",
     },
   ];
+  const regex = /[?&]v=([^&]+)/;
+  const url = route.params.exercise.demo.toString();
+  const videoId = url.match(regex)[1];
   return (
     <View style={{ flex: 1, backgroundColor: "rgb(47,47,47)" }}>
       <Appbar.Header style={{ backgroundColor: "rgb(47,47,47)" }}>
         <Appbar.BackAction
-          onPress={() => {
-            navigation.goBack();
-          }}
+          onPress={() => navigation.goBack()}
           color={"white"}
         />
         <Appbar.Content
@@ -40,21 +52,15 @@ export default function Instruction({ navigation, route }) {
           title={route.params.exercise.name.toString().toUpperCase()}
         />
       </Appbar.Header>
-      <View style={{ height: 300 }}>
-        <WebView
-          javaScriptEnabled={true}
-          source={{
-            uri: route.params.exercise.demo.toString() /*`https://www.youtube.com/embed/${
-              route.params.exercise.demo.toString().split("watch?v=")[1]
-            }`,*/,
-          }}
-        />
-      </View>
+      <YoutubePlayer
+        height={300}
+        videoId={videoId}
+        onChangeState={onStateChange}
+      />
       <ScrollView>
         <Headline
           style={{
-            marginLeft: 25,
-            marginTop: 20,
+            paddingLeft: 25,
             fontWeight: "800",
             fontSize: 30,
             color: "white",
@@ -65,13 +71,17 @@ export default function Instruction({ navigation, route }) {
         {instructions.map((instruction, index) => (
           <View
             key={index}
-            style={{ display: "flex", flexDirection: "row", paddingRight: 40 }}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              paddingRight: 40,
+              marginTop: 10,
+            }}
           >
             <Text
               style={{
                 marginLeft: 25,
                 fontSize: 18,
-                marginTop: 10,
                 color: "white",
               }}
             >
@@ -81,7 +91,6 @@ export default function Instruction({ navigation, route }) {
               style={{
                 marginLeft: 5,
                 fontSize: 18,
-                marginTop: 10,
                 color: "white",
               }}
               key={instruction.id}
