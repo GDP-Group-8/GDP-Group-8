@@ -21,13 +21,13 @@ import {
 import axios from "axios";
 import { useAuth } from "./contexts/AuthContext";
 
-const FIREBASE_API_KEY = "AIzaSyDnFCnRdu6muWnnMtZ414tb02jNFUX291U"
-const FIREBASE_AUTH_DOMAIN = "the-best-project-a6ed2.firebaseapp.com"
-const FIREBASE_PROJECT_ID = "the-best-project-a6ed2"
-const FIREBASE_STORAGE_BUCKET = "the-best-project-a6ed2.appspot.com"
-const FIREBASE_MESSAGING_SENDER_ID = "173637986504"
-const FIREBASE_APP_ID = "1:173637986504:web:338fc525ad3f959263ddfd"
-const FIREBASE_MEASUREMENT_ID = "G-RFGNPX3Y0T"
+const FIREBASE_API_KEY = "AIzaSyDnFCnRdu6muWnnMtZ414tb02jNFUX291U";
+const FIREBASE_AUTH_DOMAIN = "the-best-project-a6ed2.firebaseapp.com";
+const FIREBASE_PROJECT_ID = "the-best-project-a6ed2";
+const FIREBASE_STORAGE_BUCKET = "the-best-project-a6ed2.appspot.com";
+const FIREBASE_MESSAGING_SENDER_ID = "173637986504";
+const FIREBASE_APP_ID = "1:173637986504:web:338fc525ad3f959263ddfd";
+const FIREBASE_MEASUREMENT_ID = "G-RFGNPX3Y0T";
 
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,
@@ -44,10 +44,10 @@ const auth = getAuth(app);
 const storage = getStorage(app); // Add this line
 const storageRef = ref(storage);
 const videosRef = ref(storageRef, "videos");
-const yourIp = "http://192.168.0.195:5000";
-const uploadVideo = async (video) => {
+const yourIp = "http://192.168.170.179:5000";
+const uploadVideo = async (video, name) => {
   //upload into videos folder in the storage
-  const videoRef = ref(videosRef, "video");
+  const videoRef = ref(videosRef, name);
   const uploadTask = await uploadBytes(videoRef, video);
   console.log(uploadTask);
   //get the download url
