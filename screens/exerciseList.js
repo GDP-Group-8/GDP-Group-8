@@ -4,68 +4,7 @@ import { Text, Divider, List, Headline, Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
 import { yourIp } from "../firebase";
 export default function ExerciseList({ navigation }) {
-  const exercisesOrigin = [
-    {
-      name: "Yoga",
-      desc: "Relax the body and mind, relieve the mood",
-    },
-    {
-      name: "Sit-ups",
-      desc: "High intensity fat burning and muscle strengthening",
-    },
-    {
-      name: "Jogging",
-      desc: "Improve body endurance",
-    },
-    {
-      name: "Yoga",
-      desc: "Relax the body and mind, relieve the mood",
-    },
-    {
-      name: "Sit-ups",
-      desc: "High intensity fat burning and muscle strengthening",
-    },
-    {
-      name: "Jogging",
-      desc: "Improve body endurance",
-    },
-    {
-      name: "Yoga",
-      desc: "Relax the body and mind, relieve the mood",
-    },
-    {
-      name: "Sit-ups",
-      desc: "High intensity fat burning and muscle strengthening",
-    },
-    {
-      name: "Jogging",
-      desc: "Improve body endurance",
-    },
-    {
-      name: "Yoga",
-      desc: "Relax the body and mind, relieve the mood",
-    },
-    {
-      name: "Sit-ups",
-      desc: "High intensity fat burning and muscle strengthening",
-    },
-    {
-      name: "Jogging",
-      desc: "Improve body endurance",
-    },
-    {
-      name: "Yoga",
-      desc: "Relax the body and mind, relieve the mood",
-    },
-    {
-      name: "Sit-ups",
-      desc: "High intensity fat burning and muscle strengthening",
-    },
-    {
-      name: "Jogging",
-      desc: "Improve body endurance",
-    },
-  ];
+ 
   const [keywords, setKeywords] = useState("");
   const { currentUser, admin } = useAuth();
   const [exercises, setExercises] = React.useState([]);

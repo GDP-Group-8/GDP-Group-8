@@ -24,6 +24,7 @@ import {  View, TouchableOpacity, StyleSheet } from "react-native";
 import { Text, Headline, Appbar } from "react-native-paper";
 
 import { Camera } from "expo-camera";
+
 import { uploadVideo } from "../firebase";
 import * as MediaLibrary from "expo-media-library";
 import axios from "axios";
@@ -72,20 +73,24 @@ export default function PersonalRecords({ navigation,route }) {
       };
       camera.current.recordAsync(options).then(async (recordedVideo) => {
         setVideo(recordedVideo);
-        console.log("Video recorded");
+        console.log("Video recorded",recordedVideo.uri);
         const response = await fetch(recordedVideo.uri);
         const blob = await response.blob();
-        // Upload the video to Firebase
-        const uploadTaskPath = await uploadVideo(blob);
-        // Get the download URL
-        console.log(uploadTaskPath);
-
-        setNewExercise({...newExercise,demo:uploadTaskPath});
-
-        
+        navigation.push("VideoRecordPreview", {video:blob,setNewExercise:setNewExercise,newExercise:newExercise});
+        // navigation.push("VideoRecordPreview", {videoURI:recordedVideo.uri});
       });
     }
   };
+  // const uploadExercise = async ()=>{
+      
+  //     // Upload the video to Firebase
+  //     const uploadTaskPath = await uploadVideo(blob);
+  //     // Get the download URL
+  //     console.log(uploadTaskPath);
+
+  //     setNewExercise({...newExercise,demo:uploadTaskPath});
+      
+  // }
   return (
     <View style={styles.container}>
       <Appbar.Header style={{ backgroundColor: "rgb(47,47,47)" }}>
@@ -105,6 +110,9 @@ export default function PersonalRecords({ navigation,route }) {
           <TouchableOpacity onPress={handleRecord} style={styles.button}>
             <Text style={styles.text}>{isRecording ? "Stop" : "Record"}</Text>
           </TouchableOpacity>
+          {/* <TouchableOpacity onPress={uploadExercise} style={styles.button}>
+            <Text style={styles.text}>{"Upload"}</Text>
+          </TouchableOpacity> */}
         </View>
       </Camera>
     </View>
@@ -123,6 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     flexDirection: "row",
     margin: 20,
+    width:800
   },
   button: {
     flex: 0.1,

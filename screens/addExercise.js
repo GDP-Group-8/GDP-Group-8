@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, ScrollView,Text ,StyleSheet} from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button,Appbar } from 'react-native-paper';
 import axios from 'axios';
+import { yourIp } from '../firebase';
 const primaryColor = "orange"; // Orange
 const secondaryColor = "#2F2F2F"; // Dark gray
 const backgroundColor = "#1E1E1E"; // Even darker gray for background
@@ -17,10 +18,15 @@ export default function AddExercise({ navigation }) {
     }
     const addInstruction = ()=>{
         const newInstructions = [...instructions];
-        newInstructions.push(" ");
+        newInstructions.push("");
         setInstructions(newInstructions);
     }
     const addExercise = async ()=>{
+        console.log(newExercise.name,newExercise.demo)
+          if(!newExercise.demo){
+            console.log("error upload video");
+            return
+        }
         // Send the video URL to the backend
         try {
             await axios.post(yourIp + "/exercises/upload", {
@@ -28,6 +34,8 @@ export default function AddExercise({ navigation }) {
               description: "This is a test video",
               videoURL: newExercise.demo, // Send the video URL as videoURL
             });
+            console.log("upload video successfully");
+            navigation.pop(1)
           } catch (error) {
             alert("Error uploading video and storing link: " + error);
           }
@@ -35,7 +43,22 @@ export default function AddExercise({ navigation }) {
 
     return (
         <ScrollView className=" py-8 px-4 shadow sm:rounded-lg sm:px-10" style={{backgroundColor: backgroundColor }}>
-            <Text style={styles.heading}>Create an Exercise</Text>
+            {/* <Appbar.Header style={{ backgroundColor: "rgb(47,47,47)" }}>
+             */}
+            <Appbar.Header style={{ backgroundColor: backgroundColor }}>
+
+              <Appbar.BackAction
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                color={primaryColor}
+              />
+              <Appbar.Content
+                titleStyle={{ fontWeight: "bold", color: primaryColor }}
+                title="Create an Exercise"
+              />
+            </Appbar.Header>
+            {/* <Text style={styles.heading}>Create an Exercise</Text> */}
             <View >
                 <View>
                     <TextInput
