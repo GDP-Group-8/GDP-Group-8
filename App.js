@@ -33,6 +33,9 @@ import Instruction from "./screens/instruction";
 import CreateWorkoutScreen from "./screens/CreateWorkout";
 import PersonalRecords from "./screens/personalRecords";
 import { SlidingScreen } from "./screens/SlidingScreen";
+import AddExercise from "./screens/addExercise";
+import RecordPreview from "./screens/recordPreview";
+
 const HomeStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const HomeTab = createBottomTabNavigator();
@@ -131,6 +134,10 @@ function ExerciseListStackScreen() {
     <ExerciseListStack.Navigator screenOptions={{ headerShown: false }}>
       <ExerciseListStack.Screen name="ExerciseList" component={ExerciseList} />
       <ExerciseListStack.Screen name="Instruction" component={Instruction} />
+      <ExerciseListStack.Screen name="AddExercise" component={AddExercise} />
+      <ExerciseListStack.Screen name="VideoRecord" component={PersonalRecords} />
+      <ExerciseListStack.Screen name="VideoRecordPreview" component={RecordPreview} />
+
     </ExerciseListStack.Navigator>
   );
 }

@@ -4,28 +4,29 @@ import { Text, Headline, Appbar } from "react-native-paper";
 import WebView from "react-native-webview";
 import ExerciseList from "./exerciseList";
 export default function Instruction({ navigation, route }) {
-  const instructions = [
-    {
-      id: 1,
-      text: "Lie on the ground with knees bent",
-    },
-    {
-      id: 2,
-      text: "Slightly separate the left and right feet",
-    },
-    {
-      id: 3,
-      text: "Back off the ground, head up",
-    },
-    {
-      id: 4,
-      text: "Straighten both hands up at the same time Straighten both hands up at the same time",
-    },
-    {
-      id: 5,
-      text: "Sit-ups",
-    },
-  ];
+  // const instructions = [
+  //   {
+  //     id: 1,
+  //     text: "Lie on the ground with knees bent",
+  //   },
+  //   {
+  //     id: 2,
+  //     text: "Slightly separate the left and right feet",
+  //   },
+  //   {
+  //     id: 3,
+  //     text: "Back off the ground, head up",
+  //   },
+  //   {
+  //     id: 4,
+  //     text: "Straighten both hands up at the same time Straighten both hands up at the same time",
+  //   },
+  //   {
+  //     id: 5,
+  //     text: "Sit-ups",
+  //   },
+  // ];
+  const instructions = route.params.exercise.instructions;
   return (
     <View style={{ flex: 1, backgroundColor: "rgb(47,47,47)" }}>
       <Appbar.Header style={{ backgroundColor: "rgb(47,47,47)" }}>
@@ -86,7 +87,7 @@ export default function Instruction({ navigation, route }) {
               }}
               key={instruction.id}
             >
-              {instruction.text}
+              {instruction}
             </Text>
           </View>
         ))}
