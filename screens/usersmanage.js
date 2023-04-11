@@ -49,23 +49,40 @@ export default function UsersManage({ navigation }) {
   let adminRender;
   if (admin) {
     adminRender = (
-      <ScrollView className="bg-white">
+      <ScrollView className="bg-white" style={{ backgroundColor: "#111" }}>
         <View className="mt-6"></View>
-        <Headline style={{ textAlign: "center" }}>Manage Users</Headline>
+        <Headline style={{ textAlign: "center", color: "white" }}>
+          Manage Users
+        </Headline>
         <DataTable>
-          <DataTable.Header>
-            <DataTable.Title>Member ID</DataTable.Title>
-            <DataTable.Title>Name</DataTable.Title>
-            <DataTable.Title> Operation </DataTable.Title>
+          <DataTable.Header
+            style={{ borderBottomColor: "orange", borderBottomWidth: 1 }}
+          >
+            <DataTable.Title textStyle={{ color: "white" }}>
+              Member ID
+            </DataTable.Title>
+            <DataTable.Title textStyle={{ color: "white" }}>
+              Name
+            </DataTable.Title>
+            <DataTable.Title textStyle={{ color: "white" }}>
+              Operation
+            </DataTable.Title>
           </DataTable.Header>
           {users.map((user, index) => {
             return (
-              <DataTable.Row key={user.memberID}>
-                <DataTable.Cell> {user.memberID} </DataTable.Cell>
-                <DataTable.Cell> {user.name} </DataTable.Cell>
-                <DataTable.Cell>
+              <DataTable.Row
+                key={user.memberID}
+                style={{ borderBottomColor: "#FFA50058", borderBottomWidth: 1 }}
+              >
+                <DataTable.Cell textStyle={{ color: "white" }}>
+                  {user.memberID}
+                </DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: "white" }}>
+                  {user.name}
+                </DataTable.Cell>
+                <DataTable.Cell textStyle={{ color: "white" }}>
                   <Button
-                    textColor="lightblue"
+                    textColor="#FFD580"
                     mode="text"
                     onPress={() => {
                       navigation.push("UserDetail", {
@@ -80,57 +97,32 @@ export default function UsersManage({ navigation }) {
               </DataTable.Row>
             );
           })}
-          <View className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <View>
-              <Text className="block text-sm font-medium text-gray-700">
-                Member ID
-              </Text>
-              <View className="mt-1">
-                <TextInput
-                  label="Member ID"
-                  value={newUser.member_id}
-                  onChangeText={(value) =>
-                    setNewUser({ ...newUser, member_id: value })
-                  }
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                />
+          <View className="py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            {[
+              { label: "Member ID", field: "member_id" },
+              { label: "User Name", field: "name" },
+              { label: "Email", field: "email" },
+            ].map(({ label, field }) => (
+              <View key={field}>
+                <Text className="block text-sm font-medium text-white">
+                  {label}
+                </Text>
+                <View>
+                  <TextInput
+                    label={label}
+                    value={newUser[field]}
+                    onChangeText={(value) =>
+                      setNewUser({ ...newUser, [field]: value })
+                    }
+                    className="block w-full rounded-md px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    style={{ backgroundColor: "#2F2F2F", marginBottom: 8 }}
+                  />
+                </View>
               </View>
-            </View>
-            <View>
-              <Text className="block text-sm font-medium text-gray-700">
-                User Name
-              </Text>
-              <View className="mt-1">
-                <TextInput
-                  label="User Name"
-                  value={newUser.name}
-                  onChangeText={(value) =>
-                    setNewUser({ ...newUser, name: value })
-                  }
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                />
-              </View>
-            </View>
+            ))}
 
             <View>
-              <Text className="block text-sm font-medium text-gray-700">
-                Email
-              </Text>
-              <View className="mt-1">
-                <TextInput
-                  textContentType="emailAddress"
-                  label="Email"
-                  value={newUser.email}
-                  onChangeText={(value) =>
-                    setNewUser({ ...newUser, email: value })
-                  }
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                />
-              </View>
-            </View>
-
-            <View>
-              <Text className="block text-sm font-medium text-gray-700">
+              <Text className="block text-sm font-medium text-white">
                 Membership Type
               </Text>
               <View className="mt-1">
@@ -140,15 +132,22 @@ export default function UsersManage({ navigation }) {
                   }
                   value={newUser.membershipType}
                 >
-                  <RadioButton.Item label="Bronze" value="Bronze" />
-                  <RadioButton.Item label="Silver" value="Silver" />
-                  <RadioButton.Item label="Gold" value="Gold" />
+                  {[
+                    { label: "Bronze", value: "Bronze", key: "Bronze" },
+                    { label: "Silver", value: "Silver", key: "Silver" },
+                    { label: "Gold", value: "Gold", key: "Gold" },
+                  ].map((obj) => (
+                    <RadioButton.Item
+                      {...obj}
+                      labelStyle={{ color: "white" }}
+                    />
+                  ))}
                 </RadioButton.Group>
               </View>
             </View>
 
             <View>
-              <Text className="block text-sm font-medium text-gray-700">
+              <Text className="block text-sm font-medium text-white">
                 Join Date
               </Text>
               <View className="mt-1">
@@ -159,13 +158,14 @@ export default function UsersManage({ navigation }) {
                   onChangeText={(value) =>
                     setNewUser({ ...newUser, join_date: value })
                   }
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full appearance-none rounded-md px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  style={{ backgroundColor: "#2F2F2F", marginBottom: 8 }}
                 />
               </View>
             </View>
 
             <View>
-              <Text className="block text-sm font-medium text-gray-700">
+              <Text className="block text-sm font-medium text-white">
                 Gym Location
               </Text>
               <View className="mt-1">
@@ -176,18 +176,20 @@ export default function UsersManage({ navigation }) {
                   onChangeText={(value) =>
                     setNewUser({ ...newUser, gym_location: value })
                   }
-                  className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  className="block w-full appearance-none rounded-md px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                  style={{ backgroundColor: "#2F2F2F", marginBottom: 8 }}
                 />
               </View>
             </View>
             <View className="mt-6"></View>
-
             <View>
               <Button
                 title="Add User"
                 mode="contained"
                 onPress={() => addUser()}
-                className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="flex w-full justify-center rounded-md border border-transparent py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                style={{ backgroundColor: "orange" }}
+                textColor="white"
               >
                 Add User
               </Button>

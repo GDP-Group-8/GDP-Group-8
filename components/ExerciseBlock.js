@@ -2,6 +2,8 @@ import React from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { yourIp } from "../firebase";
+import { Dimensions } from "react-native";
+
 const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const groupedExercises = exercises.reduce((acc, exercise) => {
     console.log(exercise);
@@ -35,17 +37,88 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
       console.error("Error:", error);
     }
   };
+
+  const { width: deviceWidth } = Dimensions.get("window");
+
   return (
-    <View>
+    <View style={{ width: deviceWidth * 0.92 }}>
       {Object.entries(groupedExercises).map(([name, exercises]) => (
-        <View style={styles.exerciseContainer} key={name}>
-          <Text style={styles.exerciseName}>{name}</Text>
+        <View
+          style={{
+            backgroundColor: "#2f2f2f",
+            marginBottom: 16,
+            borderRadius: 8,
+          }}
+          key={name}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              height: 40,
+              borderBottomColor: "white",
+              borderBottomWidth: 1,
+            }}
+          >
+            <Text
+              style={{
+                ...styles.exerciseName,
+                flex: 1,
+                paddingLeft: 8,
+                height: "100%",
+                textAlignVertical: "center",
+              }}
+            >
+              {name}
+            </Text>
+            <Text
+              style={{
+                color: "white",
+                height: 40,
+                aspectRatio: 1,
+                fontSize: 20,
+                textAlign: "center",
+                textAlignVertical: "center",
+              }}
+            >
+              {"ⓘ"}
+            </Text>
+          </View>
           {exercises.map((exercise) => (
-            <View style={styles.setContainer} key={exercise._id}>
-              <Text style={styles.setLabel}>Set {exercise.set}:</Text>
-              <Text style={styles.repLabel}>Reps:</Text>
+            <View
+              style={{
+                ...styles.setContainer,
+                borderBottomColor: "white",
+                borderBottomWidth: 1,
+                flex: 1,
+                flexDirection: "row",
+                height: 40,
+                alignContent: "center",
+              }}
+              key={exercise._id}
+            >
+              <Text
+                style={{
+                  ...styles.setLabel,
+                  flex: 103,
+                  textAlign: "center",
+                  marginRight: 0,
+                  marginLeft: 0,
+                }}
+              >
+                {exercise.set}
+              </Text>
               <TextInput
-                style={styles.repInput}
+                style={{
+                  flex: 432,
+                  textAlign: "right",
+                  padding: 0,
+                  marginLeft: 0,
+                  marginRight: 0,
+                  color: "white",
+                  paddingRight: 2,
+                  fontWeight: "bold",
+                }}
                 keyboardType="numeric"
                 maxLength={3}
                 editable={bookedIn}
@@ -54,9 +127,43 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
                   updateExercise(exercise._id, "reps", text)
                 }
               />
-              <Text style={styles.weightLabel}>Weight (kg):</Text>
+              <Text
+                style={{
+                  ...styles.repLabel,
+                  flex: 150,
+                  textAlign: "left",
+                  marginLeft: 0,
+                  marginRight: 0,
+                  fontSize: 11,
+                  fontWeight: "300",
+                }}
+              >
+                reps
+              </Text>
+
+              {/* <Text
+                style={{
+                  flex: 249,
+                  textAlign: "right",
+                  marginLeft: 0,
+                  marginRight: 0,
+                  color: "white",
+                  paddingRight: 2,
+                  fontWeight: "bold",
+                }}
+              >
+                {exercise.weight}
+              </Text> */}
               <TextInput
-                style={styles.weightInput}
+                style={{
+                  flex: 249,
+                  textAlign: "right",
+                  marginLeft: 0,
+                  marginRight: 0,
+                  color: "white",
+                  paddingRight: 2,
+                  fontWeight: "bold",
+                }}
                 keyboardType="numeric"
                 maxLength={5}
                 editable={bookedIn}
@@ -65,20 +172,37 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
                   updateExercise(exercise._id, "weight", text)
                 }
               />
+              <Text
+                style={{
+                  ...styles.weightLabel,
+                  flex: 191,
+                  textAlign: "left",
+                  marginLeft: 0,
+                  marginRight: 0,
+                  fontSize: 11,
+                  fontWeight: "300",
+                }}
+              >
+                kg
+              </Text>
+              {/* <TextInput
+                style={styles.weightInput}
+                keyboardType="numeric"
+                maxLength={5}
+                editable={bookedIn}
+                defaultValue={`${exercise.weight}`}
+                onChangeText={(text) =>
+                  updateExercise(exercise._id, "weight", text)
+                }
+              /> */}
             </View>
           ))}
+          <View>
+            <Text></Text>
+          </View>
         </View>
       ))}
-      {/* button */}
-      <View style={{ alignItems: "center", marginTop: 16 }}>
-        <Button
-          mode="contained"
-          onPress={handleOnPress}
-          style={{ width: 200, backgroundColor: "#444" }}
-        >
-          Save
-        </Button>
-      </View>
+      <View style={{ alignItems: "center", marginTop: 16 }}></View>
     </View>
   );
 };

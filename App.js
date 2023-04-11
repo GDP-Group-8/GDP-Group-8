@@ -35,6 +35,7 @@ import PersonalRecords from "./screens/personalRecords";
 import { SlidingScreen } from "./screens/SlidingScreen";
 import AddExercise from "./screens/addExercise";
 import RecordPreview from "./screens/recordPreview";
+import { TabBar, TabOption } from "./components/TabBar";
 
 const HomeStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -61,7 +62,27 @@ const navColour = {
 //   dark: Color.gray_100, // Foreground Color
 // };
 
+/*
+<TabBar>
+  <TabOption name="Home" component={HomeScreen} />
+  <TabOption name="Exercises" component={ExerciseList} />
+  <TabOption name="Records" component={PersonalRecords} />
+  <TabOption name="Settings" component={Settings} />
+</TabBar>
+
+
+
+*/
+
 function HomeTabs() {
+  return (
+    <TabBar>
+      <TabOption name="Home" component={DashboardStackScreen} />
+      <TabOption name="Exercises" component={ExerciseListStackScreen} />
+      <TabOption name="Records" component={PersonalRecordsStackScreen} />
+      <TabOption name="Settings" component={AdminStackScreen} />
+    </TabBar>
+  );
   return (
     //multiple icons for tab bar
     <HomeTab.Navigator

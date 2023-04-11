@@ -12,9 +12,10 @@ import axios from "axios";
 import { Button } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { yourIp } from "../firebase";
+import { Dimensions } from "react-native";
 const primaryColor = "orange"; // Orange
 const secondaryColor = "#2F2F2F"; // Dark gray
-const backgroundColor = "#1E1E1E"; // Even darker gray for background
+const backgroundColor = "#111"; // Even darker gray for background
 
 const CreateClass = ({ navigation, workoutID }) => {
   const [className, setClassName] = useState("");
@@ -130,110 +131,156 @@ const CreateClass = ({ navigation, workoutID }) => {
     );
   };
 
+  const { width } = Dimensions.get("window");
+
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Create a Class</Text>
+      <Text style={{ ...styles.heading, textAlign: "center", color: "white" }}>
+        Create a Class
+      </Text>
+      <Text style={{ color: "white", marginBottom: 4 }}>Class Name</Text>
       <TextInput
         style={styles.input}
-        placeholder="Class Name"
         value={className}
         onChangeText={setClassName}
       />
+      <Text style={{ color: "white", marginBottom: 4 }}>Description</Text>
       <TextInput
         style={styles.input}
-        placeholder="Description"
         value={description}
         onChangeText={setDescription}
       />
+      <Text style={{ color: "white", marginBottom: 4 }}>Capacity</Text>
       <TextInput
         style={styles.input}
-        placeholder="Capacity"
         keyboardType="numeric"
         value={capacity}
         onChangeText={setCapacity}
       />
-      <View style={styles.pickerContainer}>
-        <Text style={styles.pickerLabel}>Select Instructor:</Text>
-        <Picker
-          selectedValue={selectedInstructor}
-          style={styles.picker}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedInstructor(itemValue)
-          }
-        >
-          {instructors.map((instructor) => (
-            <Picker.Item
-              key={instructor}
-              label={instructor.name}
-              value={instructor.memberID}
-            />
-          ))}
-        </Picker>
+      <View
+        style={{
+          backgroundColor: "#FFA50080",
+          height: 1,
+          marginBottom: 10,
+          marginTop: 10,
+          width: width * 0.9 + 16,
+          marginLeft: -8,
+        }}
+      ></View>
+      <Text style={{ color: "white", marginBottom: 4 }}>Instructor</Text>
+      <Picker
+        selectedValue={selectedInstructor}
+        style={styles.picker}
+        onValueChange={(itemValue, itemIndex) =>
+          setSelectedInstructor(itemValue)
+        }
+      >
+        {instructors.map((instructor) => (
+          <Picker.Item
+            key={instructor}
+            label={instructor.name}
+            value={instructor.memberID}
+            style={{ fontSize: 12 }}
+          />
+        ))}
+      </Picker>
+      {/* <View style={styles.pickerContainer}></View> */}
+      <Text style={{ color: "white", marginBottom: 4 }}>Workout</Text>
+      <Picker
+        selectedValue={selectedWorkout}
+        style={{ ...styles.picker, marginBottom: 0 }}
+        onValueChange={(itemValue, itemIndex) => setSelectedWorkout(itemValue)}
+      >
+        {workouts.map((workout) => (
+          <Picker.Item
+            key={workout._id}
+            label={workout.name}
+            value={workout._id}
+            style={{ fontSize: 12 }}
+          />
+        ))}
+      </Picker>
+      <View
+        style={{
+          backgroundColor: "#FFA50080",
+          height: 1,
+          marginBottom: 10,
+          marginTop: 10,
+          width: width * 0.9 + 16,
+          marginLeft: -8,
+        }}
+      ></View>
+      {/* <View style={styles.pickerContainer}></View> */}
+      {/* <Text
+        style={{
+          color: "white",
+          textAlign: "center",
+          marginVertical: 10,
+        }}
+      >
+        Or
+      </Text> */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginVertical: 10,
+        }}
+      >
+        <View style={styles.pickerContainer}>
+          <Text style={styles.pickerLabel}>Date</Text>
+          <TouchableOpacity
+            style={styles.dateInput}
+            onPress={handleShowDatePicker}
+          >
+            <Text style={{ color: "white" }}>{date.toDateString()}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.pickerContainer}>
+          <Text style={{ ...styles.pickerLabel, textAlign: "right" }}>
+            Time
+          </Text>
+          <TouchableOpacity
+            style={styles.dateInput}
+            onPress={handleShowTimePicker}
+          >
+            <Text style={{ color: "white" }}>
+              {((date) => {
+                const s = date.toLocaleTimeString("en-GB", {
+                  timeStyle: "medium",
+                });
+                const hour = +s.slice(0, 2);
+                const minute = s.slice(3, 5);
+                const amOrPm = hour >= 12 ? "pm" : "am";
+                const h = ((hour % 12 || 12) + "").padStart(2, "0");
+                return `${h}:${minute} ${amOrPm}`;
+              })(date)}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.pickerContainer}>
-        <Text style={styles.pickerLabel}>Select Workout:</Text>
-        <Picker
-          selectedValue={selectedWorkout}
-          style={styles.picker}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedWorkout(itemValue)
-          }
-        >
-          {workouts.map((workout) => (
-            <Picker.Item
-              key={workout._id}
-              label={workout.name}
-              value={workout._id}
-            />
-          ))}
-        </Picker>
-      </View>
-      <Text>Or</Text>
       <Button
         mode="contained"
-        styles={styles.button}
-        buttonColor="orange"
-        onPress={() => {
-          navigation.navigate("CreateWorkout");
-        }}
+        style={styles.button}
+        buttonColor="#2d2d2d"
+        onPress={() => navigation.navigate("CreateWorkout")}
       >
         Create Workout
       </Button>
-      <View style={styles.pickerContainer}>
-        <Text style={styles.pickerLabel}>Select day:</Text>
-
-        <TouchableOpacity
-          style={styles.dateInput}
-          onPress={handleShowDatePicker}
-        >
-          <Text>{date.toDateString()}</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.pickerContainer}>
-        <Text style={styles.pickerLabel}>Select Time:</Text>
-
-        <TouchableOpacity
-          style={styles.dateInput}
-          onPress={handleShowTimePicker}
-        >
-          <Text>{date.toLocaleTimeString()}</Text>
-        </TouchableOpacity>
-      </View>
+      <Button
+        mode="contained"
+        style={styles.button}
+        buttonColor="#2d2d2d"
+        onPress={handleSubmit}
+      >
+        Create Class
+      </Button>
       {showDatePicker && (
         <DateTimePicker mode="date" value={date} onChange={onDateChange} />
       )}
       {showTimePicker && (
         <DateTimePicker mode="time" value={date} onChange={onTimeChange} />
       )}
-
-      <Button
-        mode="contained"
-        styles={styles.button}
-        buttonColor="orange"
-        onPress={handleSubmit}
-      >
-        Create Class
-      </Button>
     </View>
   );
 };
@@ -245,47 +292,46 @@ const styles = StyleSheet.create({
     backgroundColor: backgroundColor,
   },
   input: {
-    height: 40,
+    height: 45,
     borderWidth: 1,
     borderColor: secondaryColor,
     paddingHorizontal: 10,
     marginBottom: 10,
-    color: primaryColor,
+    color: "white",
     backgroundColor: secondaryColor,
   },
   heading: {
     fontWeight: "bold",
     marginBottom: 10,
     fontSize: 24,
-    color: primaryColor,
+    color: "primaryColor",
   },
   pickerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    // flexDirection: "column",
+    // alignItems: "center",
     marginBottom: 10,
   },
   pickerLabel: {
-    marginRight: 10,
-    fontSize: 18,
+    // marginRight: 10,
+    // fontSize: 18,
     fontWeight: "bold",
-    color: primaryColor,
+    color: "white",
   },
   picker: {
-    flex: 1,
-    height: 40,
     borderWidth: 1,
     borderColor: secondaryColor,
     borderRadius: 5,
     backgroundColor: secondaryColor,
-    color: primaryColor,
+    color: "white",
+    marginBottom: 10,
+    height: 20,
   },
   dateInput: {
     borderWidth: 1,
     borderColor: secondaryColor,
     padding: 10,
     borderRadius: 5,
-    marginBottom: 10,
-    marginTop: 10,
+    marginVertical: 10,
     backgroundColor: secondaryColor,
     color: primaryColor,
   },
@@ -294,18 +340,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
-    marginTop: 20,
-    marginBottom: 20,
+    // marginTop: 20,
+    // marginBottom: 20,
+    marginVertical: 20,
   },
   customButtonText: {
     color: backgroundColor,
     fontSize: 18,
   },
+
   button: {
-    color: "orange",
-    borderRadius: 10,
+    borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 11,
+    paddingVertical: 5,
   },
   buttonText: {
     fontSize: 20,

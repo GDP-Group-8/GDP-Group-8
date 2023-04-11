@@ -16,6 +16,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { WhoopLineChart } from "../components/WhoopLineChart";
 import { Picker } from "@react-native-picker/picker";
 import { GoogleFitBarChart } from "../components/GoogleFitBarChart";
+import { GoogleFitKmBarChart } from "../components/GoogleFitKmBarChart";
 export const MyDataScreen = ({ navigation }) => {
   const [recovery, setRecovery] = useState(80);
   const [strain, setStrain] = useState(12);
@@ -29,11 +30,13 @@ export const MyDataScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [dailyData, setDailyData] = useState([]);
   const [googleFitData, setGoogleFitData] = useState([]);
-  const [selectedDataSource, setSelectedDataSource] = useState("whoop");
+  const [selectedDataSource, setSelectedDataSource] = useState("");
   const [whoopDataIsTrue, setWhoopDataIsTrue] = useState(true);
   const [googleFitDataIsTrue, setGoogleFitDataIsTrue] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [isAnyDataAvailable, setIsAnyDataAvailable] = useState(false);
+  const [todaysFootsteps, setTodaysFootsteps] = useState(0);
+  const [todaysKmsMoved, setTodaysKmsMoved] = useState(0);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -54,6 +57,7 @@ export const MyDataScreen = ({ navigation }) => {
       setRespiratoryRate(response.data.sleep.score.respiratory_rate.toFixed(1));
       setAvgHeartRate(response.data.sevenDayData.averageRHR.toFixed(0));
       setAvgHrv(response.data.sevenDayData.averageHRV.toFixed(0));
+      setWhoopDataIsTrue(true);
     } catch (error) {
       setWhoopDataIsTrue(false);
       console.log(error);
@@ -69,7 +73,24 @@ export const MyDataScreen = ({ navigation }) => {
       );
       setGoogleFitData(response.data);
       setIsAnyDataAvailable(true);
-      console.log(response.data);
+      setGoogleFitDataIsTrue(true);
+      //get today date in yyyy-mm-dd format. 2023-1-1 remove the zero from the month and day if it is less than 10
+      // const todayDate = new Date().toISOString().slice(0, 10);
+      //remove the zero from the month and day if it is less than 10
+      const todayDate =
+        new Date().getFullYear() +
+        "-" +
+        (new Date().getMonth() + 1) +
+        "-" +
+        new Date().getDate();
+
+      console.log(response.data["com.google.distance.delta"][todayDate].value);
+      setTodaysFootsteps(
+        response.data["com.google.step_count.delta"][todayDate].steps
+      );
+      setTodaysKmsMoved(
+        response.data["com.google.distance.delta"][todayDate].value / 1000
+      );
     } catch (error) {
       setGoogleFitDataIsTrue(false);
       console.log(error);
@@ -141,8 +162,10 @@ export const MyDataScreen = ({ navigation }) => {
             itemStyle={styles.pickerItem}
             onValueChange={(itemValue) => setSelectedDataSource(itemValue)}
           >
-            <Picker.Item label="Google Fit" value="googleFit" />
-            <Picker.Item label="Whoop" value="whoop" />
+            {googleFitDataIsTrue && (
+              <Picker.Item label="Google Fit" value="googleFit" />
+            )}
+            {whoopDataIsTrue && <Picker.Item label="Whoop" value="whoop" />}
           </Picker>
 
           {selectedDataSource === "whoop" && whoopDataIsTrue ? (
@@ -184,7 +207,24 @@ export const MyDataScreen = ({ navigation }) => {
               <WhoopLineChart sevenDayData={dailyData} />
             </View>
           ) : (
-            <GoogleFitBarChart data={googleFitData} />
+            <View>
+              <View style={styles.infoCards}>
+                <InfoCard
+                  title="Today's Footsteps"
+                  value={todaysFootsteps}
+                  unit="steps"
+                  iconName="shoe-prints"
+                />
+                <InfoCard
+                  title="Today's Kms Moved"
+                  value={todaysKmsMoved.toFixed(2)}
+                  unit="km"
+                  iconName="route"
+                />
+              </View>
+              <GoogleFitBarChart data={googleFitData} />
+              <GoogleFitKmBarChart data={googleFitData} />
+            </View>
           )}
         </>
       ) : (

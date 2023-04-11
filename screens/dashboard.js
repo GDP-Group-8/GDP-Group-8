@@ -116,7 +116,6 @@ const GymClassesScreen = ({ navigation }) => {
   };
 
   const handleBookClass = async (classID, workoutId) => {
-    console.log(workoutId);
     try {
       const res = await axios.put(yourIp + "/classes/" + classID, {
         memberID: currentUser.uid,
@@ -134,9 +133,6 @@ const GymClassesScreen = ({ navigation }) => {
         workoutID: duplicateRes.data._id,
       });
 
-      console.log(res.data);
-      console.log(duplicateRes.data);
-      console.log(res2.data);
       fetchData();
     } catch (error) {
       console.error("Error in handleBookClass:", error);
@@ -144,7 +140,6 @@ const GymClassesScreen = ({ navigation }) => {
   };
 
   const handleCancelClass = async (classID) => {
-    console.log(void classID);
     const res = await axios.put(yourIp + "/classes/cancel/" + classID, {
       memberID: currentUser.uid,
     });
@@ -160,7 +155,6 @@ const GymClassesScreen = ({ navigation }) => {
   const handleClassClick = async (gymClass) => {
     setSelectedClass(gymClass);
     //get members in class
-    console.log(gymClass.workout + " poooooo");
     const res = await axios.post(yourIp + "/members/getMembers", {
       members: gymClass.members,
     });
@@ -169,7 +163,6 @@ const GymClassesScreen = ({ navigation }) => {
       setWorkout(null);
     } else {
       const res2 = await axios.get(yourIp + "/workouts/" + gymClass.workout);
-      console.log(void res2.data);
       setWorkout(res2.data);
     }
     setMembersInClass(res.data);
@@ -197,7 +190,6 @@ const GymClassesScreen = ({ navigation }) => {
       const res2 = await axios.get(
         yourIp + "/workouts/" + getMemberWorkout.data[0].workout
       );
-      console.log(res2.data);
       setWorkout(res2.data);
     }
     setMembersInClass(res.data);
@@ -308,37 +300,48 @@ const GymClassesScreen = ({ navigation }) => {
           {upcomingClasses && (
             <ScrollView showsVerticalScrollIndicator={false}>
               {upcomingClasses.map((gymClass, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => handleBookedClassClick(gymClass)}
-                  style={{ width: "100%" }}
-                >
-                  <View style={styles.upcomingClassCard}>
-                    <Text
-                      style={[
-                        styles.className,
-                        { alignSelf: "center", color: "white", marginTop: 32 },
-                      ]}
+                //only show classes that are not yesterday or before
+                <View>
+                  {moment(gymClass.date).isAfter(
+                    moment().subtract(1, "days")
+                  ) && (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => handleBookedClassClick(gymClass)}
+                      style={{ width: "100%" }}
                     >
-                      {gymClass.className}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.spaces,
-                        { alignSelf: "center", color: "white" },
-                      ]}
-                    >
-                      {moment(gymClass.date).format("ddd, MMM D, h:mm a")}
-                    </Text>
-                    <Button
-                      mode="contained"
-                      style={styles.button}
-                      onPress={() => handleCancelClass(gymClass._id)}
-                    >
-                      Cancel
-                    </Button>
-                  </View>
-                </TouchableOpacity>
+                      <View style={styles.upcomingClassCard}>
+                        <Text
+                          style={[
+                            styles.className,
+                            {
+                              alignSelf: "center",
+                              color: "white",
+                              marginTop: 32,
+                            },
+                          ]}
+                        >
+                          {gymClass.className}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.spaces,
+                            { alignSelf: "center", color: "white" },
+                          ]}
+                        >
+                          {moment(gymClass.date).format("ddd, MMM D, h:mm a")}
+                        </Text>
+                        <Button
+                          mode="contained"
+                          style={styles.button}
+                          onPress={() => handleCancelClass(gymClass._id)}
+                        >
+                          Cancel
+                        </Button>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                </View>
               ))}
             </ScrollView>
           )}
@@ -395,7 +398,9 @@ const GymClassesScreen = ({ navigation }) => {
                   Back
                 </Text>
               </TouchableOpacity>
-              <Text style={styles.modalHeader}>{selectedClass?.className}</Text>
+              <Text style={{ ...styles.modalHeader, alignSelf: "center" }}>
+                {selectedClass?.className}
+              </Text>
             </View>
             <Text style={styles.modalDescription}>
               {selectedClass?.description}
@@ -448,7 +453,7 @@ const GymClassesScreen = ({ navigation }) => {
             )}
 
             <Button
-              textColor="black"
+              textColor="white"
               contentStyle={{ fontSize: 1 }}
               onPress={() => closeModal()}
             >
@@ -474,7 +479,7 @@ const GymClassesScreen = ({ navigation }) => {
         >
           <Text
             style={{
-              color: "orange",
+              color: "white",
               fontSize: 24,
               fontWeight: "bold",
             }}
@@ -648,7 +653,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white", // set text color to white
     marginBottom: 16,
-    alignSelf: "center",
+    alignSelf: "flex-start",
   },
   modalDescription: {
     fontSize: 16,
