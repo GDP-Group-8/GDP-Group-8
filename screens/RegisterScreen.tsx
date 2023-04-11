@@ -31,7 +31,6 @@ const RegisterScreen = ({ navigation }: Props) => {
     if (currentUser) {
       navigation.navigate("Dashboard");
     }
-    
   }, [currentUser, navigation]);
 
   const _onSignUpPressed = async () => {

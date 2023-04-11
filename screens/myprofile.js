@@ -33,32 +33,59 @@ export default function MyProfile({ navigation }) {
     setEditable(false);
     // update user's profile information in the database
   };
-
+  const props = editable
+    ? { text: "Save", onPress: handleSavePress }
+    : { text: "Edit", onPress: handleEditPress };
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>My Profiles</Text>
+    <View style={{ flex: 1, padding: 20, backgroundColor: "#111" }}>
+      <Text
+        style={{
+          fontSize: 24,
+          marginBottom: 20,
+          textAlign: "center",
+          color: "white",
+        }}
+      >
+        My Profiles
+      </Text>
       <TextInput
-        label="Name"
+        label={<Text style={{ color: "#ffffff80" }}>Name</Text>}
         value={name}
         editable={false}
-        style={{ marginBottom: 20 }}
+        style={{
+          marginBottom: 20,
+          backgroundColor: "#2e2e2e",
+          borderRadius: 5,
+        }}
+        textColor="white"
+        labelStyle={{ color: "orange" }}
       />
       <TextInput
-        label="Email"
+        label={<Text style={{ color: "#ffffff80" }}>Email</Text>}
         value={email}
         editable={editable}
         onChangeText={(text) => setEmail(text)}
-        style={{ marginBottom: 20 }}
+        style={{
+          marginBottom: 20,
+          backgroundColor: "#2e2e2e",
+          borderRadius: 5,
+        }}
+        textColor="white"
       />
-      {editable ? (
-        <Button mode="contained" onPress={handleSavePress}>
-          Save
-        </Button>
-      ) : (
-        <Button mode="contained" onPress={handleEditPress}>
-          Edit
-        </Button>
-      )}
+      <MyButton {...props} />
     </View>
   );
 }
+
+const MyButton = ({ onPress, text }) => {
+  return (
+    <Button
+      mode="contained"
+      onPress={onPress}
+      buttonColor="orange"
+      style={{ borderRadius: 5 }}
+    >
+      {text}
+    </Button>
+  );
+};
