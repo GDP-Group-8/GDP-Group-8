@@ -1,78 +1,101 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, View, Dimensions, TouchableOpacity, Modal, FlatList } from 'react-native';
 import {
   LineChart
 } from "react-native-chart-kit";
 import { Text, Divider, List, Headline, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Dimensions } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
 
+const PillList = ({ data, onSelect }) => {
+  const renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity onPress={() => onSelect(item)} style={styles.pillContainer}>
+        <Text style={styles.pillText}>{item}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  return (
+    <FlatList
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => index.toString()}
+      horizontal
+    />
+  );
+};
 
 const Table = ({ records }) => (
   <View style={styles.mainGraph}>
     <Text style={styles.infoCardValue}>{records[0].exercise}</Text>
     <View style={styles.valueContainer}>
-      {records.map(record => (
-        <Text style={styles.infoCardTitle}>
-          {record.date} : {record.weight} kg
-        </Text>
+      
+      {records && records.map(record => (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}> 
+          <Text style={styles.infoCardTitle}>{record.date}</Text>
+          <Text style={styles.infoCardTitle}>{record.weight} kg</Text>
+        </View>
       ))}
     </View>
   </View>
 );
 
+
 export const MyRecordsScreen = ({ navigation }) => {
 
   const screenWidth = (Dimensions.get("window").width) - (Dimensions.get("window").width)/13;
   const { currentUser, admin } = useAuth();
-  //const [records, setRecords] = React.useState([]);
-  const exercise = "Squat";
-
-  const records = [
-    {
-      memberID: "123",
-      exercise: "Squat",
-      date: "03/02/23",
-      weight: 64
-    },
-    {
-      memberID: "123",
-      exercise: "Squat",
-      date: "07/02/23",
-      weight: 70
-    },
-    {
-      memberID: "123",
-      exercise: "Squat",
-      date: "13/02/23",
-      weight: 90
-    },
-  ]
+  const [records, setRecords] = useState([]);
+  const [exercise, setExercise] = useState("Squat");
+  const exercises = ["Squat", "Bench", "Overhead Press", "Bicep Curls"];
+  const [modalVisible, setModalVisible] = useState(false);
+  
+  const handlePillSelect = (pill) => {
+    setExercise(pill);
+  };
 
   useEffect(() => {
     if (!currentUser) {
       navigation.navigate("HomeScreen");
     }
     fetchRecords();
-  }, [currentUser]);
+  }, [currentUser, exercise]);
 
-  async function fetchRecords(exercise) {
+  async function fetchRecords() {
+    console.log(currentUser.uid)
     // const response = await fetch(`https://gdp-api.herokuapp.com/records/${currentUser.uid}/${exercise}`);
     // const data = await response.json();
     // setRecords(data);
+    // for demo purposes, setting static data
+    setRecords([
+      {
+        memberID: "123",
+        exercise: "Squat",
+        date: "03/02/23",
+        weight: 64
+      },
+      {
+        memberID: "123",
+        exercise: "Squat",
+        date: "07/02/23",
+        weight: 70
+      },
+      {
+        memberID: "123",
+        exercise: "Squat",
+        date: "13/02/23",
+        weight: 90
+      }
+    ]);
   }
+
 
   return (
     <View style={styles.container}>
-      <View className="">
-        <Text style={styles.mainGraph}>Excercise: Squat</Text>
+      <View>
+      <PillList data={exercises} onSelect={handlePillSelect} />
+        <Text style={styles.mainGraph}>Exercise: {exercise}</Text>
           <LineChart
             class="w-100 p-3"
             data={{
@@ -126,6 +149,18 @@ export const MyRecordsScreen = ({ navigation }) => {
   );
 };
 const styles = StyleSheet.create({
+  pillContainer: {
+    backgroundColor: '#eee',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginHorizontal: 8,
+  },
+  pillText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+  },
   safeArea: {
     flex: 1,
   },
@@ -171,7 +206,7 @@ const styles = StyleSheet.create({
     right: 5,
   },
   valueContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
   },
   arrowContainer: {
