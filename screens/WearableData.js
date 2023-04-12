@@ -44,7 +44,6 @@ export const MyDataScreen = ({ navigation }) => {
       const response = await axios.get(
         yourIp + "/whoop/getData/" + currentUserUid
       );
-      console.log(response.data.sevenDayData.dailyData);
       setDailyData(response.data.sevenDayData.dailyData);
       setIsAnyDataAvailable(true);
       setStrain(response.data.cyclesToSend.score.strain);
@@ -116,45 +115,40 @@ export const MyDataScreen = ({ navigation }) => {
   }, [fetchData]);
 
   const InfoCard = ({ title, value, unit, iconName, average, isRhr }) => (
-    console.log("value", value),
-    console.log("average", average),
-    console.log("isRhr", isRhr),
-    (
-      <View style={styles.infoCard}>
-        <FontAwesome5
-          name={iconName}
-          size={24}
-          color="#fff"
-          style={styles.infoCardIcon}
-        />
-        <Text style={styles.infoCardTitle}>{title}</Text>
-        <View style={styles.valueContainer}>
-          <Text style={styles.infoCardValue}>
-            {value} {unit}
-          </Text>
-          {average && (
-            <View style={styles.arrowContainer}>
-              <FontAwesome5
-                name={
-                  (isRhr === true && value > average) ||
-                  (isRhr === false && value > average)
-                    ? "arrow-up"
-                    : "arrow-down"
-                }
-                size={12}
-                color={
-                  (isRhr && value > average) || (!isRhr && value < average)
-                    ? "red"
-                    : "green"
-                }
-                style={styles.arrowIcon}
-              />
-              <Text style={styles.averageValue}>Avg: {average}</Text>
-            </View>
-          )}
-        </View>
+    <View style={styles.infoCard}>
+      <FontAwesome5
+        name={iconName}
+        size={24}
+        color="#fff"
+        style={styles.infoCardIcon}
+      />
+      <Text style={styles.infoCardTitle}>{title}</Text>
+      <View style={styles.valueContainer}>
+        <Text style={styles.infoCardValue}>
+          {value} {unit}
+        </Text>
+        {average && (
+          <View style={styles.arrowContainer}>
+            <FontAwesome5
+              name={
+                (isRhr === true && value > average) ||
+                (isRhr === false && value > average)
+                  ? "arrow-up"
+                  : "arrow-down"
+              }
+              size={12}
+              color={
+                (isRhr && value > average) || (!isRhr && value < average)
+                  ? "red"
+                  : "green"
+              }
+              style={styles.arrowIcon}
+            />
+            <Text style={styles.averageValue}>Avg: {average}</Text>
+          </View>
+        )}
       </View>
-    )
+    </View>
   );
 
   return (

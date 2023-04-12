@@ -61,11 +61,11 @@ const GymClassesScreen = ({ navigation }) => {
     } else {
       const today = moment();
       const newDates = [];
-      for (let i = -7; i <= 7; i++) {
-        const date = moment(today).add(i, "days");
-        newDates.push(date);
-      }
-      setDates(newDates);
+      // for (let i = -7; i <= 7; i++) {
+      //   const date = moment(today).add(i, "days");
+      //   newDates.push(date);
+      // }
+      // setDates(newDates);
       fetchData();
       var formattedDate = moment().format("YYYY-MM-DD");
       setSelectedDate(formattedDate);
@@ -75,15 +75,15 @@ const GymClassesScreen = ({ navigation }) => {
   //refresh data when we navigate to this page
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await fetchData();
+    fetchData();
     var formattedDate = moment().format("YYYY-MM-DD");
     setSelectedDate(formattedDate);
     setClassesToday(availableClasses[formattedDate]);
     setRefreshing(false);
   }, []);
+
   async function fetchData() {
     const res2 = await axios.get(yourIp + "/classes/");
-    // console.log(res2.data["2023-02-19"]);
     const res = await axios.get(yourIp + "/members/" + currentUser.uid);
     const upcoming = res.data[0].classes;
     console.log(upcoming);
@@ -301,12 +301,11 @@ const GymClassesScreen = ({ navigation }) => {
             <ScrollView showsVerticalScrollIndicator={false}>
               {upcomingClasses.map((gymClass, index) => (
                 //only show classes that are not yesterday or before
-                <View>
+                <View key={index}>
                   {moment(gymClass.date).isAfter(
                     moment().subtract(1, "days")
                   ) && (
                     <TouchableOpacity
-                      key={index}
                       onPress={() => handleBookedClassClick(gymClass)}
                       style={{ width: "100%" }}
                     >

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   ScrollView,
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  RefreshControl,
 } from "react-native";
 import { Text, Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
@@ -15,12 +16,20 @@ export default function ExerciseList({ navigation }) {
   const [keywords, setKeywords] = useState("");
   const { currentUser, admin } = useAuth();
   const [exercises, setExercises] = React.useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
   useEffect(() => {
     if (!currentUser) {
       navigation.navigate("HomeScreen");
     }
     fetchExercises();
   }, [currentUser]);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchExercises();
+
+    setRefreshing(false);
+  }, []);
 
   const handleSearch = (text) => {
     setKeywords(text);
@@ -89,6 +98,9 @@ export default function ExerciseList({ navigation }) {
           )}
           <ScrollView
             style={{ backgroundColor: "rgb(47,47,47)", marginBottom: 40 }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           >
             {filteredList.map((exercise, index) => {
               return (

@@ -3,8 +3,11 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { yourIp } from "../firebase";
 import { Dimensions } from "react-native";
+import { useAuth } from "../contexts/AuthContext";
 
 const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
+  const { currentUser, admin } = useAuth();
+
   const groupedExercises = exercises.reduce((acc, exercise) => {
     console.log(exercise);
     if (!acc[exercise.exercise]) {
@@ -17,6 +20,33 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const handleOnPress = () => {
     console.log(exercises);
   };
+
+  const updateRecords = async (exercise, value) => {
+    try {
+      const today = new Date();
+      const date = today.toLocaleDateString();
+      const response = await fetch(`https://gdp-api.herokuapp.com/records`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        //member, exercise, date, weight
+        body: JSON.stringify({
+          member: currentUser.uid,
+          exercise: exercise,
+          date: date,
+          weight: value,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Error updating exercise");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const updateExercise = async (exerciseId, field, value) => {
     try {
       const response = await fetch(
@@ -168,9 +198,10 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
                 maxLength={5}
                 editable={bookedIn}
                 defaultValue={`${exercise.weight}`}
-                onChangeText={(text) =>
-                  updateExercise(exercise._id, "weight", text)
-                }
+                onChangeText={(text) => {
+                  updateExercise(exercise._id, "weight", text);
+                  updateRecords(exercise.exerciseName, text);
+                }}
               />
               <Text
                 style={{

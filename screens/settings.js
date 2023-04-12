@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { logout } from "../firebase";
 import { yourIp } from "../firebase";
 export default function Settings({ navigation }) {
-  const { currentUser, setCurrentUser } = useAuth();
+  const { currentUser, setCurrentUser, admin } = useAuth();
   useEffect(() => {
     if (!currentUser && navigation) {
       navigation.navigate("HomeScreen");
@@ -58,15 +58,17 @@ export default function Settings({ navigation }) {
         >
           My Profile
         </Button>
-        <Button
-          mode="contained"
-          onPress={handleManageUsersPress}
-          style={styles.button}
-          labelStyle={{ color: "white" }}
-          contentStyle={{ paddingVertical: 5 }}
-        >
-          Manage Users
-        </Button>
+        {admin && (
+          <Button
+            mode="contained"
+            onPress={handleManageUsersPress}
+            style={styles.button}
+            labelStyle={{ color: "white" }}
+            contentStyle={{ paddingVertical: 5 }}
+          >
+            Manage Users
+          </Button>
+        )}
         <Button
           mode="contained"
           onPress={whoop}
