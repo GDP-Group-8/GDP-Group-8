@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, TextInput, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import axios from "axios";
-import { DataTable, Button, Headline, RadioButton, Text } from "react-native-paper";
+import { DataTable, Button } from "react-native-paper";
 import { useAuth } from "../contexts/AuthContext";
 import { yourIp } from "../firebase";
 
@@ -48,8 +48,8 @@ export default function UsersManage({ navigation }) {
 
   if (admin) {
     adminRender = (
-      <ScrollView className="bg-white">
-        <View className="mt-6">
+      <ScrollView style={{ backgroundColor: "white" }}>
+        <View style={{ marginTop: 6 }}>
           <DataTable>
             <DataTable.Header>
               <DataTable.Title>Name</DataTable.Title>
@@ -59,13 +59,13 @@ export default function UsersManage({ navigation }) {
             </DataTable.Header>
 
             {users.map((user) => (
-              <DataTable.Row key={user.memberID}>
+              <DataTable.Row key={user.memberID.toString()}>
                 <DataTable.Cell>{user.name}</DataTable.Cell>
                 <DataTable.Cell>{user.email}</DataTable.Cell>
                 <DataTable.Cell>{user.status}</DataTable.Cell>
                 <DataTable.Cell>
                   <Button
-                    textColor="lightblue"
+                    color="lightblue"
                     mode="text"
                     onPress={() => {
                       navigation.push("UserDetail", {
@@ -77,7 +77,7 @@ export default function UsersManage({ navigation }) {
                     Detail
                   </Button>
                   <Button
-                    textColor="red"
+                    color="red"
                     mode="text"
                     onPress={() => deleteUser(user.memberID)}
                   >
@@ -92,5 +92,5 @@ export default function UsersManage({ navigation }) {
     );
   }
 
-  return <View className="bg-white">{adminRender}</View>;
+  return <View style={{ backgroundColor: "white" }}>{adminRender}</View>;
 }
