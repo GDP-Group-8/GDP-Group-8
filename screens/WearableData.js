@@ -83,14 +83,20 @@ export const MyDataScreen = ({ navigation }) => {
         (new Date().getMonth() + 1) +
         "-" +
         new Date().getDate();
-
-      console.log(response.data["com.google.distance.delta"][todayDate].value);
-      setTodaysFootsteps(
-        response.data["com.google.step_count.delta"][todayDate].steps
-      );
-      setTodaysKmsMoved(
-        response.data["com.google.distance.delta"][todayDate].value / 1000
-      );
+      if (response.data) {
+        if (response.data["com.google.step_count.delta"][todayDate]) {
+          setTodaysFootsteps(
+            response.data["com.google.step_count.delta"][todayDate].steps
+          );
+        }
+        if (response.data["com.google.distance.delta"][todayDate]) {
+          setTodaysKmsMoved(
+            response.data["com.google.distance.delta"][todayDate].value / 1000
+          );
+        }
+      } else {
+        setGoogleFitDataIsTrue(false);
+      }
     } catch (error) {
       setGoogleFitDataIsTrue(false);
       console.log(error);
@@ -110,39 +116,45 @@ export const MyDataScreen = ({ navigation }) => {
   }, [fetchData]);
 
   const InfoCard = ({ title, value, unit, iconName, average, isRhr }) => (
-    <View style={styles.infoCard}>
-      <FontAwesome5
-        name={iconName}
-        size={24}
-        color="#fff"
-        style={styles.infoCardIcon}
-      />
-      <Text style={styles.infoCardTitle}>{title}</Text>
-      <View style={styles.valueContainer}>
-        <Text style={styles.infoCardValue}>
-          {value} {unit}
-        </Text>
-        {average && (
-          <View style={styles.arrowContainer}>
-            <FontAwesome5
-              name={
-                (isRhr && value > average) || (!isRhr && value > average)
-                  ? "arrow-up"
-                  : "arrow-down"
-              }
-              size={12}
-              color={
-                (isRhr && value > average) || (!isRhr && value < average)
-                  ? "red"
-                  : "green"
-              }
-              style={styles.arrowIcon}
-            />
-            <Text style={styles.averageValue}>Avg: {average}</Text>
-          </View>
-        )}
+    console.log("value", value),
+    console.log("average", average),
+    console.log("isRhr", isRhr),
+    (
+      <View style={styles.infoCard}>
+        <FontAwesome5
+          name={iconName}
+          size={24}
+          color="#fff"
+          style={styles.infoCardIcon}
+        />
+        <Text style={styles.infoCardTitle}>{title}</Text>
+        <View style={styles.valueContainer}>
+          <Text style={styles.infoCardValue}>
+            {value} {unit}
+          </Text>
+          {average && (
+            <View style={styles.arrowContainer}>
+              <FontAwesome5
+                name={
+                  (isRhr === true && value > average) ||
+                  (isRhr === false && value > average)
+                    ? "arrow-up"
+                    : "arrow-down"
+                }
+                size={12}
+                color={
+                  (isRhr && value > average) || (!isRhr && value < average)
+                    ? "red"
+                    : "green"
+                }
+                style={styles.arrowIcon}
+              />
+              <Text style={styles.averageValue}>Avg: {average}</Text>
+            </View>
+          )}
+        </View>
       </View>
-    </View>
+    )
   );
 
   return (
@@ -180,7 +192,7 @@ export const MyDataScreen = ({ navigation }) => {
                   unit="bpm"
                   iconName="heart"
                   average={avgHeartRate}
-                  isRhr
+                  isRhr={true}
                 />
                 <InfoCard
                   title="Heart Rate Variability"
@@ -188,6 +200,7 @@ export const MyDataScreen = ({ navigation }) => {
                   unit="ms"
                   iconName="heartbeat"
                   average={avgHrv}
+                  isRhr={false}
                 />
               </View>
               <View style={styles.infoCards}>
@@ -222,8 +235,12 @@ export const MyDataScreen = ({ navigation }) => {
                   iconName="route"
                 />
               </View>
-              <GoogleFitBarChart data={googleFitData} />
-              <GoogleFitKmBarChart data={googleFitData} />
+              {googleFitData["com.google.step_count.delta"] && (
+                <GoogleFitBarChart data={googleFitData} />
+              )}
+              {googleFitData["com.google.distance.delta"] && (
+                <GoogleFitKmBarChart data={googleFitData} />
+              )}
             </View>
           )}
         </>
