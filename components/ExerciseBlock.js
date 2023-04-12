@@ -9,7 +9,6 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const { currentUser, admin } = useAuth();
 
   const groupedExercises = exercises.reduce((acc, exercise) => {
-    console.log(exercise);
     if (!acc[exercise.exercise]) {
       acc[exercise.exercise] = [];
     }
@@ -22,28 +21,31 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   };
 
   const updateRecords = async (exercise, value) => {
-    try {
-      const today = new Date();
-      const date = today.toLocaleDateString();
-      const response = await fetch(`https://gdp-api.herokuapp.com/records`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        //member, exercise, date, weight
-        body: JSON.stringify({
-          member: currentUser.uid,
-          exercise: exercise,
-          date: date,
-          weight: value,
-        }),
-      });
+    const requestBody = {
+      member: currentUser.uid,
+      exercise: exercise,
+      date: new Date(),
+      weight: value,
+    };
 
-      if (!response.ok) {
-        throw new Error("Error updating exercise");
-      }
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    };
+
+    try {
+      const response = await fetch(
+        `https://gdp-api.herokuapp.com/records`,
+        requestOptions
+      );
+      const data = await response.json();
+      console.log(data);
     } catch (error) {
-      console.error("Error:", error);
+      console.error(error);
     }
   };
 
@@ -200,7 +202,7 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
                 defaultValue={`${exercise.weight}`}
                 onChangeText={(text) => {
                   updateExercise(exercise._id, "weight", text);
-                  updateRecords(exercise.exerciseName, text);
+                  updateRecords(name, text);
                 }}
               />
               <Text
@@ -224,6 +226,7 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
                 defaultValue={`${exercise.weight}`}
                 onChangeText={(text) =>
                   updateExercise(exercise._id, "weight", text)
+                  updateRecords(name, text)
                 }
               /> */}
             </View>

@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Dimensions, TouchableOpacity, Modal, FlatList } from 'react-native';
 import {
-  LineChart
-} from "react-native-chart-kit";
+  StyleSheet,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+} from "react-native";
+import { LineChart } from "react-native-chart-kit";
 import { Text, Divider, List, Headline, Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../contexts/AuthContext";
@@ -10,7 +15,10 @@ import { useAuth } from "../contexts/AuthContext";
 const PillList = ({ data, onSelect }) => {
   const renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => onSelect(item)} style={styles.pillContainer}>
+      <TouchableOpacity
+        onPress={() => onSelect(item)}
+        style={styles.pillContainer}
+      >
         <Text style={styles.pillText}>{item}</Text>
       </TouchableOpacity>
     );
@@ -30,21 +38,30 @@ const Table = ({ records, exercise }) => (
   <View style={styles.mainGraph}>
     <Text style={styles.infoCardValue}>{exercise}</Text>
     <View style={styles.valueContainer}>
-      
-      {records && records.map(record => (
-        <View style={{ paddingTop: 2, borderBottomWidth: 1, borderBottomColor: "#ccc", flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}> 
-          <Text style={styles.infoCardTitle}>{record.date}</Text>
-          <Text style={styles.infoCardTitle}>{record.weight} kg</Text>
-        </View>
-      ))}
+      {records &&
+        records.map((record) => (
+          <View
+            key={record.weight}
+            style={{
+              paddingTop: 2,
+              borderBottomWidth: 1,
+              borderBottomColor: "#ccc",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <Text style={styles.infoCardTitle}>{record.date}</Text>
+            <Text style={styles.infoCardTitle}>{record.weight} kg</Text>
+          </View>
+        ))}
     </View>
   </View>
 );
 
-
 export const MyRecordsScreen = ({ navigation }) => {
-
-  const screenWidth = (Dimensions.get("window").width) - (Dimensions.get("window").width)/13;
+  const screenWidth =
+    Dimensions.get("window").width - Dimensions.get("window").width / 13;
   const { currentUser, admin } = useAuth();
   const [records, setRecords] = useState([]);
   const [graphData, setGraphData] = useState([]);
@@ -53,9 +70,8 @@ export const MyRecordsScreen = ({ navigation }) => {
   const [exercises, setExercises] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   const hasRecord = records.length > 0;
-  
 
   const handlePillSelect = (pill) => {
     setExercise(pill);
@@ -66,29 +82,29 @@ export const MyRecordsScreen = ({ navigation }) => {
   }
 
   function getWeights(records) {
-    const weights = records.map(record => record.weight);
+    const weights = records.map((record) => record.weight);
     const sortedWeights = sortArray(weights);
     return sortedWeights;
   }
 
   function getFormattedDates(dates) {
     const formattedDates = [];
-  
-    dates.forEach(date => {
+
+    dates.forEach((date) => {
       const [day, month, year] = date.split("/");
       const dateObj = new Date(`${year}-${month}-${day}`);
-      const monthName = dateObj.toLocaleString('default', { month: 'short' });
+      const monthName = dateObj.toLocaleString("default", { month: "short" });
       const formattedDate = `${day} ${monthName}`;
       const splitString = formattedDate.split(" ");
       const monthDay = splitString[2] + " " + splitString[3];
       formattedDates.push(monthDay);
     });
-  
+
     return formattedDates;
   }
 
   function getDates(records) {
-    let dates = records.map(record => record.date);
+    let dates = records.map((record) => record.date);
     const formattedDates = getFormattedDates(dates);
     return formattedDates.reverse();
   }
@@ -110,20 +126,33 @@ export const MyRecordsScreen = ({ navigation }) => {
   }, [currentUser, exercise]);
 
   async function fetchRecords() {
-    const response = await fetch(`https://gdp-api.herokuapp.com/records/${currentUser.uid}/${exercise}`);
+    const response = await fetch(
+      `https://gdp-api.herokuapp.com/records/${currentUser.uid}/${exercise}`
+    );
     const data = await response.json();
-    const modifiedData = data.map(record => {
-      const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
-      const modifiedDate = new Date(record.date).toLocaleDateString('en-GB', options);
-      const [day, month, year] = modifiedDate.split('/');
+    const modifiedData = data.map((record) => {
+      const options = { day: "2-digit", month: "2-digit", year: "2-digit" };
+      const modifiedDate = new Date(record.date).toLocaleDateString(
+        "en-GB",
+        options
+      );
+      const [day, month, year] = modifiedDate.split("/");
       return { ...record, date: `${month}/${day}/${year}` };
     });
+    console.log(modifiedData);
     setRecords(modifiedData);
-    getGraphData(modifiedData);
+
+    if (modifiedData.length >= 1) {
+      getGraphData(modifiedData);
+    } else {
+      setIsLoading(false);
+    }
   }
 
   async function fetchExercises() {
-    const response = await fetch(`https://gdp-api.herokuapp.com/records/${currentUser.uid}`);
+    const response = await fetch(
+      `https://gdp-api.herokuapp.com/records/${currentUser.uid}`
+    );
     const data = await response.json();
     const unique = [];
     data.forEach((item) => {
@@ -132,69 +161,75 @@ export const MyRecordsScreen = ({ navigation }) => {
       }
     });
     setExercises(unique);
-  }  
+  }
 
   return (
     <View style={styles.container}>
       <View>
-      <PillList data={exercises} onSelect={handlePillSelect} />
+        <PillList data={exercises} onSelect={handlePillSelect} />
         <Text style={styles.mainGraph}>Exercise: {exercise}</Text>
-        {hasRecord && graphData && graphDates && !isLoading && (
-					          <LineChart
-                    class="w-100 p-3"
-                    data={{
-                      labels: graphDates,
-                      datasets: [
-                        {
-                          data: graphData//[100,105,110]
-                        }
-                      ]
-                    }}
-                    width={screenWidth} // from react-native
-                    height={220}
-                    yAxisSuffix="kg"
-                    yAxisInterval={1} // optional, defaults to 1
-                    chartConfig={{
-                      backgroundColor: "#111",
-                      backgroundGradientFrom: "#fb8c00",
-                      backgroundGradientTo: "#ffa726",
-                      decimalPlaces: 2, // optional, defaults to 2dp
-                      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                      labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                      style: {
-                        borderRadius: 16
-                      },
-                      propsForDots: {
-                        r: "6",
-                        strokeWidth: "2",
-                        stroke: "#ffa726"
-                      }
-                    }}
-                    bezier
-                    style={{
-                      marginVertical: 8,
-                      borderRadius: 16
-                    }}
-                  />
-				)}
-        {isLoading && (
+        {hasRecord &&
+        graphData &&
+        graphDates &&
+        !isLoading &&
+        graphData.length > 1 ? (
+          <LineChart
+            class="w-100 p-3"
+            data={{
+              labels: graphDates,
+              datasets: [
+                {
+                  data: graphData, //[100,105,110]
+                },
+              ],
+            }}
+            width={screenWidth} // from react-native
+            height={220}
+            yAxisSuffix="kg"
+            yAxisInterval={1} // optional, defaults to 1
+            chartConfig={{
+              backgroundColor: "#111",
+              backgroundGradientFrom: "#fb8c00",
+              backgroundGradientTo: "#ffa726",
+              decimalPlaces: 2, // optional, defaults to 2dp
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+              propsForDots: {
+                r: "6",
+                strokeWidth: "2",
+                stroke: "#ffa726",
+              },
+            }}
+            bezier
+            style={{
+              marginVertical: 8,
+              borderRadius: 16,
+            }}
+          />
+        ) : (
           <View style={styles.loading}>
-            <Text>Loading...</Text>
+            {isLoading ? (
+              <Text>Loading...</Text>
+            ) : (
+              <Text>
+                You have no records yet, or not enough to display a graph.
+              </Text>
+            )}
           </View>
         )}
       </View>
       <View>
-        <Table 
-         records={records}
-         exercise={exercise}
-        />
+        <Table records={records} exercise={exercise} />
       </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
   pillContainer: {
-    backgroundColor: '#eee',
+    backgroundColor: "#eee",
     borderRadius: 20,
     margin: 5,
     paddingHorizontal: 12,
@@ -203,8 +238,8 @@ const styles = StyleSheet.create({
   },
   pillText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
   },
   safeArea: {
     flex: 1,
@@ -288,7 +323,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     width: "100%",
-    color: "#fff"
+    color: "#fff",
   },
   mainCardTitle: {
     fontSize: 16,
@@ -323,4 +358,3 @@ const styles = StyleSheet.create({
     backgroundColor: "orange",
   },
 });
-
