@@ -23,23 +23,24 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const updateRecords = async (exercise, value) => {
     try {
       const today = new Date();
-      const response = await fetch(
-        `https://gdp-api.herokuapp.com/records`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          //member, exercise, date, weight
-          body: JSON.stringify({
-            member: currentUser.uid,
-            exercise: exercise,
-            date: today,
-            weight: value
-          })
-        }
-      );
+      const requestBody = {
+        member: currentUser.uid,
+        exercise: exercise,
+        date: today,
+        weight: value
+      };
+      
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      };
 
+      const response = await fetch(`https://gdp-api.herokuapp.com/records`, requestOptions);
+        console.log(JSON.stringify(response))
       if (!response.ok) {
         throw new Error("Error updating record");
       }
@@ -96,7 +97,7 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
                 defaultValue={`${exercise.weight}`}
                 onChangeText={(text) =>{
                   updateExercise(exercise._id, "weight", text)
-                  updateRecords(exercise.exerciseName, text)
+                  updateRecords("Bench", 135)
                 }
                 }
               />

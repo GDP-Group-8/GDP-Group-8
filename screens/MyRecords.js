@@ -32,7 +32,7 @@ const Table = ({ records, exercise }) => (
     <View style={styles.valueContainer}>
       
       {records && records.map(record => (
-        <View style={{ paddingTop: 2, borderBottomWidth: 1, borderBottomColor: "#ccc", flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}> 
+        <View key={record.weight} style={{ paddingTop: 2, borderBottomWidth: 1, borderBottomColor: "#ccc", flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}> 
           <Text style={styles.infoCardTitle}>{record.date}</Text>
           <Text style={styles.infoCardTitle}>{record.weight} kg</Text>
         </View>
@@ -146,7 +146,7 @@ export const MyRecordsScreen = ({ navigation }) => {
                       labels: graphDates,
                       datasets: [
                         {
-                          data: graphData//[100,105,110]
+                          data: graphData //[100,105,110]
                         }
                       ]
                     }}
