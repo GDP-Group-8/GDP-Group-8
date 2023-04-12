@@ -8,7 +8,6 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const { currentUser, admin } = useAuth();
 
   const groupedExercises = exercises.reduce((acc, exercise) => {
-    console.log(exercise);
     if (!acc[exercise.exercise]) {
       acc[exercise.exercise] = [];
     }
@@ -21,31 +20,28 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   };
 
   const updateRecords = async (exercise, value) => {
+    const requestBody = {
+      member: currentUser.uid,
+      exercise: exercise,
+      date: new Date(),
+      weight: value
+    };
+    
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    };
+    
     try {
-      const today = new Date();
-      const requestBody = {
-        member: currentUser.uid,
-        exercise: exercise,
-        date: today,
-        weight: value
-      };
-      
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      };
-
       const response = await fetch(`https://gdp-api.herokuapp.com/records`, requestOptions);
-        console.log(JSON.stringify(response))
-      if (!response.ok) {
-        throw new Error("Error updating record");
-      }
+      const data = await response.json();
+      console.log(data);
     } catch (error) {
-      console.error("Error:", error);
+      console.error(error);
     }
   };
 
@@ -97,7 +93,7 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
                 defaultValue={`${exercise.weight}`}
                 onChangeText={(text) =>{
                   updateExercise(exercise._id, "weight", text)
-                  updateRecords("Bench", 135)
+                  updateRecords(name, text)
                 }
                 }
               />
