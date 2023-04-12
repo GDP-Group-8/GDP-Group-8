@@ -23,7 +23,6 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
   const updateRecords = async (exercise, value) => {
     try {
       const today = new Date();
-      const date = today.toLocaleDateString();
       const response = await fetch(
         `https://gdp-api.herokuapp.com/records`,
         {
@@ -35,14 +34,14 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
           body: JSON.stringify({
             member: currentUser.uid,
             exercise: exercise,
-            date: date,
+            date: today,
             weight: value
           })
         }
       );
 
       if (!response.ok) {
-        throw new Error("Error updating exercise");
+        throw new Error("Error updating record");
       }
     } catch (error) {
       console.error("Error:", error);
