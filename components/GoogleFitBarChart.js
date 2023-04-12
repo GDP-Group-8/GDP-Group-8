@@ -26,6 +26,7 @@ export const GoogleFitBarChart = ({ data }) => {
     useShadowColorFromDataset: false, // optional
   };
 
+
   return (
     <View style={styles.chartContainer}>
       <Text style={styles.chartTitle}>Step Count</Text>
