@@ -27,7 +27,7 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
       const response = await fetch(
         `https://gdp-api.herokuapp.com/records`,
         {
-          method: "PATCH",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
@@ -54,7 +54,7 @@ const ExerciseBlock = ({ exercises, bookedIn, workoutId }) => {
       const response = await fetch(
         yourIp + `/records/exercise/${workoutId}?exerciseId=${exerciseId}`,
         {
-          method: "POST",
+          method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
